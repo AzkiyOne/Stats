@@ -1,14 +1,9 @@
 ﻿using System.Collections.Generic;
-using Stats.Columns.Cells;
-using Stats.Filters;
+using Stats.Columns;
 using Stats.TableRecords;
-using Stats.Tables;
-using Stats.Utils;
-using Stats.Utils.Extensions;
-using Stats.Utils.Widgets;
-using UnityEngine;
+using Stats.Widgets;
+using Stats.Widgets.Filters;
 using Verse;
-using static Stats.GUIStyles.TableCell;
 
 namespace Stats.Columns.ThingDef;
 
@@ -16,38 +11,36 @@ namespace Stats.Columns.ThingDef;
 // modded stuffs may have the same color as vanilla ones or other modded stuffs.
 // Replacing label with icon won't do, because ex. all of the leathers have the same
 // icon but of different color.
-public sealed class LabelColumn<TRecord>(ColumnDef columnDef) :
-    Column<TRecord, LabelColumn<TRecord>.LabelCell>(columnDef, ColumnType.String)
-        where TRecord :
-            IThingDefTableRecord
+public sealed class LabelColumn<TRecord> : ThingDefColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override LabelCell MakeCell(TRecord record)
+    public LabelColumn(LabelColumnDef def) : base(def)
     {
-        return new LabelCell(record.ThingDef, record.StatRequest.StuffDef);
+        ThingDefOptions = def.ThingDefOptions;
     }
 
-    public override ICollection<CellField> GetCellFields(Table tableWorker)
-    {
-        Filter textFieldFilter = new StringFilter((int row) => this[row].Text ?? "");
-        int Compare(int row1, int row2) => Comparer<string?>.Default.Compare(this[row1].Text, this[row2].Text);
-        CellField textField = new(null, textFieldFilter, Compare);
+    protected override IEnumerable<Verse.ThingDef?> ThingDefOptions { get; }
 
-        return [textField];
+    // TODO: Add stuff (material) filter. Remember that it should only appear when it makes sense.
+    public override ICollection<ColumnFilterOption> FilterOptions => [
+        new ColumnFilterOption("Label", () => new StringFilter(i => this[i].Text ?? "")),
+        ..base.FilterOptions
+    ];
+
+    protected override ThingDefColumnCell MakeCell(TRecord record)
+    {
+        Verse.ThingDef thingDef = record.ThingDef;
+        Verse.ThingDef? stuffDef = record.StatRequest.StuffDef;
+        string text = stuffDef == null
+            ? thingDef.LabelCap.RawText
+            : $"{stuffDef.LabelAsStuff.CapitalizeFirst()} {thingDef.label}";
+        Widget icon = new ThingDefIconInteractive(thingDef, stuffDef);
+
+        return new ThingDefColumnCell(thingDef, text, icon);
     }
 
+    // TODO: Make a separate "Researched" column.
     //IEnumerable<ObjectTableWidget.ColumnPart> IColumnWorker<VirtualThing>.GetObjectProps()
     //{
-    //    yield return new(new Label("Label"), new StringFilter(cell => ((Cell)cell).Text));
-
-    //    var typeFilterOptions = contextObjects
-    //        .Select(@object => @object.Def)
-    //        .Distinct()
-    //        .OrderBy(thingDef => thingDef.label)
-    //        .Select<ThingDef, NTMFilterOption<ThingDef>>(
-    //            thingDef => new(thingDef, thingDef.LabelCap, new ThingDefIcon(thingDef))
-    //        );
-    //    yield return new(new Label("Type"), new OTMFilter<ThingDef>(cell => ((Cell)cell).Def, typeFilterOptions));
-
     //    var filterWidget_Researched = new BooleanFilter(
     //        cell => ((Cell)cell).Def.GetResearchProjectDefs()?.All(researchProjectDef => researchProjectDef.IsFinished) is true or null
     //    );
@@ -77,78 +70,6 @@ public sealed class LabelColumn<TRecord>(ColumnDef columnDef) :
     //        yield return new(new Label("Material"), stuffFilter);
     //    }
     //}
-
-    public readonly struct LabelCell : ICell
-    {
-        public float Width { get; }
-        public bool IsRefreshable => false;
-        public readonly string? Text;
-
-        private readonly Verse.ThingDef? _thingDef;
-        private readonly Verse.ThingDef? _stuffDef;
-        private readonly ThingDefIcon? _icon;
-        private readonly float _iconWidth;
-
-        public LabelCell(Verse.ThingDef thingDef, Verse.ThingDef? stuffDef = null)
-        {
-            _thingDef = thingDef;
-            _stuffDef = stuffDef;
-            Text = stuffDef == null
-                ? thingDef.LabelCap.RawText
-                : $"{stuffDef.LabelAsStuff.CapitalizeFirst()} {thingDef.label}";
-            float textWidth = Text.CalcSize(StringNoPad).x;
-            _icon = new ThingDefIcon(thingDef, stuffDef);
-            _iconWidth = _icon.Size.x;
-            Width = _iconWidth + ContentSpacing + textWidth;
-        }
-
-        public void Draw(Rect rect)
-        {
-            if (_thingDef != null)
-            {
-                rect
-                    .ContractedByObjectTableCellPadding()
-                    .CutLeft(out Rect iconRect, _iconWidth)
-                    .CutLeft(ContentSpacing)
-                    .TakeRest(out Rect labelRect);
-
-                if (Event.current.type == EventType.Repaint)
-                {
-                    _icon!.Draw(iconRect);
-                    Text!.Draw(labelRect, StringNoPad);
-                }
-
-                bool iconWasClicked = iconRect.ButtonGhostly();
-                if (iconWasClicked)
-                {
-                    _thingDef.OpenInfoDialog(_stuffDef);
-                }
-            }
-        }
-
-        //public Cell(VirtualThing thing)
-        //{
-        //    Def = thing.Def;
-        //    StuffDef = thing.StuffDef;
-        //    IsMadeFromDefaultStuff = thing.StuffDef == thing.Def.GetDefaultStuff();
-
-        //    var text = thing.StuffDef == null
-        //        ? thing.Def.LabelCap.RawText
-        //        : $"{thing.StuffDef.LabelAsStuff.CapitalizeFirst()} {thing.Def.label}";
-        //    var widget = new HorizontalContainer([
-        //        new ThingDefIcon(thing.Def, thing.StuffDef)
-        //        .PaddingAbs(2f)
-        //        .SizeAbs(Verse.Text.LineHeight + ObjectTableWidget.CellPadVer * 2f)
-        //        .ToButtonGhostly(() => Draw.DefInfoDialog(thing.Def, thing.StuffDef)),
-        //        new Label(text).PaddingAbs(0f, ObjectTableWidget.CellPadVer),
-        //    ], Globals.GUI.Pad)
-        //    .PaddingAbs(ObjectTableWidget.CellPadHor, 0f)
-        //    .Tooltip(thing.Def.description);
-
-        //    Widget = widget;
-        //    Text = text;
-        //}
-    }
 
     /*
     

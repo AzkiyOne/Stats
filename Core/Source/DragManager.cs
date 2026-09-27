@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Stats.Utils;
 using UnityEngine;
 using Verse;
 
 namespace Stats;
 
-internal abstract class DragManager<T>
-    where T : class
+internal abstract class DragManager<T> where T : class
 {
+    private T? _draggedWidget;
+
     public event Action<T, T>? OnDragBefore;
     public event Action<T, T>? OnDragAfter;
-
-    private T? _draggedWidget;
 
     private void StartDrag(T widget)
     {
@@ -74,9 +67,7 @@ internal abstract class DragManager<T>
     }
 }
 
-internal sealed class HorDragManager<T> :
-    DragManager<T>
-        where T : class
+internal sealed class HorDragManager<T> : DragManager<T> where T : class
 {
     protected override bool IsMouseBeforeMiddle(Rect rect, Vector2 mousePosition)
     {
@@ -95,9 +86,7 @@ internal sealed class HorDragManager<T> :
     }
 }
 
-internal sealed class VerDragManager<T> :
-    DragManager<T>
-        where T : class
+internal sealed class VerDragManager<T> : DragManager<T> where T : class
 {
     protected override bool IsMouseBeforeMiddle(Rect rect, Vector2 mousePosition)
     {

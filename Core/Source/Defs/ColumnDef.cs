@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using RimWorld;
-using Stats.Columns;
-using Stats.Utils.Widgets;
+using Stats.Widgets;
 using Verse;
 
 namespace Stats;
@@ -15,30 +14,12 @@ public class ColumnDef : Def
     public string? descriptionKey;
     // TODO: Rename to "label something"
     public ColumnLabelXmlNode? title;
-    internal Widget LabelWidget => field ??= title?.ToWidget() ?? new Label(LabelCap);
 #pragma warning disable CS8618
     public Type columnClass;
 #pragma warning restore CS8618
     public List<string> tags = [];
 
-    internal Column<TRecord> MakeColumnInstance<TRecord>()
-    {
-        Type columnType = columnClass;
-
-        if (columnType.IsGenericTypeDefinition)
-        {
-            columnType = columnType.MakeGenericType(typeof(TRecord));
-        }
-
-        if (typeof(Column<TRecord>).IsAssignableFrom(columnType))
-        {
-            return (Column<TRecord>)Activator.CreateInstance(columnType, this);
-        }
-        else
-        {
-            throw new InvalidCastException($"Column \"${defName}\" does not implement \"${typeof(Column<TRecord>).Name}\".");
-        }
-    }
+    internal Widget LabelWidget => title?.ToWidget() ?? new Label(LabelCap);
 
     public override void ResolveReferences()
     {
@@ -54,19 +35,6 @@ public class ColumnDef : Def
             description = descriptionKey.Translate();
         }
     }
-
-    public override IEnumerable<string> ConfigErrors()
-    {
-        foreach (string item in base.ConfigErrors())
-        {
-            yield return item;
-        }
-
-        if (tags.Count == 0)
-        {
-            yield return "no tags.";
-        }
-    }
 }
 
 public sealed class ColumnLabelXmlNode
@@ -80,15 +48,18 @@ public sealed class ColumnLabelXmlNode
             if (node is XmlText textNode)
             {
                 string text = textNode.InnerText.Trim();
+
                 if (text.Length > 0)
                 {
                     TextElement element = new(text);
+
                     _elements.Add(element);
                 }
             }
             else if (node is XmlElement elementNode)
             {
                 IconElement element = new(elementNode);
+
                 _elements.Add(element);
             }
         }

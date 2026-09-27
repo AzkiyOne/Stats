@@ -1,25 +1,29 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
+using Stats.Extensions;
 using Stats.TableRecords;
 
 namespace Stats.Columns.PowerTraderDef;
 
-public sealed class PowerConsumptionColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IPowerTraderDefTableRecord
+public sealed class PowerConsumptionColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public PowerConsumptionColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0 W")
     {
-        CompProperties_Power? powerCompProps = record.PowerCompProperties;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        CompProperties_Power? powerCompProps = record.ThingDef.GetCompProperties<CompProperties_Power>();
 
         if (powerCompProps is { PowerConsumption: > 0f })
         {
             float powerConsumption = powerCompProps.PowerConsumption;
 
-            return new NumberCell(powerConsumption, "0 W");
+            return powerConsumption.ToDecimal();
         }
 
-        return default;
+        return 0m;
     }
 }

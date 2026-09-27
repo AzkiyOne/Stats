@@ -1,26 +1,27 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
 
 namespace Stats.Columns.PlantDef;
 
-public sealed class GrowingTimeActualColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IPlantDefTableRecord
+public sealed class GrowingTimeActualColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public GrowingTimeActualColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0.0 d")
     {
-        PlantProperties plantProps = record.PlantProperties;
+    }
 
-        if (plantProps.growDays > 0f)
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        PlantProperties? plantProps = record.ThingDef.plant;
+
+        if (plantProps?.growDays > 0f)
         {
-            decimal cellValue = plantProps.GetGrowDaysActual().ToDecimal(1);
-
-            return new NumberCell(cellValue, "0.0 d");
+            return plantProps.GetGrowDaysActual().ToDecimal(1);
         }
 
-        return default;
+        return 0m;
     }
 }

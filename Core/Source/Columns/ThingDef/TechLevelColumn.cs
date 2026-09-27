@@ -1,66 +1,47 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
-using Stats.Columns.Cells;
-using Stats.Filters;
+using Stats.Columns;
 using Stats.TableRecords;
-using Stats.Tables;
-using Stats.Utils;
-using UnityEngine;
+using Stats.Widgets.Filters;
 using Verse;
 
 namespace Stats.Columns.ThingDef;
 
-public sealed class TechLevelColumn<TRecord>(ColumnDef columnDef) :
-    Column<TRecord, TechLevelColumn<TRecord>.TechLevelCell>(columnDef, ColumnType.String)
-        where TRecord :
-            IThingDefTableRecord
+public abstract class TechLevelColumn<TRecord> : Column<TRecord, TechLevelColumnCell> where TRecord : IThingDefTableRecord
 {
-    protected override TechLevelCell MakeCell(TRecord record)
-    {
-        return new TechLevelCell(record.ThingDef.techLevel);
-    }
+    private readonly string _label;
+    private readonly IEnumerable<NTMFilterOption<TechLevel>> _filterOptions;
 
-    public override ICollection<CellField> GetCellFields(Table tableWorker)
+    public TechLevelColumn(ColumnDef def, ThingDefTableDef tableDef) : base(def)
     {
-        IEnumerable<NTMFilterOption<TechLevel>> valueFieldFilterOptions = ((IRefRecordsProvider<Verse.ThingDef>)tableWorker).Records
-            .Select(thingDef => thingDef.techLevel)
+        _label = def.LabelCap;
+        _filterOptions = tableDef.ThingDefOptions
+            .Select(GetTechLevel)
             .Distinct()
             .OrderBy(techLevel => techLevel)
-            .Select<TechLevel, NTMFilterOption<TechLevel>>(
-                techLevel => new(techLevel, techLevel.ToStringHuman().CapitalizeFirst())
-            );
-        Filter valueFieldFilter = new OTMFilter<TechLevel>((int row) => this[row].Value, valueFieldFilterOptions);
-        int Compare(int row1, int row2) => this[row1].Value.CompareTo(this[row2].Value);
-        CellField valueField = new(null, valueFieldFilter, Compare);
-
-        return [valueField];
+            .Select(techLevel => new NTMFilterOption<TechLevel>(techLevel, techLevel.ToStringHuman().CapitalizeFirst()));
     }
 
-    public readonly struct TechLevelCell : ICell
+    public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Left;
+
+    public override ICollection<ColumnSortOption> SortOptions => [
+        new ColumnSortOption(_label, (i1, i2) => this[i1].Value.CompareTo(this[i2].Value))
+    ];
+
+    public override ICollection<ColumnFilterOption> FilterOptions => [
+        new ColumnFilterOption(_label, () => new OTMFilter<TechLevel>(i => this[i].Value, _filterOptions))
+    ];
+
+    protected override TechLevelColumnCell MakeCell(TRecord record)
     {
-        public float Width { get; }
-        public bool IsRefreshable => false;
-        public readonly TechLevel Value;
+        TechLevel techLevel = GetTechLevel(record.ThingDef);
 
-        private readonly string? _text;
+        return new TechLevelColumnCell(techLevel);
+    }
 
-        public TechLevelCell(TechLevel techLevel)
-        {
-            Value = techLevel;
-            if (techLevel != TechLevel.Undefined)
-            {
-                _text = techLevel.ToStringHuman().CapitalizeFirst();
-                Width = Text.CalcSize(_text).x;
-            }
-        }
-
-        public void Draw(Rect rect)
-        {
-            if (Value != TechLevel.Undefined)
-            {
-                rect.Label(_text, GUIStyles.TableCell.String);
-            }
-        }
+    private static TechLevel GetTechLevel(Verse.ThingDef thingDef)
+    {
+        return thingDef.techLevel;
     }
 }

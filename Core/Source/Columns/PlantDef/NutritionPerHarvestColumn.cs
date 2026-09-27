@@ -1,27 +1,30 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
 
 namespace Stats.Columns.PlantDef;
 
-public sealed class NutritionPerHarvestColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IPlantDefTableRecord
+public sealed class NutritionPerHarvestColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public NutritionPerHarvestColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0.00")
     {
-        PlantProperties plantProps = record.PlantProperties;
+    }
 
-        if (plantProps.harvestedThingDef != null)
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        PlantProperties? plantProps = record.ThingDef.plant;
+
+        if (plantProps?.harvestedThingDef != null)
         {
             float productNutrition = plantProps.harvestedThingDef.GetStatValuePerceived(StatDefOf.Nutrition);
             float nutritionPerHarvest = plantProps.harvestYield * productNutrition;
 
-            return new NumberCell(nutritionPerHarvest.ToDecimal(2), "0.00");
+            return nutritionPerHarvest.ToDecimal(2);
         }
 
-        return default;
+        return 0m;
     }
 }

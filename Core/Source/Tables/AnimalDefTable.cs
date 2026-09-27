@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
 using Stats.TableRecords;
+using Stats.Widgets;
 using Verse;
 
 namespace Stats.Tables;
 
-public static class AnimalDefTable
+public sealed class AnimalDefTable : Tab
 {
-    public static MainTabWindowTab Make(TableDef tableDef)
+    public AnimalDefTable(TableDef def) : base(def)
     {
         List<PawnDefTableRecord> records = new(250);
+
         foreach (Verse.ThingDef thingDef in DefDatabase<Verse.ThingDef>.AllDefsListForReading)
         {
             RaceProperties? raceProperties = thingDef.race;
@@ -20,6 +22,8 @@ public static class AnimalDefTable
             }
         }
 
-        return new TableTab<PawnDefTableRecord>(tableDef, records);
+        Widget = new Table<PawnDefTableRecord>(def, records);
     }
+
+    protected override TabBodyWidget Widget { get; }
 }

@@ -2,27 +2,27 @@
 using System.Linq;
 using RimWorld;
 using Stats.Columns.Cells;
+using Stats.Extensions;
 using Stats.TableRecords;
 using Stats.Tables;
-using Stats.Utils.Extensions;
 using Verse;
 
 namespace Stats.Columns.AnimalDef;
 
-public sealed class ProductsColumn<TRecord>(ColumnDef columnDef) :
-    ThingDefSetColumn<TRecord, ThingDefSetCell>(columnDef)
-        where TRecord :
-            IMilkableDefTableRecord,
-            IEggLayerDefTableRecord,
-            IShearableDefTableRecord
+public sealed class ProductsColumn<TRecord> : ThingDefSetColumn<TRecord, ThingDefSetColumnCell>
+    where TRecord : IMilkableDefTableRecord, IEggLayerDefTableRecord, IShearableDefTableRecord
 {
-    protected override ThingDefSetCell MakeCell(TRecord record)
+    public ProductsColumn(ColumnDef columnDef) : base(columnDef)
+    {
+    }
+
+    protected override ThingDefSetColumnCell MakeCell(TRecord record)
     {
         HashSet<Verse.ThingDef> products = GetProducts(record);
 
         if (products.Count > 0)
         {
-            return new ThingDefSetCell(products);
+            return new ThingDefSetColumnCell(products);
         }
 
         return default;

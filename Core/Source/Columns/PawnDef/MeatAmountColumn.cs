@@ -2,19 +2,19 @@
 using System.Linq;
 using RimWorld;
 using Stats.Columns.Cells;
+using Stats.Extensions;
 using Stats.TableRecords;
 using Stats.Tables;
-using Stats.Utils.Extensions;
 using Verse;
 
 namespace Stats.Columns.PawnDef;
 
 public sealed class MeatAmountColumn<TRecord>(ColumnDef columnDef) :
-    ThingDefCountColumn<TRecord, ThingDefCountCell>(columnDef)
+    ThingDefCountColumn<TRecord, ThingDefCountColumnCell>(columnDef)
         where TRecord :
             IPawnDefTableRecord
 {
-    protected override ThingDefCountCell MakeCell(TRecord record)
+    protected override ThingDefCountColumnCell MakeCell(TRecord record)
     {
         RaceProperties raceProperties = record.RaceProperties;
         Verse.ThingDef? meatDef = raceProperties.meatDef;
@@ -26,7 +26,7 @@ public sealed class MeatAmountColumn<TRecord>(ColumnDef columnDef) :
 
             if (meatAmount > 0f)
             {
-                return new ThingDefCountCell(meatDef, meatAmount);
+                return new ThingDefCountColumnCell(meatDef, meatAmount);
             }
         }
 

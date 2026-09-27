@@ -1,0 +1,85 @@
+﻿using System;
+using System.Collections.Generic;
+using Stats.Extensions;
+using UnityEngine;
+using Verse;
+
+namespace Stats.Widgets.Filters;
+
+public sealed class BooleanFilter : Filter
+{
+    private readonly List<bool> _values;
+
+    public BooleanFilter(List<bool> values)
+    {
+        _values = values;
+    }
+
+    public override bool IsActive => Value != null;
+
+    public override event Action? OnChange;
+
+    private bool? Value
+    {
+        get => field;
+        set
+        {
+            if (field == value)
+            {
+                return;
+            }
+
+            field = value;
+            OnChange?.Invoke();
+        }
+    } = null;
+
+    public override Vector2 GetSize()
+    {
+        return new Vector2(Text.LineHeight * 2f, Text.LineHeight);
+    }
+
+    public override void Draw(Rect rect, Vector2 containerSize)
+    {
+        var origGUIColor = GUI.color;
+
+        if (Value != true)
+        {
+            GUI.color = GUIStyles.Text.ColorSecondary;
+        }
+
+        if (rect.CutByX(rect.width / 2f).DrawButtonSubtle(Verse.Widgets.CheckboxOnTex))
+        {
+            Value = Value == true ? null : true;
+        }
+
+        GUI.color = origGUIColor;
+
+        if (Value != false)
+        {
+            GUI.color = GUIStyles.Text.ColorSecondary;
+        }
+
+        if (rect.DrawButtonSubtle(Verse.Widgets.CheckboxOffTex))
+        {
+            Value = Value == false ? null : false;
+        }
+
+        GUI.color = origGUIColor;
+    }
+
+    public override bool Eval(int i)
+    {
+        return _values[i] == Value;
+    }
+
+    public override void Reset()
+    {
+        Value = null;
+    }
+
+    public override void NotifyChanged()
+    {
+        OnChange?.Invoke();
+    }
+}

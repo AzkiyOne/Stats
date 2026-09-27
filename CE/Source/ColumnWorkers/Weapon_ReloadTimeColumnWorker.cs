@@ -2,8 +2,8 @@
 using RimWorld;
 using Stats.TableRecords.ThingDef;
 using Stats.ObjectTable.ColumnWorkers;
-using Stats.Utils.Extensions;
 using Verse;
+using Stats.Extensions;
 
 namespace Stats.Compat.CE;
 

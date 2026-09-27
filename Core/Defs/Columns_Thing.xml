@@ -6,9 +6,6 @@
         <defName>Thing_Label</defName>
         <label>thing</label>
         <columnClass>Stats.Columns.ThingDef.LabelColumn`1</columnClass>
-        <tags>
-            <li>Thing</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -16,9 +13,6 @@
         <title>$$$</title>
         <stat>MarketValue</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -26,9 +20,6 @@
         <title>HP</title>
         <stat>MaxHitPoints</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -36,36 +27,24 @@
         <title><Damage_Heat/></title>
         <stat>Flammability</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Thing_Mass</defName>
         <stat>Mass</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Thing_ContentSource</defName>
         <labelKey>Stat_Source_Label</labelKey>
         <columnClass>Stats.Columns.Def.ModContentPackColumn`1</columnClass>
-        <tags>
-            <li>Def</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Thing_TechLevel</defName>
         <label>tech level</label>
         <columnClass>Stats.Columns.ThingDef.TechLevelColumn`1</columnClass>
-        <tags>
-            <li>Thing</li>
-        </tags>
     </Stats.ColumnDef>
 
     <!-- <Stats.ColumnDef>
@@ -85,9 +64,6 @@
         <defName>Thing_Beauty</defName>
         <stat>Beauty</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -95,9 +71,6 @@
         <title><Armor/><Damage_Sharp/></title>
         <stat>ArmorRating_Sharp</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_HasArmor</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -105,9 +78,6 @@
         <title><Armor/><Damage_Blunt/></title>
         <stat>ArmorRating_Blunt</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_HasArmor</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -115,9 +85,6 @@
         <title><Armor/><Damage_Heat/></title>
         <stat>ArmorRating_Heat</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_HasArmor</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -125,9 +92,6 @@
         <title>Shield %</title>
         <stat>EnergyShieldEnergyMax</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_HasEnergyShield</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -135,9 +99,6 @@
         <title>Shield %/s</title>
         <stat>EnergyShieldRechargeRate</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_HasEnergyShield</li>
-        </tags>
     </Stats.ColumnDef>
 
     <!-- <Stats.ColumnDef>

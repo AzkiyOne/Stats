@@ -8,11 +8,11 @@ using Stats.Tables;
 namespace Stats.Columns.MilkableDef;
 
 public sealed class MilkAmountColumn<TRecord>(ColumnDef columnDef) :
-    ThingDefCountColumn<TRecord, ThingDefCountCell>(columnDef)
+    ThingDefCountColumn<TRecord, ThingDefCountColumnCell>(columnDef)
         where TRecord :
             IMilkableDefTableRecord
 {
-    protected override ThingDefCountCell MakeCell(TRecord record)
+    protected override ThingDefCountColumnCell MakeCell(TRecord record)
     {
         CompProperties_Milkable? milkableCompProps = record.MilkableCompProperties;
 
@@ -21,7 +21,7 @@ public sealed class MilkAmountColumn<TRecord>(ColumnDef columnDef) :
             Verse.ThingDef milkDef = milkableCompProps.milkDef;
             decimal milkAmount = milkableCompProps.milkAmount;
 
-            return new ThingDefCountCell(milkDef, milkAmount);
+            return new ThingDefCountColumnCell(milkDef, milkAmount);
         }
 
         return default;

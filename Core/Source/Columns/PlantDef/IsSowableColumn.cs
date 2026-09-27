@@ -1,14 +1,18 @@
-﻿using Stats.TableRecords;
+﻿using System.Collections.Generic;
+using Stats.TableRecords;
 
 namespace Stats.Columns.PlantDef;
 
-public sealed class IsSowableColumn<TRecord>(ColumnDef columnDef) :
-    BooleanColumn<TRecord>(columnDef)
-        where TRecord :
-            IPlantDefTableRecord
+public sealed class IsSowableColumn<TRecord> : BooleanColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override bool GetValue(TRecord record)
+    public IsSowableColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
-        return record.PlantProperties.Sowable;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override bool GetValueFromRecord(TRecord record)
+    {
+        return record.ThingDef.plant?.Sowable ?? false;
     }
 }

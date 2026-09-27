@@ -1,17 +1,17 @@
 ﻿using RimWorld;
 using Stats.Columns.Cells;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
 
 namespace Stats.Columns.AnimalDef;
 
 public sealed class ProductsNutritionPerDayColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
+    NumberColumn<TRecord, NumberColumnCell>(columnDef)
         where TRecord :
             IMilkableDefTableRecord,
             IEggLayerDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    protected override NumberColumnCell MakeCell(TRecord record)
     {
         // Milk
         float milkNutritionPerDay = 0f;
@@ -46,6 +46,6 @@ public sealed class ProductsNutritionPerDayColumn<TRecord>(ColumnDef columnDef) 
         // Result
         float productsNutritionPerDay = milkNutritionPerDay + eggsNutritionPerDay;
 
-        return new NumberCell(productsNutritionPerDay.ToDecimal(2), "0.00/d");
+        return new NumberColumnCell(productsNutritionPerDay.ToDecimal(2), "0.00/d");
     }
 }

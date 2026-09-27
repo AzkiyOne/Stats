@@ -1,16 +1,16 @@
 ﻿using RimWorld;
 using Stats.Columns.Cells;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
 
 namespace Stats.Columns.EggLayerDef;
 
 public sealed class EggsPerDayColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
+    NumberColumn<TRecord, NumberColumnCell>(columnDef)
         where TRecord :
             IEggLayerDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    protected override NumberColumnCell MakeCell(TRecord record)
     {
         CompProperties_EggLayer? eggLayerCompProps = record.EggLayerCompProperties;
 
@@ -20,7 +20,7 @@ public sealed class EggsPerDayColumn<TRecord>(ColumnDef columnDef) :
             float averageEggCount = eggLayerCompProps.eggCountRange.Average;
             float eggsPerDay = averageEggCount / eggLayIntervalDays;
 
-            return new NumberCell(eggsPerDay.ToDecimal(1), "0.0/d");
+            return new NumberColumnCell(eggsPerDay.ToDecimal(1), "0.0/d");
         }
 
         return default;

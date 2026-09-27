@@ -1,37 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Stats.Columns.Cells;
-using Stats.Filters;
-using Stats.Tables;
-using UnityEngine;
+using Stats.Widgets.Filters;
 
 namespace Stats.Columns;
 
-public abstract class ThingDefCountColumn<TRecord, TCell>(ColumnDef def) :
-    Column<TRecord, TCell>(def, ColumnType.Number)
-        where TCell :
-            struct,
-            IThingDefCountCell
+public abstract class ThingDefCountColumn<TRecord> : Column<TRecord, ThingDefCountColumnCell>
 {
-    protected abstract IEnumerable<Verse.ThingDef?> GetTypeFieldFilterOptions(Table tableWorker);
-
-    public override ICollection<CellField> GetCellFields(Table tableWorker)
+    protected ThingDefCountColumn(ColumnDef def) : base(def)
     {
-        Filter countFilter = new NumberFilter((int row) => this[row].Count);
-        int CompareByCount(int row1, int row2) => this[row1].Count.CompareTo(this[row2].Count);
-        CellField countField = new("Amount", countFilter, CompareByCount);
-
-        IEnumerable<NTMFilterOption<Verse.ThingDef?>> thingDefFilterOptions = GetTypeFieldFilterOptions(tableWorker)
-            .OrderBy(thingDef => thingDef?.label)
-            .Select<Verse.ThingDef?, NTMFilterOption<Verse.ThingDef?>>(
-                thingDef => thingDef == null
-                    ? new()
-                    : new(thingDef, thingDef.LabelCap, new Widgets_Legacy.ThingDefIcon(thingDef))
-            );
-        Filter thingDefFilter = new OTMFilter<Verse.ThingDef?>((int row) => this[row].ThingDef, thingDefFilterOptions);
-        int CompareByThingDefLabel(int row1, int row2) => Comparer<string?>.Default.Compare(this[row1].ThingDefLabel, this[row2].ThingDefLabel);
-        CellField thingDefField = new("Type", thingDefFilter, CompareByThingDefLabel);
-
-        return [countField, thingDefField];
     }
+
+    public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Right;
+
+    public override ICollection<ColumnSortOption> SortOptions => [
+        new ColumnSortOption("Amount", (i1, i2) => this[i1].Count.CompareTo(this[i2].Count)),
+        new ColumnSortOption("Label", (i1, i2) => Comparer<string?>.Default.Compare(this[i1].ThingDefLabel, this[i2].ThingDefLabel))
+    ];
+
+    public override ICollection<ColumnFilterOption> FilterOptions => [
+        new ColumnFilterOption("Amount", () => new NumberFilter(i => this[i].Count)),
+        new ColumnFilterOption("Type", () => new OTMFilter<Verse.ThingDef?>(i => this[i].ThingDef, ThingDefFilterOptions))
+    ];
+
+    protected virtual IEnumerable<NTMFilterOption<Verse.ThingDef?>> ThingDefFilterOptions => ThingDefOptions
+        .OrderBy(def => def?.label)
+        .Select<Verse.ThingDef?, NTMFilterOption<Verse.ThingDef?>>(
+            thingDef => thingDef == null ? new() : new(thingDef, thingDef.LabelCap, new Widgets_Legacy.ThingDefIcon(thingDef))
+        );
+
+    protected abstract IEnumerable<Verse.ThingDef?> ThingDefOptions { get; }
 }

@@ -1,25 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Stats.Columns.Cells;
+using Stats.Extensions;
 using Stats.TableRecords;
 using Stats.Tables;
-using Stats.Utils.Extensions;
 
 namespace Stats.Columns.PawnDef;
 
 public sealed class WeaponsColumn<TRecord>(ColumnDef columnDef) :
-    ThingDefSetColumn<TRecord, ThingDefSetCell>(columnDef)
+    ThingDefSetColumn<TRecord, ThingDefSetColumnCell>(columnDef)
         where TRecord :
             IThingDefTableRecord
 {
-    protected override ThingDefSetCell MakeCell(TRecord record)
+    protected override ThingDefSetColumnCell MakeCell(TRecord record)
     {
         Verse.ThingDef thingDef = record.ThingDef;
         HashSet<Verse.ThingDef>? weapons = thingDef.GetPossibleWeapons();
 
         if (weapons != null)
         {
-            return new ThingDefSetCell(weapons);
+            return new ThingDefSetColumnCell(weapons);
         }
 
         return default;

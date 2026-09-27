@@ -1,18 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
-using Stats.Columns.Cells;
 using Stats.TableRecords;
-using Stats.Tables;
 
 namespace Stats.Columns.ShearableDef;
 
-public sealed class WoolAmountColumn<TRecord>(ColumnDef columnDef) :
-    ThingDefCountColumn<TRecord, ThingDefCountCell>(columnDef)
-        where TRecord :
-            IShearableDefTableRecord
+public sealed class WoolAmountColumn<TRecord>(ColumnDef columnDef) : ThingDefCountColumn<TRecord, ThingDefCountColumnCell>(columnDef) where TRecord : IThingDefTableRecord
 {
-    protected override ThingDefCountCell MakeCell(TRecord record)
+    protected override ThingDefCountColumnCell MakeCell(TRecord record)
     {
         CompProperties_Shearable? shearableCompProps = record.ShearableCompProperties;
 
@@ -21,7 +16,7 @@ public sealed class WoolAmountColumn<TRecord>(ColumnDef columnDef) :
             Verse.ThingDef woolDef = shearableCompProps.woolDef;
             decimal woolAmount = shearableCompProps.woolAmount;
 
-            return new ThingDefCountCell(woolDef, woolAmount);
+            return new ThingDefCountColumnCell(woolDef, woolAmount);
         }
 
         return default;

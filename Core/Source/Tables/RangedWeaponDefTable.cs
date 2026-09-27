@@ -1,44 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
+using Stats.Widgets;
 using Verse;
 
 namespace Stats.Tables;
 
-public static class RangedWeaponDefTable
+public sealed class RangedWeaponDefTable : Tab
 {
-    public static MainTabWindowTab Make(TableDef tableDef)
+    public RangedWeaponDefTable(TableDef def) : base(def)
     {
-        List<RangedWeaponDefTableRecord> records = new(250);
-        foreach (Verse.ThingDef thingDef in DefDatabase<Verse.ThingDef>.AllDefsListForReading)
-        {
-            VerbProperties? primaryVerbProperties = thingDef.Verbs.Primary();
+        Widget = new Table<ThingDefTableRecord>(def, Records, [Records.Select(rec => rec.ThingDef)]);
+    }
 
-            if (primaryVerbProperties != null
-                && thingDef is { IsRangedWeapon: true, destroyOnDrop: false }
+    protected override TabBodyWidget Widget { get; }
+
+    static RangedWeaponDefTable()
+    {
+        List<ThingDefTableRecord> records = new(100);
+
+        foreach (ThingDef thingDef in DefDatabase<ThingDef>.AllDefsListForReading)
+        {
+            if (thingDef is { IsRangedWeapon: true, destroyOnDrop: false }
                 && thingDef.GetCompProperties<CompProperties_UniqueWeapon>() == null)
             {
-                HashSet<Verse.ThingDef>? stuffDefs = thingDef.GetAllowedStuffs();
+                HashSet<ThingDef>? stuffDefs = thingDef.GetAllowedStuffs();
 
                 if (stuffDefs?.Count > 0)
                 {
-                    foreach (Verse.ThingDef stuffDef in stuffDefs)
+                    foreach (ThingDef stuffDef in stuffDefs)
                     {
-                        RangedWeaponDefTableRecord record = new(thingDef, primaryVerbProperties, stuffDef);
+                        ThingDefTableRecord record = new(thingDef, stuffDef);
+
                         records.Add(record);
                     }
                 }
                 else
                 {
-                    RangedWeaponDefTableRecord record = new(thingDef, primaryVerbProperties);
+                    ThingDefTableRecord record = new(thingDef);
+
                     records.Add(record);
                 }
             }
         }
 
-        return new TableTab<RangedWeaponDefTableRecord>(tableDef, records);
+        Records = records;
     }
+
+    private static List<ThingDefTableRecord> Records { get; }
 }

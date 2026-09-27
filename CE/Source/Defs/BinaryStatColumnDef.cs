@@ -1,4 +1,6 @@
-﻿namespace Stats.Compat.CE;
+﻿using Stats.Defs;
+
+namespace Stats.Compat.CE;
 
 public class BinaryStatColumnDef : StatColumnDef
 {

@@ -9,11 +9,11 @@ using UnityEngine;
 namespace Stats.Columns.PlantDef;
 
 public sealed class HarvestYieldColumn<TRecord>(ColumnDef columnDef) :
-    ThingDefCountColumn<TRecord, ThingDefCountCell>(columnDef)
+    ThingDefCountColumn<TRecord, ThingDefCountColumnCell>(columnDef)
         where TRecord :
-            IPlantDefTableRecord
+            IThingDefTableRecord
 {
-    protected override ThingDefCountCell MakeCell(TRecord record)
+    protected override ThingDefCountColumnCell MakeCell(TRecord record)
     {
         PlantProperties plantProps = record.PlantProperties;
 
@@ -21,7 +21,7 @@ public sealed class HarvestYieldColumn<TRecord>(ColumnDef columnDef) :
         {
             decimal yield = Mathf.CeilToInt(plantProps.harvestYield);
 
-            return new ThingDefCountCell(plantProps.harvestedThingDef, yield);
+            return new ThingDefCountColumnCell(plantProps.harvestedThingDef, yield);
         }
 
         return default;

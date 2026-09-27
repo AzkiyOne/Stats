@@ -10,9 +10,6 @@ public class IconDef : Def
 #pragma warning restore CS8618
     public float scale = 1f;
     public Color color = Color.white;
-#pragma warning disable CS8618
-    public Texture2D Texture { get; private set; }
-#pragma warning restore CS8618
 
     public override void PostLoad()
     {
@@ -23,4 +20,8 @@ public class IconDef : Def
             Texture = ContentFinder<Texture2D>.Get(path);
         });
     }
+
+#pragma warning disable CS8618
+    public Texture2D Texture { get; private set; }
+#pragma warning restore CS8618
 }

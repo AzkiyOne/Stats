@@ -1,5 +1,4 @@
-﻿using Stats.Utils;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Stats.Widgets_Legacy;
 
@@ -49,6 +48,6 @@ public sealed class Label : Widget
             return;
         }
 
-        rect.Label(Text, Style);
+        rect.DrawLabel(Text, Style);
     }
 }

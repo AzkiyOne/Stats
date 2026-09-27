@@ -1,30 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Stats.Columns.Cells;
-using Stats.Filters;
-using Stats.Tables;
+using Stats.Widgets.Filters;
 
 namespace Stats.Columns;
 
-public abstract class DefColumn<TRecord, TCell>(ColumnDef def) :
-    Column<TRecord, TCell>(def, ColumnType.String)
-        where TCell :
-            struct,
-            IDefCell
+public abstract class DefColumn<TRecord> : Column<TRecord, DefColumnCell>
 {
-    protected abstract IEnumerable<Verse.Def?> GetValueFieldFilterOptions(Table tableWorker);
+    private readonly string _label;
 
-    public override ICollection<CellField> GetCellFields(Table tableWorker)
+    protected DefColumn(ColumnDef def) : base(def)
     {
-        IEnumerable<NTMFilterOption<Verse.Def?>> valueFieldFilterOptions = GetValueFieldFilterOptions(tableWorker)
-            .OrderBy(def => def?.label)
-            .Select<Verse.Def?, NTMFilterOption<Verse.Def?>>(
-                def => def == null ? new() : new(def, def.LabelCap)
-            );
-        Filter valueFieldFilter = new OTMFilter<Verse.Def?>((int row) => this[row].Value, valueFieldFilterOptions);
-        int CompareByDefLabel(int row1, int row2) => Comparer<string?>.Default.Compare(this[row1].Text, this[row2].Text);
-        CellField valueField = new(null, valueFieldFilter, CompareByDefLabel);
-
-        return [valueField];
+        _label = def.LabelCap;
     }
+
+    public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Left;
+
+    public override ICollection<ColumnSortOption> SortOptions => [
+        new ColumnSortOption(_label, (i1, i2) => Comparer<string?>.Default.Compare(this[i1].Text, this[i2].Text))
+    ];
+
+    public override ICollection<ColumnFilterOption> FilterOptions => [
+        new ColumnFilterOption(_label, () => new OTMFilter<Verse.Def?>(i => this[i].Value, DefFilterOptions))
+    ];
+
+    protected virtual IEnumerable<NTMFilterOption<Verse.Def?>> DefFilterOptions => DefOptions
+        .OrderBy(def => def?.label)
+        .Select<Verse.Def?, NTMFilterOption<Verse.Def?>>(def => def == null ? new() : new(def, def.LabelCap));
+
+    protected abstract IEnumerable<Verse.Def?> DefOptions { get; }
 }

@@ -1,14 +1,18 @@
-﻿using Stats.TableRecords;
+﻿using System.Collections.Generic;
+using Stats.TableRecords;
 
 namespace Stats.Columns.PlantDef;
 
-public sealed class IsBlightableColumn<TRecord>(ColumnDef columnDef) :
-    BooleanColumn<TRecord>(columnDef)
-        where TRecord :
-            IPlantDefTableRecord
+public sealed class IsBlightableColumn<TRecord> : BooleanColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override bool GetValue(TRecord record)
+    public IsBlightableColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
-        return record.PlantProperties.Blightable;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override bool GetValueFromRecord(TRecord record)
+    {
+        return record.ThingDef.plant?.Blightable ?? false;
     }
 }

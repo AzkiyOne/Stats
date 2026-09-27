@@ -1,16 +1,16 @@
 ﻿using RimWorld;
 using Stats.Columns.Cells;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
 
 namespace Stats.Columns.EggLayerDef;
 
 public sealed class EggLayingIntervalColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
+    NumberColumn<TRecord, NumberColumnCell>(columnDef)
         where TRecord :
             IEggLayerDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    protected override NumberColumnCell MakeCell(TRecord record)
     {
         CompProperties_EggLayer? eggLayerCompProps = record.EggLayerCompProperties;
 
@@ -18,7 +18,7 @@ public sealed class EggLayingIntervalColumn<TRecord>(ColumnDef columnDef) :
         {
             float eggLayingInterval = eggLayerCompProps.eggLayIntervalDays;
 
-            return new NumberCell(eggLayingInterval.ToDecimal(1), "0.0 d");
+            return new NumberColumnCell(eggLayingInterval.ToDecimal(1), "0.0 d");
         }
 
         return default;

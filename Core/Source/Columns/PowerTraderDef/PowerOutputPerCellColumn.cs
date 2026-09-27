@@ -1,28 +1,31 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
+using Stats.Extensions;
 using Stats.TableRecords;
 
 namespace Stats.Columns.PowerTraderDef;
 
-public sealed class PowerOutputPerCellColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IPowerTraderDefTableRecord
+public sealed class PowerOutputPerCellColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public PowerOutputPerCellColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0 W/c")
     {
-        CompProperties_Power? powerCompProps = record.PowerCompProperties;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        CompProperties_Power? powerCompProps = record.ThingDef.GetCompProperties<CompProperties_Power>();
 
         if (powerCompProps != null)
         {
-            Verse.ThingDef thingDef = record.ThingDef;
-            float area = thingDef.size.Area;
+            float area = record.ThingDef.size.Area;
             float powerOutput = powerCompProps.PowerConsumption * -1f;
             float powerOutputPerCell = powerOutput / area;
 
-            return new NumberCell(powerOutputPerCell, "0 W/c");
+            return powerOutputPerCell.ToDecimal();
         }
 
-        return default;
+        return 0m;
     }
 }

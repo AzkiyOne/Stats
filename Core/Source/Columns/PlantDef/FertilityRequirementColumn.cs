@@ -1,26 +1,27 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
 
 namespace Stats.Columns.PlantDef;
 
-public sealed class FertilityRequirementColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IPlantDefTableRecord
+public sealed class FertilityRequirementColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public FertilityRequirementColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0\\%")
     {
-        PlantProperties plantProps = record.PlantProperties;
+    }
 
-        if (plantProps.fertilityMin > 0f)
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        PlantProperties? plantProps = record.ThingDef.plant;
+
+        if (plantProps?.fertilityMin > 0f)
         {
-            decimal cellValue = (100F * plantProps.fertilityMin).ToDecimal(1);
-
-            return new NumberCell(cellValue, "0\\%");
+            return (100F * plantProps.fertilityMin).ToDecimal(1);
         }
 
-        return default;
+        return 0m;
     }
 }

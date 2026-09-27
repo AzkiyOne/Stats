@@ -1,25 +1,27 @@
-﻿using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using Stats.Extensions;
 using Stats.TableRecords;
 using Verse;
 
 namespace Stats.Columns.RangedWeaponDef;
 
-public sealed class BurstShotCountColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IRangedWeaponDefTableRecord
+public sealed class BurstShotCountColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public BurstShotCountColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
-        VerbProperties verbProps = record.PrimaryVerbProperties;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        VerbProperties? verbProps = record.ThingDef.GetGunPrimaryVerbProps();
 
         if (verbProps is { Ranged: true, showBurstShotStats: true })
         {
-            decimal burstShotCount = verbProps.burstShotCount;
-
-            return new NumberCell(burstShotCount);
+            return verbProps.burstShotCount;
         }
 
-        return default;
+        return 0m;
     }
 }

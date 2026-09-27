@@ -1,34 +1,36 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Stats.Columns.Cells;
-using Stats.Filters;
-using Stats.Tables;
-using Stats.Widgets_Legacy;
+using Stats.Widgets.Filters;
 
 namespace Stats.Columns;
 
-public abstract class ThingDefSetColumn<TRecord, TCell>(ColumnDef def) :
-    Column<TRecord, TCell>(def, ColumnType.String)
-        where TCell :
-            struct,
-            IThingDefSetCell
+public abstract class ThingDefSetColumn<TRecord> : Column<TRecord, ThingDefSetColumnCell>
 {
-    protected abstract IEnumerable<Verse.ThingDef?> GetValueFieldFilterOptions(Table tableWorker);
-
     private static readonly HashSet<Verse.ThingDef> _emptyThingDefHashSet = [];
 
-    public override ICollection<CellField> GetCellFields(Table tableWorker)
-    {
-        IEnumerable<NTMFilterOption<Verse.ThingDef?>> valueFieldFilterOptions = GetValueFieldFilterOptions(tableWorker)
-            .OrderBy(def => def?.label)
-            .Select<Verse.ThingDef?, NTMFilterOption<Verse.ThingDef?>>(
-                def => def == null ? new() : new(def, def.LabelCap, new ThingDefIcon(def))
-            );
-        Filter valueFieldFilter = new MTMFilter<Verse.ThingDef?>((int row) => this[row].Value ?? _emptyThingDefHashSet, valueFieldFilterOptions);
-        // TODO: Figure out how to efficiently compare cells so that cells with equal values will be grouped together.
-        int Compare(int row1, int row2) => row1.CompareTo(row2);
-        CellField valueField = new(null, valueFieldFilter, Compare);
+    private readonly string _label;
 
-        return [valueField];
+    protected ThingDefSetColumn(ColumnDef def) : base(def)
+    {
+        _label = def.LabelCap;
     }
+
+    public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Left;
+
+    public override ICollection<ColumnSortOption> SortOptions => [
+        // TODO: Figure out how to efficiently compare cells so that cells with equal values will be grouped together.
+        //new ColumnSortOption(_label, (i1, i2) => i1.CompareTo(i2))
+    ];
+
+    public override ICollection<ColumnFilterOption> FilterOptions => [
+        new ColumnFilterOption(_label, () => new MTMFilter<Verse.ThingDef?>(row => this[row].Value ?? _emptyThingDefHashSet, ThingDefFilterOptions))
+    ];
+
+    protected virtual IEnumerable<NTMFilterOption<Verse.ThingDef?>> ThingDefFilterOptions => ThingDefOptions
+        .OrderBy(def => def?.label)
+        .Select<Verse.ThingDef?, NTMFilterOption<Verse.ThingDef?>>(
+            thingDef => thingDef == null ? new() : new(thingDef, thingDef.LabelCap, new Widgets_Legacy.ThingDefIcon(thingDef))
+        );
+
+    protected abstract IEnumerable<Verse.ThingDef?> ThingDefOptions { get; }
 }

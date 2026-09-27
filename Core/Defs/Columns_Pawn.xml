@@ -7,9 +7,6 @@
         <title><Slaughter/><Meat/></title>
         <stat>MeatAmount</stat>
         <columnClass>Stats.Columns.PawnDef.MeatAmountColumn`1</columnClass>
-        <tags>
-            <li>Thing_HasMeat</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -17,9 +14,6 @@
         <title><Slaughter/><Leather/></title>
         <stat>LeatherAmount</stat>
         <columnClass>Stats.Columns.PawnDef.LeatherAmountColumn`1</columnClass>
-        <tags>
-            <li>Thing_HasSkin</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -27,9 +21,6 @@
         <title><Resistance/><Toxic/></title>
         <stat>ToxicResistance</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPawn</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -37,9 +28,6 @@
         <title><Resistance/><ToxicEnvironment/></title>
         <stat>ToxicEnvironmentResistance</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPawn</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -47,9 +35,6 @@
         <title><Nutrition/><Decrease/></title>
         <stat>MaxNutrition</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_ConsumesFood</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -57,9 +42,6 @@
         <title><MoveSpeed/></title>
         <stat>MoveSpeed</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPawn</li>
-        </tags>
     </Stats.ColumnDef>
     
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -67,9 +49,6 @@
         <title><Temp_Cold/></title>
         <stat>ComfyTemperatureMin</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPawn</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -77,9 +56,6 @@
         <title><Temp_Hot/></title>
         <stat>ComfyTemperatureMax</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPawn</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -88,9 +64,6 @@
         <descriptionKey>Stat_Race_LifeExpectancy_Desc</descriptionKey>
         <title><Time/>Life</title>
         <columnClass>Stats.Columns.PawnDef.LifeExpectancyColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPawn</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -98,9 +71,6 @@
         <title><Accuracy/><Shoot/></title>
         <stat>ShootingAccuracyPawn</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPawn</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -108,9 +78,6 @@
         <title><Time/><DirectHit/></title>
         <stat>AimingDelayFactor</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPawn</li>
-        </tags>
     </Stats.ColumnDef>
     
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -118,18 +85,12 @@
         <stat>MeleeDodgeChance</stat>
         <title>Dodge %</title>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPawn</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Pawn_PsychicSensitivity</defName>
         <stat>PsychicSensitivity</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPawn</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -137,9 +98,6 @@
         <label>caravan carrying capacity</label>
         <title><Caravan/>kg</title>
         <columnClass>Stats.Columns.PawnDef.CaravanCarryingCapacityColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPawn</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -148,9 +106,6 @@
         <description>Possible weapons that this creature can spawn with.</description>
         <title><RangedWeapon/></title>
         <columnClass>Stats.Columns.PawnDef.WeaponsColumn`1</columnClass>
-        <tags>
-            <li>Thing_CanUseWeapons</li>
-        </tags>
     </Stats.ColumnDef>
 
 </Defs>

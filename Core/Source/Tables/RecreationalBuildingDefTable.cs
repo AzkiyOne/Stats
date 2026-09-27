@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
 using RimWorld;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
+using Stats.Widgets;
 using Verse;
 
 namespace Stats.Tables;
 
-public static class RecreationalBuildingDefTable
+public sealed class RecreationalBuildingDefTable : Tab
 {
-    public static MainTabWindowTab Make(TableDef tableDef)
+    public RecreationalBuildingDefTable(TableDef def) : base(def)
     {
         List<BuildingDefTableRecord> records = new(250);
+
         foreach (Verse.ThingDef thingDef in DefDatabase<Verse.ThingDef>.AllDefsListForReading)
         {
             BuildingProperties? buildingProperties = thingDef.building;
@@ -37,6 +39,8 @@ public static class RecreationalBuildingDefTable
             }
         }
 
-        return new TableTab<BuildingDefTableRecord>(tableDef, records);
+        Widget = new Table<BuildingDefTableRecord>(def, records);
     }
+
+    protected override TabBodyWidget Widget { get; }
 }

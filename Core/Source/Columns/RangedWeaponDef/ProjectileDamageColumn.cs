@@ -1,27 +1,31 @@
-﻿using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using Stats.Extensions;
 using Stats.TableRecords;
 using Verse;
 
 namespace Stats.Columns.RangedWeaponDef;
 
-public sealed class ProjectileDamageColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IRangedWeaponDefTableRecord
+public sealed class ProjectileDamageColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public ProjectileDamageColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
-        VerbProperties verbProperties = record.PrimaryVerbProperties;
-        ProjectileProperties? defaultProjProps = verbProperties.defaultProjectile?.projectile;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        VerbProperties? verbProperties = record.ThingDef.GetGunPrimaryVerbProps();
+        ProjectileProperties? defaultProjProps = verbProperties?.defaultProjectile?.projectile;
 
         if (defaultProjProps?.damageDef?.harmsHealth == true)
         {
             Verse.ThingDef thingDef = record.ThingDef;
             decimal projectileDamage = defaultProjProps.GetDamageAmount(thingDef, null);
 
-            return new NumberCell(projectileDamage);
+            return projectileDamage;
         }
 
-        return default;
+        return 0m;
     }
 }

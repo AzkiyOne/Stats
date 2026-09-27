@@ -8,16 +8,16 @@ using Stats.Tables;
 namespace Stats.Columns.ApparelDef;
 
 public sealed class LayersColumn<TRecord>(ColumnDef columnDef) :
-    DefSetColumn<TRecord, DefSetCell>(columnDef)
+    DefSetColumn<TRecord, DefSetColumnCell>(columnDef)
         where TRecord :
             IApparelDefTableRecord
 {
-    protected override DefSetCell MakeCell(TRecord record)
+    protected override DefSetColumnCell MakeCell(TRecord record)
     {
         ApparelProperties apparelProps = record.ApparelProperties;
         List<Verse.ApparelLayerDef> layers = apparelProps.layers;
 
-        return new DefSetCell(layers);
+        return new DefSetColumnCell(layers);
     }
 
     protected override IEnumerable<Verse.Def?> GetValueFieldFilterOptions(Table tableWorker)

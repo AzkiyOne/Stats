@@ -8,18 +8,18 @@ using Verse;
 namespace Stats.Columns.AnimalDef;
 
 public sealed class TrainabilityColumn<TRecord>(ColumnDef columnDef) :
-    DefColumn<TRecord, DefCell>(columnDef)
+    DefColumn<TRecord, DefColumnCell>(columnDef)
         where TRecord :
             IPawnDefTableRecord
 {
-    protected override DefCell MakeCell(TRecord record)
+    protected override DefColumnCell MakeCell(TRecord record)
     {
         RaceProperties raceProperties = record.RaceProperties;
         TrainabilityDef? trainability = raceProperties.trainability;
 
         if (trainability != null)
         {
-            return new DefCell(trainability);
+            return new DefColumnCell(trainability);
         }
 
         return default;

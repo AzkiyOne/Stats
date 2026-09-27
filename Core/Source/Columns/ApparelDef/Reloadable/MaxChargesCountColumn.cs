@@ -5,11 +5,11 @@ using Stats.TableRecords;
 namespace Stats.Columns.ApparelDef.Reloadable;
 
 public sealed class MaxChargesCountColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
+    NumberColumn<TRecord, NumberColumnCell>(columnDef)
         where TRecord :
             IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    protected override NumberColumnCell MakeCell(TRecord record)
     {
         Verse.ThingDef thingDef = record.ThingDef;
         CompProperties_ApparelReloadable? reloadableCompProperties = thingDef.GetCompProperties<CompProperties_ApparelReloadable>();
@@ -18,7 +18,7 @@ public sealed class MaxChargesCountColumn<TRecord>(ColumnDef columnDef) :
         {
             decimal maxCharges = reloadableCompProperties.maxCharges;
 
-            return new NumberCell(maxCharges);
+            return new NumberColumnCell(maxCharges);
         }
 
         return default;

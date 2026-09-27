@@ -8,11 +8,11 @@ using Stats.Tables;
 namespace Stats.Columns.RefuelableDef;
 
 public sealed class FuelCapacityColumn<TRecord>(ColumnDef columnDef) :
-    ThingDefCountColumn<TRecord, ThingDefCountCell>(columnDef)
+    ThingDefCountColumn<TRecord, ThingDefCountColumnCell>(columnDef)
         where TRecord :
             IRefuelableDefTableRecord
 {
-    protected override ThingDefCountCell MakeCell(TRecord record)
+    protected override ThingDefCountColumnCell MakeCell(TRecord record)
     {
         CompProperties_Refuelable? refuelableCompProps = record.RefuelableCompProperties;
 
@@ -24,7 +24,7 @@ public sealed class FuelCapacityColumn<TRecord>(ColumnDef columnDef) :
             {
                 float fuelCapacity = refuelableCompProps.fuelCapacity;
 
-                return new ThingDefCountCell(fuelType, fuelCapacity);
+                return new ThingDefCountColumnCell(fuelType, fuelCapacity);
             }
         }
 

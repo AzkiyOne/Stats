@@ -1,6 +1,6 @@
 ﻿using RimWorld;
 
-namespace Stats;
+namespace Stats.Defs;
 
 public class StatColumnDef : ColumnDef
 {

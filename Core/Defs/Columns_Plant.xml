@@ -8,9 +8,6 @@
         <descriptionKey>Stat_Thing_Plant_MinGrowingSkillToSow_Desc</descriptionKey>
         <title>LVL<PlantGrow/></title>
         <columnClass>Stats.Columns.PlantDef.MinGrowingSkillToSowColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -19,9 +16,6 @@
         <description>Estimated actual plant growing time.</description>
         <title><Time/><PlantGrow/></title>
         <columnClass>Stats.Columns.PlantDef.GrowingTimeActualColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -30,9 +24,6 @@
         <descriptionKey>Stat_Thing_Plant_FertilityRequirement_Desc</descriptionKey>
         <title>Fert. req.</title>
         <columnClass>Stats.Columns.PlantDef.FertilityRequirementColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -41,9 +32,6 @@
         <descriptionKey>Stat_Thing_Plant_FertilitySensitivity_Desc</descriptionKey>
         <title>Fert. sens.</title>
         <columnClass>Stats.Columns.PlantDef.FertilitySensitivityColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -52,9 +40,6 @@
         <descriptionKey>Stat_Thing_Plant_LightRequirement_Desc</descriptionKey>
         <title><Light/>Req.</title>
         <columnClass>Stats.Columns.PlantDef.LightRequirementColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -63,9 +48,6 @@
         <descriptionKey>Stat_Thing_Plant_LifeSpan_Desc</descriptionKey>
         <title><Time/>Life</title>
         <columnClass>Stats.Columns.PlantDef.LifeSpanColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -74,9 +56,6 @@
         <descriptionKey>Stat_Thing_Plant_HarvestYield_Desc</descriptionKey>
         <title><PlantHarvest/><PlantHarvestProduct/></title>
         <columnClass>Stats.Columns.PlantDef.HarvestYieldColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -84,9 +63,6 @@
         <label>product per day</label>
         <title><PlantHarvest/><PlantHarvestProduct/><Per/>D</title>
         <columnClass>Stats.Columns.PlantDef.ProductPerDayColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -94,9 +70,6 @@
         <label>Can be cultivated</label>
         <title><PlantCanBeCultivated/></title>
         <columnClass>Stats.Columns.PlantDef.IsSowableColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -104,9 +77,6 @@
         <label>Can be grown in hydroponics</label>
         <title><Hydroponics/></title>
         <columnClass>Stats.Columns.PlantDef.CanBeGrownInHydroponicsColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -114,9 +84,6 @@
         <label>Can be infected with blight</label>
         <title><Blight/></title>
         <columnClass>Stats.Columns.PlantDef.IsBlightableColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -124,9 +91,6 @@
         <label>Is considered a tree</label>
         <title><Tree/></title>
         <columnClass>Stats.Columns.PlantDef.IsTreeColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -134,9 +98,6 @@
         <label>Can be planted under roof</label>
         <title><UnderRoof/></title>
         <columnClass>Stats.Columns.PlantDef.CanBePlantedUnderRoofColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -144,9 +105,6 @@
         <label>Is plant destroyed on harvest</label>
         <title><PlantHarvestDestructive/></title>
         <columnClass>Stats.Columns.PlantDef.IsDestroyedOnHarvestColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -154,9 +112,6 @@
         <label>Nutrition per harvest</label>
         <title><PlantHarvest/><Nutrition/></title>
         <columnClass>Stats.Columns.PlantDef.NutritionPerHarvestColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -164,9 +119,6 @@
         <label>Nutrition per harvest per day</label>
         <title><PlantHarvest/><Nutrition/><Per/>D</title>
         <columnClass>Stats.Columns.PlantDef.NutritionPerHarvestPerDayColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -175,9 +127,6 @@
         <title><Nutrition/><PlantRaw/></title>
         <stat>Nutrition</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -185,9 +134,6 @@
         <label>Raw nutrition per day</label>
         <title><Nutrition/><PlantRaw/><Per/>D</title>
         <columnClass>Stats.Columns.PlantDef.RawNutritionPerDayColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPlant</li>
-        </tags>
     </Stats.ColumnDef>
 
 </Defs>

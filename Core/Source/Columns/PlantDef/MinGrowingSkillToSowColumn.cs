@@ -1,19 +1,26 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
 using Stats.TableRecords;
 
 namespace Stats.Columns.PlantDef;
 
-public sealed class MinGrowingSkillToSowColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IPlantDefTableRecord
+public sealed class MinGrowingSkillToSowColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public MinGrowingSkillToSowColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
-        PlantProperties plantProperties = record.PlantProperties;
-        decimal sowMinSkill = plantProperties.sowMinSkill;
+    }
 
-        return new NumberCell(sowMinSkill);
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        PlantProperties? plantProperties = record.ThingDef.plant;
+
+        if (plantProperties != null)
+        {
+            return plantProperties.sowMinSkill;
+        }
+
+        return 0m;
     }
 }

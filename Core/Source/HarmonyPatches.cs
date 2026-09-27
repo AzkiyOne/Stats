@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using Stats.Utils;
 using Verse;
 
 namespace Stats;

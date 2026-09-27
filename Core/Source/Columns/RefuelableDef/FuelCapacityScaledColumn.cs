@@ -18,8 +18,7 @@ namespace Stats.Columns.RefuelableDef;
 // - Override RefreshCells and set the flag to false at the end.
 //
 // Since we'll probably be subscribing to some global event, we'll need to have a Dispose method on base column worker class,
-// so we can unsubscribe from the event when/if the column will be removed from a table. Actually, check if we have to, since C#'s
-// event are built-in there is a chance that runtime handles these things itself.
+// so we can unsubscribe from the event when/if the column will be removed from a table.
 public sealed class FuelCapacityScaledColumn<TRecord>(ColumnDef columnDef) :
     ThingDefCountColumn<TRecord, FuelCapacityScaledColumn<TRecord>.TableCell>(columnDef)
         where TRecord :
@@ -78,17 +77,17 @@ public sealed class FuelCapacityScaledColumn<TRecord>(ColumnDef columnDef) :
         public Verse.ThingDef? ThingDef => _innerCell.ThingDef;
         public string ThingDefLabel => _innerCell.ThingDefLabel;
         public decimal Count => _innerCell.Count;
-        public float Width => _innerCell.Width;
+        public float MinWidth => _innerCell.MinWidth;
         public bool IsRefreshable => RefuelableCompProps != null;
 
         public readonly CompProperties_Refuelable? RefuelableCompProps;
 
-        private readonly ThingDefCountCell _innerCell;
+        private readonly ThingDefCountColumnCell _innerCell;
 
         public TableCell(Verse.ThingDef fuelType, decimal fuelCapacity, CompProperties_Refuelable refuelableCompProps)
         {
             RefuelableCompProps = refuelableCompProps;
-            _innerCell = new ThingDefCountCell(fuelType, fuelCapacity);
+            _innerCell = new ThingDefCountColumnCell(fuelType, fuelCapacity);
         }
 
         public void Draw(Rect rect)

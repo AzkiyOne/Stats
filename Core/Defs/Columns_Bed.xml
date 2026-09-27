@@ -7,9 +7,6 @@
         <title>Rest *%</title>
         <stat>BedRestEffectiveness</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsBed</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -17,9 +14,6 @@
         <label>for small animals</label>
         <title><Animal_Small/></title>
         <columnClass>Stats.Columns.BedDef.FitsSmallAnimalsColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsBed</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -27,9 +21,6 @@
         <label>for large animals</label>
         <title><Animal_Large/></title>
         <columnClass>Stats.Columns.BedDef.FitsLargeAnimalsColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsBed</li>
-        </tags>
     </Stats.ColumnDef>
 
 </Defs>

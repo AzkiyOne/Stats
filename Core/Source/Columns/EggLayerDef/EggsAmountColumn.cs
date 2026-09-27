@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
-using Stats.Columns.Cells;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Tables;
-using Stats.Utils.Extensions;
 
 namespace Stats.Columns.EggLayerDef;
 
-public sealed class EggsAmountColumn<TRecord>(ColumnDef columnDef) :
-    ThingDefCountColumn<TRecord, ThingDefCountCell>(columnDef)
-        where TRecord :
-            IEggLayerDefTableRecord
+public sealed class EggsAmountColumn<TRecord> : ThingDefCountColumn<TRecord> where TRecord : IEggLayerDefTableRecord
 {
-    protected override ThingDefCountCell MakeCell(TRecord record)
+    public EggsAmountColumn(ColumnDef def) : base(def)
+    {
+    }
+
+    protected override ThingDefCountColumnCell MakeCell(TRecord record)
     {
         CompProperties_EggLayer? eggLayerCompProps = record.EggLayerCompProperties;
 
@@ -22,7 +21,7 @@ public sealed class EggsAmountColumn<TRecord>(ColumnDef columnDef) :
             Verse.ThingDef eggDef = eggLayerCompProps.GetAnyEggDef();
             float eggAmount = eggLayerCompProps.eggCountRange.Average;
 
-            return new ThingDefCountCell(eggDef, eggAmount);
+            return new ThingDefCountColumnCell(eggDef, eggAmount);
         }
 
         return default;

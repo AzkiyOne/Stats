@@ -1,26 +1,30 @@
-﻿using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using Stats.Extensions;
 using Stats.TableRecords;
 using Verse;
 
 namespace Stats.Columns.RangedWeaponDef;
 
-public sealed class ProjectileBDFPassableColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IRangedWeaponDefTableRecord
+public sealed class ProjectileBDFPassableColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public ProjectileBDFPassableColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0\\%")
     {
-        VerbProperties verbProperties = record.PrimaryVerbProperties;
-        DamageDef? defaultProjDamageDef = verbProperties.defaultProjectile?.projectile?.damageDef;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        VerbProperties? verbProperties = record.ThingDef.GetGunPrimaryVerbProps();
+        DamageDef? defaultProjDamageDef = verbProperties?.defaultProjectile?.projectile?.damageDef;
 
         if (defaultProjDamageDef != null)
         {
             float projectileBDFPassable = defaultProjDamageDef.buildingDamageFactorPassable * 100f;
 
-            return new NumberCell(projectileBDFPassable, "0\\%");
+            return projectileBDFPassable.ToDecimal();
         }
 
-        return default;
+        return 0m;
     }
 }

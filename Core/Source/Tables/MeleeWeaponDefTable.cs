@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
-using UnityEngine;
+using Stats.Widgets;
 using Verse;
 
 namespace Stats.Tables;
 
-public static class MeleeWeaponDefTable
+public sealed class MeleeWeaponDefTable : Tab
 {
-    public static MainTabWindowTab Make(TableDef tableDef)
+    public MeleeWeaponDefTable(TableDef def) : base(def)
     {
         List<ThingDefTableRecord> records = new(250);
+
         foreach (Verse.ThingDef thingDef in DefDatabase<Verse.ThingDef>.AllDefsListForReading)
         {
             if (thingDef is { IsMeleeWeapon: true, destroyOnDrop: false })
@@ -33,6 +34,8 @@ public static class MeleeWeaponDefTable
             }
         }
 
-        return new TableTab<ThingDefTableRecord>(tableDef, records);
+        Widget = new Table<ThingDefTableRecord>(def, records);
     }
+
+    protected override TabBodyWidget Widget { get; }
 }

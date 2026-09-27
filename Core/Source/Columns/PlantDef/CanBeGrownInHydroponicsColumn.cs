@@ -1,14 +1,18 @@
-﻿using Stats.TableRecords;
+﻿using System.Collections.Generic;
+using Stats.TableRecords;
 
 namespace Stats.Columns.PlantDef;
 
-public sealed class CanBeGrownInHydroponicsColumn<TRecord>(ColumnDef columnDef) :
-    BooleanColumn<TRecord>(columnDef)
-        where TRecord :
-            IPlantDefTableRecord
+public sealed class CanBeGrownInHydroponicsColumn<TRecord> : BooleanColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override bool GetValue(TRecord record)
+    public CanBeGrownInHydroponicsColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
-        return record.PlantProperties.sowTags.Contains("Hydroponic");
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override bool GetValueFromRecord(TRecord record)
+    {
+        return record.ThingDef.plant?.sowTags.Contains("Hydroponic") ?? false;
     }
 }

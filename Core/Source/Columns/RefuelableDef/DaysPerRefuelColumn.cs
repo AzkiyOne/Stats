@@ -1,18 +1,21 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
 
 namespace Stats.Columns.RefuelableDef;
 
-public sealed class DaysPerRefuelColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IRefuelableDefTableRecord
+public sealed class DaysPerRefuelColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public DaysPerRefuelColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0.0 d")
     {
-        CompProperties_Refuelable? refuelableCompProps = record.RefuelableCompProperties;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        CompProperties_Refuelable? refuelableCompProps = record.ThingDef.GetCompProperties<CompProperties_Refuelable>();
 
         if (refuelableCompProps is { fuelConsumptionRate: not 0f })
         {
@@ -20,9 +23,9 @@ public sealed class DaysPerRefuelColumn<TRecord>(ColumnDef columnDef) :
             float fuelConsumptionRate = refuelableCompProps.fuelConsumptionRate;
             float daysPerRefuel = fuelCapacity / fuelConsumptionRate;
 
-            return new NumberCell(daysPerRefuel.ToDecimal(1), "0.0 d");
+            return daysPerRefuel.ToDecimal(1);
         }
 
-        return default;
+        return 0m;
     }
 }

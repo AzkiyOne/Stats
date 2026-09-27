@@ -1,16 +1,16 @@
 ﻿using RimWorld;
 using Stats.Columns.Cells;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
 
 namespace Stats.Columns.AnimalDef;
 
 public sealed class LeatherPerDayColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
+    NumberColumn<TRecord, NumberColumnCell>(columnDef)
         where TRecord :
             IPawnDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    protected override NumberColumnCell MakeCell(TRecord record)
     {
         Verse.ThingDef thingDef = record.ThingDef;
         float growthTime = AnimalProductionUtility.DaysToAdulthood(thingDef);
@@ -20,7 +20,7 @@ public sealed class LeatherPerDayColumn<TRecord>(ColumnDef columnDef) :
             float leatherAmount = thingDef.GetStatValuePerceived(StatDefOf.LeatherAmount);
             float leatherPerDay = leatherAmount / growthTime;
 
-            return new NumberCell(leatherPerDay.ToDecimal(1), "0.0/d");
+            return new NumberColumnCell(leatherPerDay.ToDecimal(1), "0.0/d");
         }
 
         return default;

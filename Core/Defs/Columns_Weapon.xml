@@ -7,9 +7,6 @@
         <title>DPS</title>
         <stat>MeleeWeapon_AverageDPS</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsMeleeWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -17,9 +14,6 @@
         <title>AP</title>
         <stat>MeleeWeapon_AverageArmorPenetration</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsMeleeWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -28,9 +22,6 @@
         <descriptionKey>Stat_Thing_Damage_Desc</descriptionKey>
         <title><Projectile/><RangedWeaponDamage/></title>
         <columnClass>Stats.Columns.RangedWeaponDef.ProjectileDamageColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRangedWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -39,9 +30,6 @@
         <descriptionKey>StoppingPowerExplanation</descriptionKey>
         <title><Projectile/><StoppingPower/></title>
         <columnClass>Stats.Columns.RangedWeaponDef.ProjectileStoppingPowerColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRangedWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -50,9 +38,6 @@
         <title><Projectile/>AP</title>
         <descriptionKey>ArmorPenetrationExplanation</descriptionKey>
         <columnClass>Stats.Columns.RangedWeaponDef.ProjectileArmorPenetrationColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRangedWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -61,9 +46,6 @@
         <descriptionKey>Stat_Thing_Weapon_BurstShotFireRate_Desc</descriptionKey>
         <title>RPM</title>
         <columnClass>Stats.Columns.RangedWeaponDef.RPMColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRangedWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -72,9 +54,6 @@
         <descriptionKey>Stat_Thing_Weapon_BurstShotCount_Desc</descriptionKey>
         <title><Shoot/><Projectile/></title>
         <columnClass>Stats.Columns.RangedWeaponDef.BurstShotCountColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRangedWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -82,9 +61,6 @@
         <labelKey>Range</labelKey>
         <descriptionKey>Stat_Thing_Weapon_Range_Desc</descriptionKey>
         <columnClass>Stats.Columns.RangedWeaponDef.RangeColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRangedWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -92,9 +68,6 @@
         <title><Accuracy/>3</title>
         <stat>AccuracyTouch</stat>
         <columnClass>Stats.Columns.RangedWeaponDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRangedWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -102,9 +75,6 @@
         <title><Accuracy/>12</title>
         <stat>AccuracyShort</stat>
         <columnClass>Stats.Columns.RangedWeaponDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRangedWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -112,9 +82,6 @@
         <title><Accuracy/>25</title>
         <stat>AccuracyMedium</stat>
         <columnClass>Stats.Columns.RangedWeaponDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRangedWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -122,9 +89,6 @@
         <title><Accuracy/>40</title>
         <stat>AccuracyLong</stat>
         <columnClass>Stats.Columns.RangedWeaponDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRangedWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -132,9 +96,6 @@
         <title><Shoot/><TimeInterval/></title>
         <stat>RangedWeapon_Cooldown</stat>
         <columnClass>Stats.Columns.RangedWeaponDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRangedWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -143,9 +104,6 @@
         <descriptionKey>Stat_Thing_Weapon_RangedWarmupTime_Desc</descriptionKey>
         <title><Time/><DirectHit/></title>
         <columnClass>Stats.Columns.RangedWeaponDef.AimingTimeColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRangedWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -154,9 +112,6 @@
         <descriptionKey>BuildingDamageFactorPassableExplanation</descriptionKey>
         <title><Projectile/><RangedWeaponDamage/><BuildingPassable/></title>
         <columnClass>Stats.Columns.RangedWeaponDef.ProjectileBDFPassableColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRangedWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -165,9 +120,6 @@
         <descriptionKey>BuildingDamageFactorImpassableExplanation</descriptionKey>
         <title><Projectile/><RangedWeaponDamage/><BuildingImpassable/></title>
         <columnClass>Stats.Columns.RangedWeaponDef.ProjectileBDFImpassableColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRangedWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -176,9 +128,6 @@
         <descriptionKey>Stat_Thing_Weapon_DirectHitChance_Desc</descriptionKey>
         <title>%<DirectHit/></title>
         <columnClass>Stats.Columns.RangedWeaponDef.DirectHitChanceColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRangedWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -187,9 +136,6 @@
         <title>MR</title>
         <descriptionKey>Stat_Thing_Weapon_MissRadius_Desc</descriptionKey>
         <columnClass>Stats.Columns.RangedWeaponDef.MissRadiusColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRangedWeapon</li>
-        </tags>
     </Stats.ColumnDef>
 
 </Defs>

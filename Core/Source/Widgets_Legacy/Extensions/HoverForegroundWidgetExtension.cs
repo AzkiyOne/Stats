@@ -1,5 +1,4 @@
-﻿using Stats.Utils;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 namespace Stats.Widgets_Legacy.Extensions;

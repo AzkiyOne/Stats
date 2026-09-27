@@ -15,16 +15,16 @@ namespace Stats.Columns.ApparelDef;
 // groups of body parts. The resulting list is of course significantly smaller
 // and can be safely displayed in a single row/column.
 public sealed class BodyPartGroupsColumn<TRecord>(ColumnDef columnDef) :
-    DefSetColumn<TRecord, DefSetCell>(columnDef)
+    DefSetColumn<TRecord, DefSetColumnCell>(columnDef)
         where TRecord :
             IApparelDefTableRecord
 {
-    protected override DefSetCell MakeCell(TRecord record)
+    protected override DefSetColumnCell MakeCell(TRecord record)
     {
         ApparelProperties apparelProps = record.ApparelProperties;
         List<Verse.BodyPartGroupDef> bodyPartGroups = apparelProps.bodyPartGroups;
 
-        return new DefSetCell(bodyPartGroups);
+        return new DefSetColumnCell(bodyPartGroups);
     }
 
     protected override IEnumerable<Verse.Def?> GetValueFieldFilterOptions(Table tableWorker)

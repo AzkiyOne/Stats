@@ -7,9 +7,6 @@
         <label>Meat nutrition per day during growth</label>
         <title><Nutrition/><Meat/><Per/>D</title>
         <columnClass>Stats.Columns.AnimalDef.MeatNutritionPerDayColumn`1</columnClass>
-        <tags>
-            <li>Thing_HasMeat</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -17,9 +14,6 @@
         <label>Leather per day</label>
         <title><Leather/><Per/>D</title>
         <columnClass>Stats.Columns.AnimalDef.LeatherPerDayColumn`1</columnClass>
-        <tags>
-            <li>Thing_HasSkin</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -28,9 +22,6 @@
         <descriptionKey>Stat_Animal_MilkAmountDesc</descriptionKey>
         <title><CollectAnimalProducts/><Milk/></title>
         <columnClass>Stats.Columns.MilkableDef.MilkAmountColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsMilkable</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -39,9 +30,6 @@
         <descriptionKey>Stat_Animal_MilkGrowthTimeDesc</descriptionKey>
         <title><TimeInterval/><Milk/></title>
         <columnClass>Stats.Columns.MilkableDef.MilkingIntervalColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsMilkable</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -49,9 +37,6 @@
         <label>Milk per day</label>
         <title><Milk/><Per/>D</title>
         <columnClass>Stats.Columns.MilkableDef.MilkPerDayColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsMilkable</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -59,9 +44,6 @@
         <label>Milk nutrition per day</label>
         <title><Nutrition/><Milk/><Per/>D</title>
         <columnClass>Stats.Columns.MilkableDef.MilkNutritionPerDayColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsMilkable</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -69,9 +51,6 @@
         <label>Average eggs amount</label>
         <title><CollectAnimalProducts/><Egg/></title>
         <columnClass>Stats.Columns.EggLayerDef.EggsAmountColumn`1</columnClass>
-        <tags>
-            <li>Thing_LaysEggs</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -79,9 +58,6 @@
         <label>Egg laying interval</label>
         <title><TimeInterval/><Egg/></title>
         <columnClass>Stats.Columns.EggLayerDef.EggLayingIntervalColumn`1</columnClass>
-        <tags>
-            <li>Thing_LaysEggs</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -89,9 +65,6 @@
         <label>Eggs per day</label>
         <title><Egg/><Per/>D</title>
         <columnClass>Stats.Columns.EggLayerDef.EggsPerDayColumn`1</columnClass>
-        <tags>
-            <li>Thing_LaysEggs</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -99,9 +72,6 @@
         <label>Eggs nutrition per day</label>
         <title><Nutrition/><Egg/><Per/>D</title>
         <columnClass>Stats.Columns.EggLayerDef.EggsNutritionPerDayColumn`1</columnClass>
-        <tags>
-            <li>Thing_LaysEggs</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -110,9 +80,6 @@
         <descriptionKey>Stat_Animal_WoolAmountDesc</descriptionKey>
         <title><CollectAnimalProducts/><Wool/></title>
         <columnClass>Stats.Columns.ShearableDef.WoolAmountColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsShearable</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -121,9 +88,6 @@
         <descriptionKey>Stat_Animal_WoolGrowthTimeDesc</descriptionKey>
         <title><TimeInterval/><Wool/></title>
         <columnClass>Stats.Columns.ShearableDef.ShearingIntervalColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsShearable</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -131,9 +95,6 @@
         <label>Wool per day</label>
         <title><Wool/><Per/>D</title>
         <columnClass>Stats.Columns.ShearableDef.WoolPerDayColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsShearable</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -142,9 +103,6 @@
         <descriptionKey>PackAnimalExplanation</descriptionKey>
         <title><Caravan/></title>
         <columnClass>Stats.Columns.AnimalDef.IsPackAnimalColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsAnimal</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -152,9 +110,6 @@
         <title><Caravan/><MoveSpeed/></title>
         <stat>CaravanRidingSpeedFactor</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPawn</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -162,18 +117,12 @@
         <title>LVL<AnimalHandling/></title>
         <stat>MinimumHandlingSkill</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsAnimal</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Animal_Wildness</defName>
         <stat>Wildness</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsAnimal</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -182,9 +131,6 @@
         <descriptionKey>Stat_Race_BlockedByFences_Desc</descriptionKey>
         <title><Fence/></title>
         <columnClass>Stats.Columns.AnimalDef.IsBlockedByFencesColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsAnimal</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -193,9 +139,6 @@
         <descriptionKey>NuzzleIntervalExplanation</descriptionKey>
         <title><TimeInterval/><Nuzzle/></title>
         <columnClass>Stats.Columns.AnimalDef.NuzzleIntervalColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsAnimal</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -203,9 +146,6 @@
         <labelKey>Trainability</labelKey>
         <descriptionKey>Stat_Race_Trainability_Desc</descriptionKey>
         <columnClass>Stats.Columns.AnimalDef.TrainabilityColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsAnimal</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -214,9 +154,6 @@
         <descriptionKey>Stat_Animal_GestationTimeDesc</descriptionKey>
         <title><Time/>Gestation</title>
         <columnClass>Stats.Columns.AnimalDef.GestationTimeColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsAnimal</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -225,20 +162,12 @@
         <descriptionKey>Stat_Animal_GrowthTimeDesc</descriptionKey>
         <title><Time/>Growth</title>
         <columnClass>Stats.Columns.AnimalDef.GrowthTimeColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsAnimal</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Animal_Products</defName>
         <label>products</label>
         <columnClass>Stats.Columns.AnimalDef.ProductsColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsMilkable</li>
-            <li>Thing_LaysEggs</li>
-            <li>Thing_IsShearable</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -246,11 +175,6 @@
         <label>products nutrition per day</label>
         <title><Nutrition/>(<Milk/>+<Egg/>)<Per/>D</title>
         <columnClass>Stats.Columns.AnimalDef.ProductsNutritionPerDayColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsMilkable</li>
-            <li>Thing_LaysEggs</li>
-            <li>Thing_IsShearable</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -258,9 +182,6 @@
         <labelKey>Stat_Animal_LitterSize</labelKey>
         <descriptionKey>Stat_Animal_LitterSizeDesc</descriptionKey>
         <columnClass>Stats.Columns.AnimalDef.AverageLitterSizeColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsAnimal</li>
-        </tags>
     </Stats.ColumnDef>
 
     <!-- <Stats.ColumnDef>

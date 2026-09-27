@@ -1,25 +1,26 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
 using Stats.TableRecords;
 
 namespace Stats.Columns.ShearableDef;
 
-public sealed class ShearingIntervalColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IShearableDefTableRecord
+public sealed class ShearingIntervalColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public ShearingIntervalColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0 d")
     {
-        CompProperties_Shearable? shearableCompProps = record.ShearableCompProperties;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        CompProperties_Shearable? shearableCompProps = record.ThingDef.GetCompProperties<CompProperties_Shearable>();
 
         if (shearableCompProps != null)
         {
-            decimal shearIntervalDays = shearableCompProps.shearIntervalDays;
-
-            return new NumberCell(shearIntervalDays, "0 d");
+            return shearableCompProps.shearIntervalDays;
         }
 
-        return default;
+        return 0m;
     }
 }

@@ -1,29 +1,36 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
+using Stats.Extensions;
 using Stats.TableRecords;
 
 namespace Stats.Columns.PowerTraderDef;
 
-public sealed class PowerOutputPerFuelColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IPowerTraderDefTableRecord,
-            IRefuelableDefTableRecord
+public sealed class PowerOutputPerFuelColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public PowerOutputPerFuelColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0 W/u")
     {
-        CompProperties_Power? powerCompProps = record.PowerCompProperties;
-        CompProperties_Refuelable? refuelableCompProps = record.RefuelableCompProperties;
+    }
 
-        if (powerCompProps != null && refuelableCompProps is { fuelConsumptionRate: not 0f })
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        CompProperties_Power? powerCompProps = record.ThingDef.GetCompProperties<CompProperties_Power>();
+
+        if (powerCompProps != null)
         {
-            float powerOutput = powerCompProps.PowerConsumption * -1f;
-            float fuelConsumptionRate = refuelableCompProps.fuelConsumptionRate;
-            float powerOutputPerFuel = powerOutput / fuelConsumptionRate;
+            CompProperties_Refuelable? refuelableCompProps = record.ThingDef.GetCompProperties<CompProperties_Refuelable>();
 
-            return new NumberCell(powerOutputPerFuel, "0 W/u");
+            if (refuelableCompProps is { fuelConsumptionRate: not 0f })
+            {
+                float powerOutput = powerCompProps.PowerConsumption * -1f;
+                float fuelConsumptionRate = refuelableCompProps.fuelConsumptionRate;
+                float powerOutputPerFuel = powerOutput / fuelConsumptionRate;
+
+                return powerOutputPerFuel.ToDecimal();
+            }
         }
 
-        return default;
+        return 0m;
     }
 }

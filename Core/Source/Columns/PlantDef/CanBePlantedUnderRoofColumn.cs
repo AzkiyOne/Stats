@@ -1,14 +1,18 @@
-﻿using Stats.TableRecords;
+﻿using System.Collections.Generic;
+using Stats.TableRecords;
 
 namespace Stats.Columns.PlantDef;
 
-public sealed class CanBePlantedUnderRoofColumn<TRecord>(ColumnDef columnDef) :
-    BooleanColumn<TRecord>(columnDef)
-        where TRecord :
-            IPlantDefTableRecord
+public sealed class CanBePlantedUnderRoofColumn<TRecord> : BooleanColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override bool GetValue(TRecord record)
+    public CanBePlantedUnderRoofColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
-        return record.PlantProperties.interferesWithRoof == false;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override bool GetValueFromRecord(TRecord record)
+    {
+        return record.ThingDef.plant?.interferesWithRoof == false;
     }
 }

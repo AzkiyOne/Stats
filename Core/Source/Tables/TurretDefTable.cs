@@ -1,32 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using RimWorld;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
+using Stats.Widgets;
 using Verse;
 
 namespace Stats.Tables;
 
-public static class TurretDefTable
+public sealed class TurretDefTable : Tab
 {
-    public static MainTabWindowTab Make(TableDef tableDef)
+    public TurretDefTable(TableDef def) : base(def)
     {
         List<TurretDefTableRecord> records = new(250);
-        foreach (ThingDef thingDef in DefDatabase<ThingDef>.AllDefsListForReading)
+
+        foreach (Verse.ThingDef thingDef in DefDatabase<Verse.ThingDef>.AllDefsListForReading)
         {
             BuildingProperties? buildingProperties = thingDef.building;
             VerbProperties? primaryVerbProperties = buildingProperties?.turretGunDef?.Verbs.Primary();
 
             if (primaryVerbProperties != null
-                && buildingProperties is { IsTurret: true, turretGunDef: ThingDef turretGunDef }
+                && buildingProperties is { IsTurret: true, turretGunDef: Verse.ThingDef turretGunDef }
                 && thingDef.IsBuildingObtainableByPlayer())
             {
-                HashSet<ThingDef>? stuffDefs = thingDef.GetAllowedStuffs();
+                HashSet<Verse.ThingDef>? stuffDefs = thingDef.GetAllowedStuffs();
 
                 if (stuffDefs?.Count > 0)
                 {
-                    foreach (ThingDef stuffDef in stuffDefs)
+                    foreach (Verse.ThingDef stuffDef in stuffDefs)
                     {
                         TurretDefTableRecord record = new(thingDef, buildingProperties, turretGunDef, primaryVerbProperties, stuffDef);
                         records.Add(record);
@@ -40,6 +40,8 @@ public static class TurretDefTable
             }
         }
 
-        return new TableTab<TurretDefTableRecord>(tableDef, records);
+        Widget = new Table<TurretDefTableRecord>(def, records);
     }
+
+    protected override TabBodyWidget Widget { get; }
 }

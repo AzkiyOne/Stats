@@ -1,17 +1,21 @@
-﻿using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using Stats.Extensions;
 using Stats.TableRecords;
 using Verse;
 
 namespace Stats.Columns.RangedWeaponDef;
 
-public sealed class RPMColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IRangedWeaponDefTableRecord
+public sealed class RPMColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public RPMColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0 rpm")
     {
-        VerbProperties verbProps = record.PrimaryVerbProperties;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        VerbProperties? verbProps = record.ThingDef.GetGunPrimaryVerbProps();
 
         if (verbProps is { Ranged: true, showBurstShotStats: true, burstShotCount: > 1 })
         {
@@ -19,9 +23,9 @@ public sealed class RPMColumn<TRecord>(ColumnDef columnDef) :
             float secondsBetweenShots = verbProps.ticksBetweenBurstShots.TicksToSeconds();
             float rpm = 60f / secondsBetweenShots;
 
-            return new NumberCell(rpm, "0 rpm");
+            return rpm.ToDecimal();
         }
 
-        return default;
+        return 0m;
     }
 }

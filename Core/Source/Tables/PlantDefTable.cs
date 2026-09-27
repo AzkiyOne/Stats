@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using RimWorld;
 using Stats.TableRecords;
+using Stats.Widgets;
 using Verse;
 
 namespace Stats.Tables;
 
-public static class PlantDefTable
+public sealed class PlantDefTable : Tab
 {
-    public static MainTabWindowTab Make(TableDef tableDef)
+    public PlantDefTable(TableDef def) : base(def)
     {
         List<PlantDefTableRecord> records = new(250);
+
         foreach (Verse.ThingDef thingDef in DefDatabase<Verse.ThingDef>.AllDefsListForReading)
         {
             PlantProperties? plantProperties = thingDef.plant;
@@ -23,6 +23,8 @@ public static class PlantDefTable
             }
         }
 
-        return new TableTab<PlantDefTableRecord>(tableDef, records);
+        Widget = new Table<PlantDefTableRecord>(def, records);
     }
+
+    protected override TabBodyWidget Widget { get; }
 }

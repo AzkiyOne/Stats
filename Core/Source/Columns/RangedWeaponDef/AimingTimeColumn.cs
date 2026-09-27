@@ -1,22 +1,29 @@
-﻿using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
 using Verse;
 
 namespace Stats.Columns.RangedWeaponDef;
 
-public sealed class AimingTimeColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IRangedWeaponDefTableRecord
+public sealed class AimingTimeColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    private static readonly string FormatString = "0.00 " + "LetterSecond".Translate();
+    private static readonly string _formatString = "0.00 " + "LetterSecond".Translate();
 
-    protected override NumberCell MakeCell(TRecord record)
+    public AimingTimeColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, _formatString)
     {
-        VerbProperties verbProps = record.PrimaryVerbProperties;
-        float aimingTime = verbProps.warmupTime;
+    }
 
-        return new NumberCell(aimingTime.ToDecimal(2), FormatString);
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        VerbProperties? verbProps = record.ThingDef.GetGunPrimaryVerbProps();
+
+        if (verbProps != null)
+        {
+            return verbProps.warmupTime.ToDecimal(2);
+        }
+
+        return 0m;
     }
 }

@@ -1,14 +1,18 @@
-﻿using Stats.TableRecords;
+﻿using System.Collections.Generic;
+using Stats.TableRecords;
 
 namespace Stats.Columns.PlantDef;
 
-public sealed class IsTreeColumn<TRecord>(ColumnDef columnDef) :
-    BooleanColumn<TRecord>(columnDef)
-        where TRecord :
-            IPlantDefTableRecord
+public sealed class IsTreeColumn<TRecord> : BooleanColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override bool GetValue(TRecord record)
+    public IsTreeColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
-        return record.PlantProperties.IsTree;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override bool GetValueFromRecord(TRecord record)
+    {
+        return record.ThingDef.plant?.IsTree ?? false;
     }
 }

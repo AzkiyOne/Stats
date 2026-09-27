@@ -2,18 +2,18 @@
 using System.Linq;
 using RimWorld;
 using Stats.Columns.Cells;
+using Stats.Extensions;
 using Stats.TableRecords;
 using Stats.Tables;
-using Stats.Utils.Extensions;
 
 namespace Stats.Columns.PawnDef;
 
 public sealed class LeatherAmountColumn<TRecord>(ColumnDef columnDef) :
-    ThingDefCountColumn<TRecord, ThingDefCountCell>(columnDef)
+    ThingDefCountColumn<TRecord, ThingDefCountColumnCell>(columnDef)
         where TRecord :
             IPawnDefTableRecord
 {
-    protected override ThingDefCountCell MakeCell(TRecord record)
+    protected override ThingDefCountColumnCell MakeCell(TRecord record)
     {
         Verse.ThingDef? leatherDef = record.RaceProperties.leatherDef;
 
@@ -24,7 +24,7 @@ public sealed class LeatherAmountColumn<TRecord>(ColumnDef columnDef) :
 
             if (leatherAmount > 0f)
             {
-                return new ThingDefCountCell(leatherDef, leatherAmount);
+                return new ThingDefCountColumnCell(leatherDef, leatherAmount);
             }
         }
 

@@ -1,18 +1,21 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
 
 namespace Stats.Columns.ShearableDef;
 
-public sealed class WoolPerDayColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IShearableDefTableRecord
+public sealed class WoolPerDayColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public WoolPerDayColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0.0/d")
     {
-        CompProperties_Shearable? shearableCompProps = record.ShearableCompProperties;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        CompProperties_Shearable? shearableCompProps = record.ThingDef.GetCompProperties<CompProperties_Shearable>();
 
         if (shearableCompProps is { shearIntervalDays: > 0 })
         {
@@ -20,9 +23,9 @@ public sealed class WoolPerDayColumn<TRecord>(ColumnDef columnDef) :
             float shearIntervalDays = shearableCompProps.shearIntervalDays;
             float woolPerDay = woolAmount / shearIntervalDays;
 
-            return new NumberCell(woolPerDay.ToDecimal(1), "0.0/d");
+            return woolPerDay.ToDecimal(1);
         }
 
-        return default;
+        return 0m;
     }
 }

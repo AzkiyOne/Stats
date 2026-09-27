@@ -8,18 +8,18 @@ using Stats.Tables;
 namespace Stats.Columns.BuildingDef;
 
 public sealed class RecreationTypeColumn<TRecord>(ColumnDef columnDef) :
-    DefColumn<TRecord, DefCell>(columnDef)
+    DefColumn<TRecord, DefColumnCell>(columnDef)
         where TRecord :
             IBuildingDefTableRecord
 {
-    protected override DefCell MakeCell(TRecord record)
+    protected override DefColumnCell MakeCell(TRecord record)
     {
         BuildingProperties buildingProperties = record.BuildingProperties;
         JoyKindDef? joyKind = buildingProperties.joyKind;
 
         if (joyKind != null)
         {
-            return new DefCell(joyKind);
+            return new DefColumnCell(joyKind);
         }
 
         return default;

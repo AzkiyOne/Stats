@@ -1,40 +1,47 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
+using Stats.Extensions;
 using Stats.TableRecords;
 using Verse;
 
 namespace Stats.Columns.TurretDef;
 
-public sealed class BurstsPerRearmColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            ITurretDefTableRecord,
-            IRefuelableDefTableRecord
+public sealed class BurstsPerRearmColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public BurstsPerRearmColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
-        CompProperties_Refuelable? refuelableCompProps = record.RefuelableCompProperties;
+    }
 
-        if (refuelableCompProps is { fuelCapacity: > 0f })
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        VerbProperties? turretGunDefPrimaryVerbProps = record.ThingDef.GetGunPrimaryVerbProps();
+
+        if (turretGunDefPrimaryVerbProps != null)
         {
-            VerbProperties turretGunDefPrimaryVerbProps = record.PrimaryVerbProperties;
-            float fuelPerBurst = turretGunDefPrimaryVerbProps.consumeFuelPerBurst;
-            float fuelPerShot = turretGunDefPrimaryVerbProps.consumeFuelPerShot;
+            CompProperties_Refuelable? refuelableCompProps = record.ThingDef.GetCompProperties<CompProperties_Refuelable>();
 
-            if (fuelPerShot > 0f)
+            if (refuelableCompProps is { fuelCapacity: > 0f })
             {
-                fuelPerBurst = fuelPerShot * turretGunDefPrimaryVerbProps.burstShotCount;
-            }
+                float fuelPerBurst = turretGunDefPrimaryVerbProps.consumeFuelPerBurst;
+                float fuelPerShot = turretGunDefPrimaryVerbProps.consumeFuelPerShot;
 
-            if (fuelPerBurst > 0f)
-            {
-                float fuelCapacity = refuelableCompProps.fuelCapacity;
-                float burstsPerRearm = fuelCapacity / fuelPerBurst;
+                if (fuelPerShot > 0f)
+                {
+                    fuelPerBurst = fuelPerShot * turretGunDefPrimaryVerbProps.burstShotCount;
+                }
 
-                return new NumberCell(burstsPerRearm);
+                if (fuelPerBurst > 0f)
+                {
+                    float fuelCapacity = refuelableCompProps.fuelCapacity;
+                    float burstsPerRearm = fuelCapacity / fuelPerBurst;
+
+                    return burstsPerRearm.ToDecimal();
+                }
             }
         }
 
-        return default;
+        return 0m;
     }
 }

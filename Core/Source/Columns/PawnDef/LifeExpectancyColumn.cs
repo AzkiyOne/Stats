@@ -1,19 +1,27 @@
-﻿using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using Stats.Extensions;
 using Stats.TableRecords;
 using Verse;
 
 namespace Stats.Columns.PawnDef;
 
-public sealed class LifeExpectancyColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IPawnDefTableRecord
+public sealed class LifeExpectancyColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public LifeExpectancyColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0 y")
     {
-        RaceProperties raceProperties = record.RaceProperties;
-        float lifeExpectancy = raceProperties.lifeExpectancy;
+    }
 
-        return new NumberCell(lifeExpectancy, "0 y");
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        RaceProperties? raceProperties = record.ThingDef.race;
+
+        if (raceProperties != null)
+        {
+            return raceProperties.lifeExpectancy.ToDecimal();
+        }
+
+        return 0m;
     }
 }

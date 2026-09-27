@@ -12,9 +12,6 @@
         <defName>Building_Size</defName>
         <label>size</label>
         <columnClass>Stats.Columns.ThingDef.SizeColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsBuilding</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -22,9 +19,6 @@
         <title><Recreation/>Power</title>
         <stat>JoyGainFactor</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_GivesJoy</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -33,19 +27,12 @@
         <descriptionKey>Stat_RecreationType_Desc</descriptionKey>
         <title><Recreation/>Type</title>
         <columnClass>Stats.Columns.BuildingDef.RecreationTypeColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsBuilding</li>
-            <li>Thing_GivesJoy</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Building_Comfort</defName>
         <stat>Comfort</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_GivesComfort</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -53,9 +40,6 @@
         <title>Immunity *%</title>
         <stat>ImmunityGainSpeedFactor</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsMedical</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -63,9 +47,6 @@
         <title>Tend +%</title>
         <stat>MedicalTendQualityOffset</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsMedical</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
@@ -73,9 +54,6 @@
         <title>Surgery *%</title>
         <stat>SurgerySuccessChanceFactor</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsMedical</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -83,9 +61,6 @@
         <label>power output</label>
         <title><Electricity/></title>
         <columnClass>Stats.Columns.PowerTraderDef.PowerOutputColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPowerGenerator</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -93,9 +68,6 @@
         <label>power per cell</label>
         <title><Electricity/><Per/>Cell</title>
         <columnClass>Stats.Columns.PowerTraderDef.PowerOutputPerCellColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPowerGenerator</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -104,9 +76,6 @@
         <description>Measured in watts/unit.</description>
         <title><Electricity/><Per/><Fuel/></title>
         <columnClass>Stats.Columns.PowerTraderDef.PowerOutputPerFuelColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPowerGenerator</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -114,9 +83,6 @@
         <label>power consumption</label>
         <title><Electricity/><Decrease/></title>
         <columnClass>Stats.Columns.PowerTraderDef.PowerConsumptionColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsPowerConsumer</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -124,9 +90,6 @@
         <label>fuel capacity</label>
         <title><Fuel/></title>
         <columnClass>Stats.Columns.RefuelableDef.FuelCapacityColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRefuelable</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -135,9 +98,6 @@
         <description>Measured in amount/day.</description>
         <title><Fuel/><Decrease/><Per/>D</title>
         <columnClass>Stats.Columns.RefuelableDef.FuelConsumptionRateColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRefuelable</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -145,9 +105,6 @@
         <label>days per refuel</label>
         <title>Days<Per/><Reload/></title>
         <columnClass>Stats.Columns.RefuelableDef.DaysPerRefuelColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsRefuelable</li>
-        </tags>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -155,9 +112,6 @@
         <label>is reinstallable</label>
         <title><IsBuildingReinstallable/></title>
         <columnClass>Stats.Columns.ThingDef.IsMinifiableColumn`1</columnClass>
-        <tags>
-            <li>Thing_IsBuilding</li>
-        </tags>
     </Stats.ColumnDef>
 
 </Defs>

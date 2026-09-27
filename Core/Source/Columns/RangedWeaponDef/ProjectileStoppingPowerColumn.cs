@@ -1,27 +1,28 @@
-﻿using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
 using Verse;
 
 namespace Stats.Columns.RangedWeaponDef;
 
-public sealed class ProjectileStoppingPowerColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IRangedWeaponDefTableRecord
+public sealed class ProjectileStoppingPowerColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public ProjectileStoppingPowerColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0.0")
     {
-        VerbProperties verbProperties = record.PrimaryVerbProperties;
-        ProjectileProperties? defaultProjProps = verbProperties.defaultProjectile?.projectile;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        VerbProperties? verbProperties = record.ThingDef.GetGunPrimaryVerbProps();
+        ProjectileProperties? defaultProjProps = verbProperties?.defaultProjectile?.projectile;
 
         if (defaultProjProps != null)
         {
-            float projectileStoppingPower = defaultProjProps.stoppingPower;
-
-            return new NumberCell(projectileStoppingPower.ToDecimal(1), "0.0");
+            return defaultProjProps.stoppingPower.ToDecimal(1);
         }
 
-        return default;
+        return 0m;
     }
 }

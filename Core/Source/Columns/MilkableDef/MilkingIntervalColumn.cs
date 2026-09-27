@@ -5,11 +5,11 @@ using Stats.TableRecords;
 namespace Stats.Columns.MilkableDef;
 
 public sealed class MilkingIntervalColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
+    NumberColumn<TRecord, NumberColumnCell>(columnDef)
         where TRecord :
             IMilkableDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    protected override NumberColumnCell MakeCell(TRecord record)
     {
         CompProperties_Milkable? milkableCompProps = record.MilkableCompProperties;
 
@@ -17,7 +17,7 @@ public sealed class MilkingIntervalColumn<TRecord>(ColumnDef columnDef) :
         {
             decimal milkIntervalDays = milkableCompProps.milkIntervalDays;
 
-            return new NumberCell(milkIntervalDays, "0 d");
+            return new NumberColumnCell(milkIntervalDays, "0 d");
         }
 
         return default;

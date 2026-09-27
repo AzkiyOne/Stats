@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using RimWorld;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
+using Stats.Widgets;
 using Verse;
 
 namespace Stats.Tables;
 
 // We do not check for "destroyOnDrop" for better compatibility with mods like
 // VFE - Pirates.
-public static class ApparelDefTable
+public sealed class ApparelDefTable : Tab
 {
-    public static MainTabWindowTab Make(TableDef tableDef)
+    public ApparelDefTable(TableDef def) : base(def)
     {
         List<ApparelDefTableRecord> records = new(250);
+
         foreach (Verse.ThingDef thingDef in DefDatabase<Verse.ThingDef>.AllDefsListForReading)
         {
             ApparelProperties? apparelProperties = thingDef.apparel;
@@ -39,6 +39,8 @@ public static class ApparelDefTable
             }
         }
 
-        return new TableTab<ApparelDefTableRecord>(tableDef, records);
+        Widget = new Table<ApparelDefTableRecord>(def, records);
     }
+
+    protected override TabBodyWidget Widget { get; }
 }

@@ -1,29 +1,30 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
 
 namespace Stats.Columns.PlantDef;
 
-public sealed class NutritionPerHarvestPerDayColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IPlantDefTableRecord
+public sealed class NutritionPerHarvestPerDayColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public NutritionPerHarvestPerDayColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0.000/d")
     {
-        // TODO: This is mostly copy paste from NutritionPerHarvestColumnWorker.
-        PlantProperties plantProps = record.PlantProperties;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        PlantProperties? plantProps = record.ThingDef.plant;
 
         if (plantProps is { harvestedThingDef: not null, growDays: > 0f })
         {
             float productNutrition = plantProps.harvestedThingDef.GetStatValuePerceived(StatDefOf.Nutrition);
             float nutritionPerHarvest = plantProps.harvestYield * productNutrition;
-            decimal cellValue = (nutritionPerHarvest / plantProps.GetGrowDaysActual()).ToDecimal(3);
 
-            return new NumberCell(cellValue, "0.000/d");
+            return (nutritionPerHarvest / plantProps.GetGrowDaysActual()).ToDecimal(3);
         }
 
-        return default;
+        return 0m;
     }
 }

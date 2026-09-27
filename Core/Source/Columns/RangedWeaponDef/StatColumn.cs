@@ -1,15 +1,17 @@
-﻿using Stats.TableRecords;
+﻿using RimWorld;
+using Stats.Defs;
+using Stats.Tables.RangedWeaponDef;
 
 namespace Stats.Columns.RangedWeaponDef;
 
-public sealed class StatColumn<TRecord>(StatColumnDef columnDef) :
-    BuildableDef.StatColumn<TRecord>(columnDef)
-        where TRecord :
-            IBuildableDefTableRecord,
-            IRangedWeaponDefTableRecord
+public sealed class StatColumn<TRecord> : BuildableDef.Columns.StatColumn<TRecord> where TRecord : IRangedWeaponDefTableRecord
 {
-    protected override StatCell MakeCell(TRecord record)
+    public StatColumn(StatColumnDef def) : base(def)
     {
-        return MakeCell(record.RangedWeaponStatRequest);
+    }
+
+    protected override StatRequest GetStatRequest(TRecord record)
+    {
+        return record.RangedWeaponStatRequest;
     }
 }

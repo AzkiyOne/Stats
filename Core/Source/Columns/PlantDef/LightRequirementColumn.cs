@@ -1,26 +1,27 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Utils.Extensions;
 
 namespace Stats.Columns.PlantDef;
 
-public sealed class LightRequirementColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberCell>(columnDef)
-        where TRecord :
-            IPlantDefTableRecord
+public sealed class LightRequirementColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberCell MakeCell(TRecord record)
+    public LightRequirementColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0\\%")
     {
-        PlantProperties plantProps = record.PlantProperties;
+    }
 
-        if (plantProps.growMinGlow > 0f)
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        PlantProperties? plantProps = record.ThingDef.plant;
+
+        if (plantProps?.growMinGlow > 0f)
         {
-            decimal cellValue = (100f * plantProps.growMinGlow).ToDecimal(0);
-
-            return new NumberCell(cellValue, "0\\%");
+            return (100f * plantProps.growMinGlow).ToDecimal();
         }
 
-        return default;
+        return 0m;
     }
 }

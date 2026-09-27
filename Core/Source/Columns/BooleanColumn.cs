@@ -1,78 +1,67 @@
 ﻿using System.Collections.Generic;
-using Stats.Columns.Cells;
-using Stats.Filters;
-using Stats.Tables;
-using Stats.Utils.Extensions;
+using Stats.Extensions;
 using UnityEngine;
 
 namespace Stats.Columns;
 
-public abstract class BooleanColumn<TRecord, TCell>(ColumnDef def) :
-    Column<TRecord, TCell>(def, ColumnType.Boolean)
-        where TCell :
-            struct,
-            IBooleanCell
+public abstract class BooleanColumn<TRecord> : Column<TRecord, bool>
 {
-    protected override float GetMaxCellWidth(List<int> rows)
+    private static readonly Texture2D _textureTrue = Verse.Widgets.CheckboxOnTex;
+    private readonly List<bool> _cellValueComp;
+
+    protected BooleanColumn(ColumnDef def, List<TRecord> records) : base(def, records)
+    {
+        string name = def.LabelCap;
+        _cellValueComp = new List<bool>(records.Capacity);
+        SortOptions = [
+            new ColumnSortOption<bool>(name, _cellValueComp)
+        ];
+        FilterOptions = [
+            new BooleanColumnFilterOption(name, _cellValueComp)
+        ];
+    }
+
+    public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Middle;
+
+    public override ICollection<ColumnSortOption> SortOptions { get; }
+
+    public override ICollection<ColumnFilterOption> FilterOptions { get; }
+
+    protected override void AddValue(bool value)
+    {
+        _cellValueComp.Add(value);
+    }
+
+    protected override void SetValue(int i, bool value)
+    {
+        _cellValueComp[i] = value;
+    }
+
+    protected override void RemoveValue(int index)
+    {
+        _cellValueComp.ReplaceWithLast(index);
+    }
+
+    public override void DrawCell(Rect rect, int i)
+    {
+        if (Event.current.type == EventType.Repaint && _cellValueComp[i])
+        {
+            rect.ContractedByObjectTableCellPadding()
+                .DrawTextureFitted(_textureTrue);
+        }
+    }
+
+    public override float GetMinWidth(List<int> recordIds)
+    {
+        return GetCellWidth(0);
+    }
+
+    protected override float GetCellWidth(int i)
     {
         return Verse.Text.LineHeight;
     }
 
-    public override ICollection<CellField> GetCellFields(Table tableWorker)
+    public override void Hide()
     {
-        Filter valueFieldFilter = new BooleanFilter((int row) => this[row].Value);
-        int Compare(int row1, int row2) => this[row1].Value.CompareTo(this[row2]);
-        CellField valueField = new(null, valueFieldFilter, Compare);
-
-        return [valueField];
-    }
-}
-
-public abstract class BooleanColumn<TRecord>(ColumnDef def) :
-    Column<TRecord>(def, ColumnType.Boolean)
-{
-    private readonly List<bool> _values = new(250);
-
-    protected abstract bool GetValue(TRecord @object);
-
-    protected override void DrawCell(Rect rect, int row)
-    {
-        BooleanCell.Draw(rect, _values[row]);
-    }
-
-    protected override float GetMaxCellWidth(List<int> rows)
-    {
-        return Verse.Text.LineHeight;
-    }
-
-    public override void NotifyRecordAdded(TRecord row)
-    {
-        bool value;
-        try
-        {
-            value = GetValue(row);
-        }
-        catch
-        {
-            value = default;
-        }
-
-        _values.Add(value);
-    }
-
-    public override void NotifyRecordRemoved(int row)
-    {
-        _values.ReplaceWithLast(row);
-    }
-
-    public override void RefreshCells() { }
-
-    public override ICollection<CellField> GetCellFields(Table tableWorker)
-    {
-        Filter valueFieldFilter = new BooleanFilter((int row) => _values[row]);
-        int Compare(int row1, int row2) => _values[row1].CompareTo(_values[row2]);
-        CellField valueField = new(null, valueFieldFilter, Compare);
-
-        return [valueField];
     }
 }

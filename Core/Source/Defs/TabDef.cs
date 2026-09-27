@@ -1,22 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Stats.Widgets;
 using UnityEngine;
 using Verse;
 
 namespace Stats;
 
-public abstract class TabDef :
-    Def
+public class TabDef : Def
 {
     public string? iconPath;
-    public Texture2D Icon { get; private set; } = BaseContent.BadTex;
     public Color iconColor = Color.white;
     public float iconScale = 1f;
+#pragma warning disable CS8618
+    public Type widgetClass;
+#pragma warning restore CS8618
 
-    public abstract MainTabWindowTab MakeTab();
+    [Obsolete]
+    public Tab MakeWidget()
+    {
+        return (Tab)Activator.CreateInstance(widgetClass, this);
+    }
+
+    public Texture2D Icon { get; private set; } = BaseContent.BadTex;
 
     public override void ResolveReferences()
     {
