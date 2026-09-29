@@ -3,33 +3,36 @@ using System.Linq;
 using RimWorld;
 using Stats.Extensions;
 using Stats.TableRecords;
+using Verse;
 
 namespace Stats.Columns.EggLayerDef;
 
-public sealed class EggsAmountColumn<TRecord> : ThingDefCountColumn<TRecord> where TRecord : IEggLayerDefTableRecord
+public sealed class EggsAmountColumn<TRecord> : ThingDefCountColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    public EggsAmountColumn(ColumnDef def) : base(def)
+    public EggsAmountColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetEggDefs(thingDefs))
     {
     }
 
-    protected override ThingDefCountColumnCell MakeCell(TRecord record)
+    public override bool IsRefreshable => false;
+
+    protected override ThingDefCount? GetValueFromRecord(TRecord record)
     {
-        CompProperties_EggLayer? eggLayerCompProps = record.EggLayerCompProperties;
+        CompProperties_EggLayer? eggLayerCompProps = record.ThingDef.GetCompProperties<CompProperties_EggLayer>();
 
         if (eggLayerCompProps != null)
         {
             Verse.ThingDef eggDef = eggLayerCompProps.GetAnyEggDef();
             float eggAmount = eggLayerCompProps.eggCountRange.Average;
 
-            return new ThingDefCountColumnCell(eggDef, eggAmount);
+            return new ThingDefCount(eggDef, (int)eggAmount);
         }
 
-        return default;
+        return null;
     }
 
-    protected override IEnumerable<Verse.ThingDef?> GetTypeFieldFilterOptions(Table tableWorker)
+    private static IEnumerable<Verse.ThingDef?> GetEggDefs(IEnumerable<Verse.ThingDef> thingDefs)
     {
-        return ((IRefRecordsProvider<Verse.ThingDef>)tableWorker).Records
+        return thingDefs
             .Select(thingDef => thingDef.GetCompProperties<CompProperties_EggLayer>()?.GetAnyEggDef())
             .Distinct();
     }

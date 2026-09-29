@@ -8,21 +8,21 @@ namespace Stats.Columns;
 
 public abstract class NumberColumn<TRecord> : Column<TRecord, decimal>
 {
-    private readonly List<decimal> _cellValueComp;
-    private List<string>? _cellTextComp;
-    private List<float>? _cellWidthComp;
+    private readonly List<decimal> _cellValue;
+    private List<string>? _cellText;
+    private List<float>? _cellWidth;
     private readonly string _formatString;
 
     protected NumberColumn(ColumnDef def, List<TRecord> records, string formatString = "") : base(def, records)
     {
-        string name = def.LabelCap;
+        string label = def.LabelCap;
         _formatString = formatString;
-        _cellValueComp = new List<decimal>(records.Capacity);
+        _cellValue = new List<decimal>(records.Capacity);
         SortOptions = [
-            new ColumnSortOption<decimal>(name, _cellValueComp)
+            new ColumnSortOption<decimal>(label, i => _cellValue[i])
         ];
         FilterOptions = [
-            new NumberColumnFilterOption(name, _cellValueComp)
+            new NumberColumnFilterOption(label, i => _cellValue[i])
         ];
     }
 
@@ -32,30 +32,30 @@ public abstract class NumberColumn<TRecord> : Column<TRecord, decimal>
 
     public override ICollection<ColumnFilterOption> FilterOptions { get; }
 
-    private List<string> CellTextComp => _cellTextComp ??= InitCellTextComp();
+    private List<string> CellText => _cellText ??= InitCellText();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private List<string> InitCellTextComp()
+    private List<string> InitCellText()
     {
-        return [.. _cellValueComp.Select(FormatValue)];
+        return [.. _cellValue.Select(FormatValue)];
     }
 
-    private List<float> CellWidthComp => _cellWidthComp ??= InitCellWidthComp();
+    private List<float> CellWidth => _cellWidth ??= InitCellWidth();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private List<float> InitCellWidthComp()
+    private List<float> InitCellWidth()
     {
-        return [.. CellTextComp.Select(GetCellWidth)];
+        return [.. CellText.Select(GetCellWidth)];
     }
 
     public override void DrawCell(Rect rect, int i)
     {
-        rect.DrawLabel(CellTextComp[i], GUIStyles.TableCell.Number);
+        rect.DrawLabel(CellText[i], GUIStyles.TableCell.Number);
     }
 
     protected override float GetCellWidth(int i)
     {
-        return CellWidthComp[i];
+        return CellWidth[i];
     }
 
     private string FormatValue(decimal value)
@@ -70,28 +70,28 @@ public abstract class NumberColumn<TRecord> : Column<TRecord, decimal>
 
     public override void Hide()
     {
-        _cellTextComp = null;
-        _cellWidthComp = null;
+        _cellText = null;
+        _cellWidth = null;
     }
 
     protected override void AddValue(decimal value)
     {
-        _cellValueComp.Add(value);
-        _cellTextComp?.Add(FormatValue(value));
-        _cellWidthComp?.Add(GetCellWidth(CellTextComp[^1]));
+        _cellValue.Add(value);
+        _cellText?.Add(FormatValue(value));
+        _cellWidth?.Add(GetCellWidth(CellText[^1]));
     }
 
     protected override void SetValue(int i, decimal value)
     {
-        _cellValueComp[i] = value;
-        _cellTextComp?[i] = FormatValue(value);
-        _cellWidthComp?[i] = GetCellWidth(CellTextComp[i]);
+        _cellValue[i] = value;
+        _cellText?[i] = FormatValue(value);
+        _cellWidth?[i] = GetCellWidth(CellText[i]);
     }
 
     protected override void RemoveValue(int index)
     {
-        _cellValueComp.ReplaceWithLast(index);
-        _cellTextComp?.ReplaceWithLast(index);
-        _cellWidthComp?.ReplaceWithLast(index);
+        _cellValue.ReplaceWithLast(index);
+        _cellText?.ReplaceWithLast(index);
+        _cellWidth?.ReplaceWithLast(index);
     }
 }

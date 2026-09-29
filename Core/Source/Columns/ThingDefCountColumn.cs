@@ -1,32 +1,151 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Stats.Extensions;
+using Stats.Widgets;
 using Stats.Widgets.Filters;
+using UnityEngine;
+using Verse;
 
 namespace Stats.Columns;
 
-public abstract class ThingDefCountColumn<TRecord> : Column<TRecord, ThingDefCountColumnCell>
+public abstract class ThingDefCountColumn<TRecord> : Column<TRecord, ThingDefCount?>
 {
-    protected ThingDefCountColumn(ColumnDef def) : base(def)
+    private readonly List<decimal> _cellCount;
+    private readonly List<Verse.ThingDef?> _cellThingDef;
+    private readonly List<string> _cellThingDefLabel;
+    private readonly List<float> _cellWidth;
+    private readonly List<CellDrawData?> _cellDrawData;
+
+    protected ThingDefCountColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef?> thingDefFilterOptions) : base(def, records)
     {
+        string label = def.LabelCap;
+        int capacity = records.Capacity;
+        _cellCount = new List<decimal>(capacity);
+        _cellThingDef = new List<Verse.ThingDef?>(capacity);
+        _cellThingDefLabel = new List<string>(capacity);
+        _cellWidth = new List<float>(capacity);
+        _cellDrawData = new List<CellDrawData?>(capacity);
+        SortOptions = [
+            new ColumnSortOption<decimal>("Amount", i => _cellCount[i]),
+            new ColumnSortOption<string>("ThingDef Label", i => _cellThingDefLabel[i])
+        ];
+        IEnumerable<NTMFilterOption<Verse.ThingDef?>> thingDefNTMFilterOptions = thingDefFilterOptions
+            .OrderBy(def => def?.label)
+            .Select<Verse.ThingDef?, NTMFilterOption<Verse.ThingDef?>>(
+                thingDef => thingDef == null ? new() : new(thingDef, thingDef.LabelCap, new Widgets_Legacy.ThingDefIcon(thingDef))
+            );
+        FilterOptions = [
+            new NumberColumnFilterOption("Amount", i => _cellCount[i]),
+            new OTMColumnFilterOption<Verse.ThingDef?>("Type", i => _cellThingDef[i], thingDefNTMFilterOptions),
+            new StringColumnFilterOption("ThingDef Label", i => _cellThingDefLabel[i]),
+        ];
     }
 
     public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Right;
 
-    public override ICollection<ColumnSortOption> SortOptions => [
-        new ColumnSortOption("Amount", (i1, i2) => this[i1].Count.CompareTo(this[i2].Count)),
-        new ColumnSortOption("Label", (i1, i2) => Comparer<string?>.Default.Compare(this[i1].ThingDefLabel, this[i2].ThingDefLabel))
-    ];
+    public override ICollection<ColumnSortOption> SortOptions { get; }
 
-    public override ICollection<ColumnFilterOption> FilterOptions => [
-        new ColumnFilterOption("Amount", () => new NumberFilter(i => this[i].Count)),
-        new ColumnFilterOption("Type", () => new OTMFilter<Verse.ThingDef?>(i => this[i].ThingDef, ThingDefFilterOptions))
-    ];
+    public override ICollection<ColumnFilterOption> FilterOptions { get; }
 
-    protected virtual IEnumerable<NTMFilterOption<Verse.ThingDef?>> ThingDefFilterOptions => ThingDefOptions
-        .OrderBy(def => def?.label)
-        .Select<Verse.ThingDef?, NTMFilterOption<Verse.ThingDef?>>(
-            thingDef => thingDef == null ? new() : new(thingDef, thingDef.LabelCap, new Widgets_Legacy.ThingDefIcon(thingDef))
-        );
+    public override void DrawCell(Rect rect, int i)
+    {
+        CellDrawData? drawData = _cellDrawData[i];
 
-    protected abstract IEnumerable<Verse.ThingDef?> ThingDefOptions { get; }
+        if (drawData.HasValue)
+        {
+            (string text, Widget icon) = drawData.Value;
+
+            rect.ContractedByObjectTableCellPadding()
+                .CutRight(out Rect iconRect, icon.Size.x)
+                .CutRight(GUIStyles.TableCell.ContentSpacing)
+                .TakeRest(out Rect labelRect);
+
+            if (Event.current.type == EventType.Repaint)
+            {
+                text.Draw(labelRect, GUIStyles.TableCell.NumberNoPad);
+            }
+
+            icon.Draw(iconRect);
+        }
+    }
+
+    protected override float GetCellWidth(int i)
+    {
+        return _cellWidth[i];
+    }
+
+    private void GetCellValues(
+        ThingDefCount? value,
+        out decimal count,
+        out Verse.ThingDef? thingDef,
+        out string thingDefLabel,
+        out CellDrawData? cellDrawData,
+        out float cellWidth)
+    {
+        if (value.HasValue)
+        {
+            count = value.Value.Count;
+            thingDef = value.Value.ThingDef;
+            thingDefLabel = thingDef.LabelCap;
+            string cellText = count.ToString();
+            Widget cellIcon = new ThingDefIconInteractive(thingDef);
+            cellDrawData = new CellDrawData(cellText, cellIcon);
+            float cellTextWidth = cellText.CalcSize(GUIStyles.TableCell.NumberNoPad).x;
+            float cellIconWidth = cellIcon.Size.x;
+            cellWidth = cellTextWidth + GUIStyles.TableCell.ContentSpacing + cellIconWidth;
+        }
+        else
+        {
+            count = 0m;
+            thingDef = null;
+            thingDefLabel = "";
+            cellDrawData = null;
+            cellWidth = 0f;
+        }
+    }
+
+    protected override void AddValue(ThingDefCount? value)
+    {
+        GetCellValues(
+            value,
+            out decimal count,
+            out Verse.ThingDef? thingDef,
+            out string thingDefLabel,
+            out CellDrawData? cellDrawData,
+            out float cellWidth);
+
+        _cellCount.Add(count);
+        _cellThingDef.Add(thingDef);
+        _cellThingDefLabel.Add(thingDefLabel);
+        _cellDrawData.Add(cellDrawData);
+        _cellWidth.Add(cellWidth);
+    }
+
+    protected override void RemoveValue(int i)
+    {
+        _cellCount.ReplaceWithLast(i);
+        _cellThingDef.ReplaceWithLast(i);
+        _cellThingDefLabel.ReplaceWithLast(i);
+        _cellDrawData.ReplaceWithLast(i);
+        _cellWidth.ReplaceWithLast(i);
+    }
+
+    protected override void SetValue(int i, ThingDefCount? value)
+    {
+        GetCellValues(
+            value,
+            out decimal count,
+            out Verse.ThingDef? thingDef,
+            out string thingDefLabel,
+            out CellDrawData? cellDrawData,
+            out float cellWidth);
+
+        _cellCount[i] = count;
+        _cellThingDef[i] = thingDef;
+        _cellThingDefLabel[i] = thingDefLabel;
+        _cellDrawData[i] = cellDrawData;
+        _cellWidth[i] = cellWidth;
+    }
+
+    private readonly record struct CellDrawData(string Text, Widget Icon);
 }

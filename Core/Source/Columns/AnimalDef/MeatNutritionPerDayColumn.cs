@@ -1,20 +1,21 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
 using Stats.Extensions;
 using Stats.TableRecords;
-using Verse;
 
 namespace Stats.Columns.AnimalDef;
 
-public sealed class MeatNutritionPerDayColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberColumnCell>(columnDef)
-        where TRecord :
-            IPawnDefTableRecord
+public sealed class MeatNutritionPerDayColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberColumnCell MakeCell(TRecord record)
+    public MeatNutritionPerDayColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0.00/d")
     {
-        RaceProperties raceProps = record.RaceProperties;
-        Verse.ThingDef? meatDef = raceProps.meatDef;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        Verse.ThingDef? meatDef = record.ThingDef.race?.meatDef;
 
         if (meatDef != null)
         {
@@ -28,10 +29,10 @@ public sealed class MeatNutritionPerDayColumn<TRecord>(ColumnDef columnDef) :
                 float meatPerDay = meatAmount / growthTime;
                 float meatNutritionPerDay = meatPerDay * meatNutrition;
 
-                return new NumberColumnCell(meatNutritionPerDay.ToDecimal(2), "0.00/d");
+                return meatNutritionPerDay.ToDecimal(2);
             }
         }
 
-        return default;
+        return 0m;
     }
 }

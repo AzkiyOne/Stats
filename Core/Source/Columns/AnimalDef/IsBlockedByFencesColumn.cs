@@ -1,14 +1,18 @@
-﻿using Stats.TableRecords;
+﻿using System.Collections.Generic;
+using Stats.TableRecords;
 
 namespace Stats.Columns.AnimalDef;
 
-public sealed class IsBlockedByFencesColumn<TRecord>(ColumnDef columnDef) :
-    BooleanColumn<TRecord>(columnDef)
-        where TRecord :
-            IPawnDefTableRecord
+public sealed class IsBlockedByFencesColumn<TRecord> : BooleanColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override bool GetValue(TRecord record)
+    public IsBlockedByFencesColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
-        return record.RaceProperties.FenceBlocked;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override bool GetValueFromRecord(TRecord record)
+    {
+        return record.ThingDef.race?.FenceBlocked ?? false;
     }
 }

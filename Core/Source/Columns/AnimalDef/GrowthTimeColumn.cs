@@ -1,19 +1,29 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
+using Stats.Extensions;
 using Stats.TableRecords;
 
 namespace Stats.Columns.AnimalDef;
 
-public sealed class GrowthTimeColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberColumnCell>(columnDef)
-        where TRecord :
-            IPawnDefTableRecord
+public sealed class GrowthTimeColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberColumnCell MakeCell(TRecord record)
+    public GrowthTimeColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0 d")
+    {
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
     {
         Verse.ThingDef thingDef = record.ThingDef;
-        float growthTime = AnimalProductionUtility.DaysToAdulthood(thingDef);
 
-        return new NumberColumnCell(growthTime, "0 d");
+        if (thingDef.race != null)
+        {
+            float growthTime = AnimalProductionUtility.DaysToAdulthood(thingDef);
+
+            return growthTime.ToDecimal();
+        }
+
+        return 0m;
     }
 }

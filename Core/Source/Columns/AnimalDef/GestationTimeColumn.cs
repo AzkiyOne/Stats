@@ -1,20 +1,29 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
 using Stats.Extensions;
 using Stats.TableRecords;
 
 namespace Stats.Columns.AnimalDef;
 
-public sealed class GestationTimeColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberColumnCell>(columnDef)
-        where TRecord :
-            IPawnDefTableRecord
+public sealed class GestationTimeColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberColumnCell MakeCell(TRecord record)
+    public GestationTimeColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0.0 d")
+    {
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
     {
         Verse.ThingDef thingDef = record.ThingDef;
-        float gestationTime = AnimalProductionUtility.GestationDaysLitter(thingDef);
 
-        return new NumberColumnCell(gestationTime.ToDecimal(1), "0.0 d");
+        if (thingDef.race != null)
+        {
+            float gestationTime = AnimalProductionUtility.GestationDaysLitter(thingDef);
+
+            return gestationTime.ToDecimal(1);
+        }
+
+        return 0m;
     }
 }

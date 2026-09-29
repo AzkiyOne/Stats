@@ -1,21 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
-using Stats.Columns.Cells;
 using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Tables;
+using Verse;
 
 namespace Stats.Columns.PawnDef;
 
-public sealed class LeatherAmountColumn<TRecord>(ColumnDef columnDef) :
-    ThingDefCountColumn<TRecord, ThingDefCountColumnCell>(columnDef)
-        where TRecord :
-            IPawnDefTableRecord
+public sealed class LeatherAmountColumn<TRecord> : ThingDefCountColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override ThingDefCountColumnCell MakeCell(TRecord record)
+    public LeatherAmountColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetLeatherDefs(thingDefs))
     {
-        Verse.ThingDef? leatherDef = record.RaceProperties.leatherDef;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override ThingDefCount? GetValueFromRecord(TRecord record)
+    {
+        Verse.ThingDef? leatherDef = record.ThingDef.race?.leatherDef;
 
         if (leatherDef != null)
         {
@@ -24,16 +26,16 @@ public sealed class LeatherAmountColumn<TRecord>(ColumnDef columnDef) :
 
             if (leatherAmount > 0f)
             {
-                return new ThingDefCountColumnCell(leatherDef, leatherAmount);
+                return new ThingDefCount(leatherDef, (int)leatherAmount);
             }
         }
 
-        return default;
+        return null;
     }
 
-    protected override IEnumerable<Verse.ThingDef?> GetTypeFieldFilterOptions(Table tableWorker)
+    private static IEnumerable<Verse.ThingDef?> GetLeatherDefs(IEnumerable<Verse.ThingDef> thingDefs)
     {
-        return ((IRefRecordsProvider<Verse.ThingDef>)tableWorker).Records
+        return thingDefs
             .Select(thingDef => thingDef.race?.leatherDef)
             .Distinct();
     }

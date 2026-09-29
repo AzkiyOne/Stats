@@ -7,8 +7,8 @@ namespace Stats.Widgets.Filters;
 
 public sealed class MTMFilter<TOption> : NTMFilter<IEnumerable<TOption>, TOption>
 {
-    public MTMFilter(List<IEnumerable<TOption>> values, IEnumerable<NTMFilterOption<TOption>> options, string? label = null)
-        : base(values, options, Operators.List, Operators.IntersectsWith.Instance, label)
+    public MTMFilter(Func<int, IEnumerable<TOption>> getValue, IEnumerable<NTMFilterOption<TOption>> options, string? label = null)
+        : base(getValue, options, Operators.List, Operators.IntersectsWith.Instance, label)
     {
     }
 

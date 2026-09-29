@@ -1,14 +1,18 @@
-﻿using Stats.TableRecords;
+﻿using System.Collections.Generic;
+using Stats.TableRecords;
 
 namespace Stats.Columns.AnimalDef;
 
-public sealed class IsPackAnimalColumn<TRecord>(ColumnDef columnDef) :
-    BooleanColumn<TRecord>(columnDef)
-        where TRecord :
-            IPawnDefTableRecord
+public sealed class IsPackAnimalColumn<TRecord> : BooleanColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override bool GetValue(TRecord record)
+    public IsPackAnimalColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
-        return record.RaceProperties.packAnimal;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override bool GetValueFromRecord(TRecord record)
+    {
+        return record.ThingDef.race?.packAnimal ?? false;
     }
 }

@@ -306,6 +306,10 @@ public sealed partial class Table<TRecord>
         {
             if (_isManuallyResized == false)
             {
+                // TODO: 
+                // - Make columns return cell width with padding. Reason - consistency with DrawCell methods.
+                // - Make PadHor/Ver be a sum of left + right/top + bottom padding.
+                // - Introduce PadLR/PadTB.
                 Width = Mathf.Max(_labelWidget.Size.x, _column.GetMinWidth(rows)) + GUIStyles.TableCell.PadHor * 2f;
             }
         }
@@ -330,9 +334,9 @@ public sealed partial class Table<TRecord>
             _column.RemoveRecord(i);
         }
 
-        public void RefreshCells(List<TRecord> records)
+        public void RefreshCells()
         {
-            _column.RefreshCells(records);
+            _column.RefreshCells();
         }
     }
 }

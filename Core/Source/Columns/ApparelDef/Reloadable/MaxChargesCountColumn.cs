@@ -1,26 +1,26 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
 using Stats.TableRecords;
 
 namespace Stats.Columns.ApparelDef.Reloadable;
 
-public sealed class MaxChargesCountColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberColumnCell>(columnDef)
-        where TRecord :
-            IThingDefTableRecord
+public sealed class MaxChargesCountColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberColumnCell MakeCell(TRecord record)
+    public MaxChargesCountColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
-        Verse.ThingDef thingDef = record.ThingDef;
-        CompProperties_ApparelReloadable? reloadableCompProperties = thingDef.GetCompProperties<CompProperties_ApparelReloadable>();
+    }
 
-        if (reloadableCompProperties != null)
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        CompProperties_ApparelReloadable? reloadableCompProps = record.ThingDef.GetCompProperties<CompProperties_ApparelReloadable>();
+
+        if (reloadableCompProps != null)
         {
-            decimal maxCharges = reloadableCompProperties.maxCharges;
-
-            return new NumberColumnCell(maxCharges);
+            return reloadableCompProps.maxCharges;
         }
 
-        return default;
+        return 0m;
     }
 }

@@ -1,35 +1,37 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
-using Stats.Columns.Cells;
 using Stats.TableRecords;
-using Stats.Tables;
 using UnityEngine;
+using Verse;
 
 namespace Stats.Columns.PlantDef;
 
-public sealed class HarvestYieldColumn<TRecord>(ColumnDef columnDef) :
-    ThingDefCountColumn<TRecord, ThingDefCountColumnCell>(columnDef)
-        where TRecord :
-            IThingDefTableRecord
+public sealed class HarvestYieldColumn<TRecord> : ThingDefCountColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override ThingDefCountColumnCell MakeCell(TRecord record)
+    public HarvestYieldColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetHarvestedThingDefs(thingDefs))
     {
-        PlantProperties plantProps = record.PlantProperties;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override ThingDefCount? GetValueFromRecord(TRecord record)
+    {
+        PlantProperties? plantProps = record.ThingDef.plant;
 
         if (plantProps is { harvestYield: > 0f, harvestedThingDef: not null })
         {
-            decimal yield = Mathf.CeilToInt(plantProps.harvestYield);
+            int yield = Mathf.CeilToInt(plantProps.harvestYield);
 
-            return new ThingDefCountColumnCell(plantProps.harvestedThingDef, yield);
+            return new ThingDefCount(plantProps.harvestedThingDef, yield);
         }
 
-        return default;
+        return null;
     }
 
-    protected override IEnumerable<Verse.ThingDef?> GetTypeFieldFilterOptions(Table tableWorker)
+    private static IEnumerable<Verse.ThingDef?> GetHarvestedThingDefs(IEnumerable<Verse.ThingDef> thingDefs)
     {
-        return ((IRefRecordsProvider<Verse.ThingDef>)tableWorker).Records
+        return thingDefs
             .Select(thingDef => thingDef.plant?.harvestedThingDef)
             .Distinct();
     }

@@ -2,29 +2,36 @@
 using System.Linq;
 using RimWorld;
 using Stats.TableRecords;
+using Verse;
 
 namespace Stats.Columns.ShearableDef;
 
-public sealed class WoolAmountColumn<TRecord>(ColumnDef columnDef) : ThingDefCountColumn<TRecord, ThingDefCountColumnCell>(columnDef) where TRecord : IThingDefTableRecord
+public sealed class WoolAmountColumn<TRecord> : ThingDefCountColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override ThingDefCountColumnCell MakeCell(TRecord record)
+    public WoolAmountColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetWoolDefs(thingDefs))
     {
-        CompProperties_Shearable? shearableCompProps = record.ShearableCompProperties;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override ThingDefCount? GetValueFromRecord(TRecord record)
+    {
+        CompProperties_Shearable? shearableCompProps = record.ThingDef.GetCompProperties<CompProperties_Shearable>();
 
         if (shearableCompProps != null)
         {
             Verse.ThingDef woolDef = shearableCompProps.woolDef;
-            decimal woolAmount = shearableCompProps.woolAmount;
+            int woolAmount = shearableCompProps.woolAmount;
 
-            return new ThingDefCountColumnCell(woolDef, woolAmount);
+            return new ThingDefCount(woolDef, woolAmount);
         }
 
-        return default;
+        return null;
     }
 
-    protected override IEnumerable<Verse.ThingDef?> GetTypeFieldFilterOptions(Table tableWorker)
+    private static IEnumerable<Verse.ThingDef?> GetWoolDefs(IEnumerable<Verse.ThingDef> thingDefs)
     {
-        return ((IRefRecordsProvider<Verse.ThingDef>)tableWorker).Records
+        return thingDefs
             .Select(thingDef => thingDef.GetCompProperties<CompProperties_Shearable>()?.woolDef)
             .Distinct();
     }

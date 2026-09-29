@@ -1,23 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
-using Stats.Columns.Cells;
 using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Tables;
 using Verse;
 
 namespace Stats.Columns.PawnDef;
 
-public sealed class MeatAmountColumn<TRecord>(ColumnDef columnDef) :
-    ThingDefCountColumn<TRecord, ThingDefCountColumnCell>(columnDef)
-        where TRecord :
-            IPawnDefTableRecord
+public sealed class MeatAmountColumn<TRecord> : ThingDefCountColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override ThingDefCountColumnCell MakeCell(TRecord record)
+    public MeatAmountColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetMeatDefs(thingDefs))
     {
-        RaceProperties raceProperties = record.RaceProperties;
-        Verse.ThingDef? meatDef = raceProperties.meatDef;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override ThingDefCount? GetValueFromRecord(TRecord record)
+    {
+        Verse.ThingDef? meatDef = record.ThingDef.race?.meatDef;
 
         if (meatDef != null)
         {
@@ -26,16 +26,16 @@ public sealed class MeatAmountColumn<TRecord>(ColumnDef columnDef) :
 
             if (meatAmount > 0f)
             {
-                return new ThingDefCountColumnCell(meatDef, meatAmount);
+                return new ThingDefCount(meatDef, (int)meatAmount);
             }
         }
 
-        return default;
+        return null;
     }
 
-    protected override IEnumerable<Verse.ThingDef?> GetTypeFieldFilterOptions(Table tableWorker)
+    private static IEnumerable<Verse.ThingDef?> GetMeatDefs(IEnumerable<Verse.ThingDef> thingDefs)
     {
-        return ((IRefRecordsProvider<Verse.ThingDef>)tableWorker).Records
+        return thingDefs
             .Select(thingDef => thingDef.race?.meatDef)
             .Distinct();
     }

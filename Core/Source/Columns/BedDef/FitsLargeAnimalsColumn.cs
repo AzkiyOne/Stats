@@ -1,16 +1,20 @@
-﻿using RimWorld;
+﻿using System.Collections.Generic;
+using RimWorld;
 using Stats.TableRecords;
 
 namespace Stats.Columns.BedDef;
 
-public sealed class FitsLargeAnimalsColumn<TRecord>(ColumnDef columnDef) :
-    BooleanColumn<TRecord>(columnDef)
-        where TRecord :
-            IBuildingDefTableRecord
+public sealed class FitsLargeAnimalsColumn<TRecord> : BooleanColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override bool GetValue(TRecord record)
+    public FitsLargeAnimalsColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
-        BuildingProperties buildingProperties = record.BuildingProperties;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override bool GetValueFromRecord(TRecord record)
+    {
+        BuildingProperties? buildingProperties = record.ThingDef.building;
 
         return buildingProperties is { bed_humanlike: false, bed_maxBodySize: > 0.55f };
     }

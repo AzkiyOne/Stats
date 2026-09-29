@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Stats.Widgets.Filters;
@@ -8,11 +7,11 @@ public sealed class StringFilter : FilterWithInputField<string, string>
 {
     private string _value = "";
     private RelOperator<string, string> _operator = Operators.Default;
-    private readonly List<string> _values;
+    private readonly Func<int, string> _getValue;
 
-    public StringFilter(List<string> values, string? placeholder = null) : base(Operators.List, placeholder)
+    public StringFilter(Func<int, string> getValue, string? placeholder = null) : base(Operators.List, placeholder)
     {
-        _values = values;
+        _getValue = getValue;
     }
 
     public override bool IsActive => Value.Length > 0;
@@ -60,7 +59,7 @@ public sealed class StringFilter : FilterWithInputField<string, string>
 
     public override bool Eval(int i)
     {
-        return Operator.Eval(_values[i], Value);
+        return Operator.Eval(_getValue(i), Value);
     }
 
     public override void Reset()

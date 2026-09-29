@@ -1,36 +1,92 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Stats.Extensions;
+using Stats.Widgets;
 using Stats.Widgets.Filters;
+using UnityEngine;
 
 namespace Stats.Columns;
 
-public abstract class ThingDefSetColumn<TRecord> : Column<TRecord, ThingDefSetColumnCell>
+public abstract class ThingDefSetColumn<TRecord> : Column<TRecord, IReadOnlyCollection<Verse.ThingDef>?>
 {
     private static readonly HashSet<Verse.ThingDef> _emptyThingDefHashSet = [];
 
-    private readonly string _label;
+    private readonly List<IReadOnlyCollection<Verse.ThingDef>> _cellValue;
+    private readonly List<int> _cellThingDefsCount;
+    private readonly List<Widget[]?> _cellIcons;
+    private readonly List<float> _cellWidth;
 
-    protected ThingDefSetColumn(ColumnDef def) : base(def)
+    protected ThingDefSetColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefFilterOptions) : base(def, records)
     {
-        _label = def.LabelCap;
+        string label = def.LabelCap;
+        int capacity = records.Capacity;
+        _cellValue = new List<IReadOnlyCollection<Verse.ThingDef>>(capacity);
+        _cellThingDefsCount = new List<int>(capacity);
+        _cellIcons = new List<Widget[]?>(capacity);
+        _cellWidth = new List<float>(capacity);
+        SortOptions = [
+            new ColumnSortOption<int>(label, i => _cellThingDefsCount[i]),
+        ];
+        IEnumerable<NTMFilterOption<Verse.ThingDef>> thingDefNTMFilterOptions = thingDefFilterOptions
+            .OrderBy(thingDef => thingDef.label)
+            .Select<Verse.ThingDef, NTMFilterOption<Verse.ThingDef>>(
+                thingDef => new(thingDef, thingDef.LabelCap, new Widgets_Legacy.ThingDefIcon(thingDef))
+            );
+        FilterOptions = [
+            new MTMColumnFilterOption<Verse.ThingDef>(label, i => _cellValue[i], thingDefNTMFilterOptions),
+        ];
     }
 
     public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Left;
 
-    public override ICollection<ColumnSortOption> SortOptions => [
-        // TODO: Figure out how to efficiently compare cells so that cells with equal values will be grouped together.
-        //new ColumnSortOption(_label, (i1, i2) => i1.CompareTo(i2))
-    ];
+    public override ICollection<ColumnSortOption> SortOptions { get; }
 
-    public override ICollection<ColumnFilterOption> FilterOptions => [
-        new ColumnFilterOption(_label, () => new MTMFilter<Verse.ThingDef?>(row => this[row].Value ?? _emptyThingDefHashSet, ThingDefFilterOptions))
-    ];
+    public override ICollection<ColumnFilterOption> FilterOptions { get; }
 
-    protected virtual IEnumerable<NTMFilterOption<Verse.ThingDef?>> ThingDefFilterOptions => ThingDefOptions
-        .OrderBy(def => def?.label)
-        .Select<Verse.ThingDef?, NTMFilterOption<Verse.ThingDef?>>(
-            thingDef => thingDef == null ? new() : new(thingDef, thingDef.LabelCap, new Widgets_Legacy.ThingDefIcon(thingDef))
-        );
+    public override void DrawCell(Rect rect, int index)
+    {
+        Widget[]? icons = _cellIcons[index];
 
-    protected abstract IEnumerable<Verse.ThingDef?> ThingDefOptions { get; }
+        if (icons != null)
+        {
+            for (int i = 0; i < icons.Length; i++)
+            {
+                Widget icon = icons[i];
+                // TODO: This can be optimized.
+                rect = rect.CutLeft(out Rect iconRect, icon.Size.x);
+
+                icon.Draw(iconRect);
+
+                rect.xMin += GUIStyles.TableCell.ContentSpacing;
+            }
+        }
+    }
+
+    protected override float GetCellWidth(int i)
+    {
+        return _cellWidth[i];
+    }
+
+    private void GetCellValues(IReadOnlyCollection<Verse.ThingDef>? value)
+    {
+
+    }
+
+    protected override void AddValue(IReadOnlyCollection<Verse.ThingDef>? value)
+    {
+        _cellValue.Add(value ?? _emptyThingDefHashSet);
+    }
+
+    protected override void RemoveValue(int i)
+    {
+        _cellValue.ReplaceWithLast(i);
+        _cellThingDefsCount.ReplaceWithLast(i);
+        _cellIcons.ReplaceWithLast(i);
+        _cellWidth.ReplaceWithLast(i);
+    }
+
+    protected override void SetValue(int i, IReadOnlyCollection<Verse.ThingDef>? value)
+    {
+        throw new System.NotImplementedException();
+    }
 }

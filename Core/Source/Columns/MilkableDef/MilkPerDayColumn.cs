@@ -1,18 +1,21 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
 using Stats.Extensions;
 using Stats.TableRecords;
 
 namespace Stats.Columns.MilkableDef;
 
-public sealed class MilkPerDayColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberColumnCell>(columnDef)
-        where TRecord :
-            IMilkableDefTableRecord
+public sealed class MilkPerDayColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberColumnCell MakeCell(TRecord record)
+    public MilkPerDayColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0.0/d")
     {
-        CompProperties_Milkable? milkableCompProps = record.MilkableCompProperties;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        CompProperties_Milkable? milkableCompProps = record.ThingDef.GetCompProperties<CompProperties_Milkable>();
 
         if (milkableCompProps is { milkIntervalDays: > 0 })
         {
@@ -20,9 +23,9 @@ public sealed class MilkPerDayColumn<TRecord>(ColumnDef columnDef) :
             float milkIntervalDays = milkableCompProps.milkIntervalDays;
             float milkPerDay = milkAmount / milkIntervalDays;
 
-            return new NumberColumnCell(milkPerDay.ToDecimal(1), "0.0/d");
+            return milkPerDay.ToDecimal(1);
         }
 
-        return default;
+        return 0m;
     }
 }

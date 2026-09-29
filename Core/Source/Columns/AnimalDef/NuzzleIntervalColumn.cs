@@ -1,25 +1,32 @@
-﻿using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
 using Stats.Extensions;
 using Stats.TableRecords;
 using Verse;
 
 namespace Stats.Columns.AnimalDef;
 
-public sealed class NuzzleIntervalColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberColumnCell>(columnDef)
-        where TRecord :
-            IPawnDefTableRecord
+public sealed class NuzzleIntervalColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberColumnCell MakeCell(TRecord record)
+    public NuzzleIntervalColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0.0 h")
     {
-        RaceProperties raceProps = record.RaceProperties;
-        float nuzzleInterval = raceProps.nuzzleMtbHours;
+    }
 
-        if (nuzzleInterval > 0f)
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        RaceProperties? raceProps = record.ThingDef.race;
+
+        if (raceProps != null)
         {
-            return new NumberColumnCell(nuzzleInterval.ToDecimal(1), "0.0 h");
+            float nuzzleInterval = raceProps.nuzzleMtbHours;
+
+            if (nuzzleInterval > 0f)
+            {
+                return nuzzleInterval.ToDecimal(1);
+            }
         }
 
-        return default;
+        return 0m;
     }
 }

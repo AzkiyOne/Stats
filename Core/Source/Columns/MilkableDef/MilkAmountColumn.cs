@@ -1,35 +1,37 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
-using Stats.Columns.Cells;
 using Stats.TableRecords;
-using Stats.Tables;
+using Verse;
 
 namespace Stats.Columns.MilkableDef;
 
-public sealed class MilkAmountColumn<TRecord>(ColumnDef columnDef) :
-    ThingDefCountColumn<TRecord, ThingDefCountColumnCell>(columnDef)
-        where TRecord :
-            IMilkableDefTableRecord
+public sealed class MilkAmountColumn<TRecord> : ThingDefCountColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override ThingDefCountColumnCell MakeCell(TRecord record)
+    public MilkAmountColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetMilkDefs(thingDefs))
     {
-        CompProperties_Milkable? milkableCompProps = record.MilkableCompProperties;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override ThingDefCount? GetValueFromRecord(TRecord record)
+    {
+        CompProperties_Milkable? milkableCompProps = record.ThingDef.GetCompProperties<CompProperties_Milkable>();
 
         if (milkableCompProps != null)
         {
             Verse.ThingDef milkDef = milkableCompProps.milkDef;
-            decimal milkAmount = milkableCompProps.milkAmount;
+            int milkAmount = milkableCompProps.milkAmount;
 
-            return new ThingDefCountColumnCell(milkDef, milkAmount);
+            return new ThingDefCount(milkDef, milkAmount);
         }
 
-        return default;
+        return null;
     }
 
-    protected override IEnumerable<Verse.ThingDef?> GetTypeFieldFilterOptions(Table tableWorker)
+    private static IEnumerable<Verse.ThingDef?> GetMilkDefs(IEnumerable<Verse.ThingDef> thingDefs)
     {
-        return ((IRefRecordsProvider<Verse.ThingDef>)tableWorker).Records
+        return thingDefs
             .Select(thingDef => thingDef.GetCompProperties<CompProperties_Milkable>()?.milkDef)
             .Distinct();
     }

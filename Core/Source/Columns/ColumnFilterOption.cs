@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Stats.Widgets.Filters;
 
 namespace Stats.Columns;
@@ -17,79 +18,79 @@ public abstract class ColumnFilterOption
 
 public class NumberColumnFilterOption : ColumnFilterOption
 {
-    private readonly List<decimal> _values;
+    private readonly Func<int, decimal> _getValue;
 
-    public NumberColumnFilterOption(string name, List<decimal> values) : base(name)
+    public NumberColumnFilterOption(string name, Func<int, decimal> getValue) : base(name)
     {
-        _values = values;
+        _getValue = getValue;
     }
 
     public override Filter GetFilter()
     {
-        return new NumberFilter(_values);
+        return new NumberFilter(_getValue);
     }
 }
 
 public class BooleanColumnFilterOption : ColumnFilterOption
 {
-    private readonly List<bool> _values;
+    private readonly Func<int, bool> _getValue;
 
-    public BooleanColumnFilterOption(string name, List<bool> values) : base(name)
+    public BooleanColumnFilterOption(string name, Func<int, bool> getValue) : base(name)
     {
-        _values = values;
+        _getValue = getValue;
     }
 
     public override Filter GetFilter()
     {
-        return new BooleanFilter(_values);
+        return new BooleanFilter(_getValue);
     }
 }
 
 public class StringColumnFilterOption : ColumnFilterOption
 {
-    private readonly List<string> _values;
+    private readonly Func<int, string> _getValue;
 
-    public StringColumnFilterOption(string name, List<string> values) : base(name)
+    public StringColumnFilterOption(string name, Func<int, string> getValue) : base(name)
     {
-        _values = values;
+        _getValue = getValue;
     }
 
     public override Filter GetFilter()
     {
-        return new StringFilter(_values);
+        return new StringFilter(_getValue);
     }
 }
 
 public class OTMColumnFilterOption<T> : ColumnFilterOption
 {
-    private readonly List<T> _values;
+    private readonly Func<int, T> _getValue;
     private readonly IEnumerable<NTMFilterOption<T>> _options;
 
-    public OTMColumnFilterOption(string name, List<T> values, IEnumerable<NTMFilterOption<T>> options) : base(name)
+    public OTMColumnFilterOption(string name, Func<int, T> getValue, IEnumerable<NTMFilterOption<T>> options) : base(name)
     {
-        _values = values;
+        _getValue = getValue;
         _options = options;
     }
 
     public override Filter GetFilter()
     {
-        return new OTMFilter<T>(_values, _options);
+        return new OTMFilter<T>(_getValue, _options);
     }
 }
 
 public class MTMColumnFilterOption<T> : ColumnFilterOption
 {
-    private readonly List<IEnumerable<T>> _values;
+    private readonly Func<int, IEnumerable<T>> _getValue;
     private readonly IEnumerable<NTMFilterOption<T>> _options;
 
-    public MTMColumnFilterOption(string name, List<IEnumerable<T>> values, IEnumerable<NTMFilterOption<T>> options) : base(name)
+    public MTMColumnFilterOption(string name, Func<int, IEnumerable<T>> getValue, IEnumerable<NTMFilterOption<T>> options) : base(name)
     {
-        _values = values;
+        _getValue = getValue;
         _options = options;
     }
 
     public override Filter GetFilter()
     {
-        return new MTMFilter<T>(_values, _options);
+        return new MTMFilter<T>(_getValue, _options);
     }
 }

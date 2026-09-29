@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -9,14 +8,14 @@ public sealed class NumberFilter : FilterWithInputField<decimal, decimal>
 {
     private decimal _value = 0m;
     private RelOperator<decimal, decimal> _operator = Operators.Default;
-    private readonly List<decimal> _values;
+    private readonly Func<int, decimal> _getValue;
     private bool _inputIsValid = true;
     private string _textFieldText = "";
     private static readonly Color _errorColor = Color.red.ToTransparent(0.5f);
 
-    public NumberFilter(List<decimal> values, string? placeholder = null) : base(Operators.List, placeholder)
+    public NumberFilter(Func<int, decimal> getValue, string? placeholder = null) : base(Operators.List, placeholder)
     {
-        _values = values;
+        _getValue = getValue;
     }
 
     public override bool IsActive => _textFieldText.Length > 0 && _inputIsValid;
@@ -103,7 +102,7 @@ public sealed class NumberFilter : FilterWithInputField<decimal, decimal>
 
     public override bool Eval(int i)
     {
-        return Operator.Eval(_values[i], Value);
+        return Operator.Eval(_getValue(i), Value);
     }
 
     public override void Reset()

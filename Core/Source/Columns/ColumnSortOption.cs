@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Stats.Columns;
 
@@ -17,15 +16,15 @@ public abstract class ColumnSortOption
 
 public class ColumnSortOption<T> : ColumnSortOption where T : IComparable<T>
 {
-    private readonly List<T> _values;
+    private readonly Func<int, T> _getValue;
 
-    public ColumnSortOption(string name, List<T> values) : base(name)
+    public ColumnSortOption(string name, Func<int, T> getValue) : base(name)
     {
-        _values = values;
+        _getValue = getValue;
     }
 
     public override int Compare(int i1, int i2)
     {
-        return _values[i1].CompareTo(_values[i2]);
+        return _getValue(i1).CompareTo(_getValue(i2));
     }
 }

@@ -1,18 +1,21 @@
-﻿using RimWorld;
+﻿using System.Collections.Generic;
+using RimWorld;
 using Stats.TableRecords;
 
 namespace Stats.Columns.ApparelDef.Reloadable;
 
-public sealed class IsDestroyedOnEmptyColumn<TRecord>(ColumnDef columnDef) :
-    BooleanColumn<TRecord>(columnDef)
-        where TRecord :
-            IThingDefTableRecord
+public sealed class IsDestroyedOnEmptyColumn<TRecord> : BooleanColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override bool GetValue(TRecord record)
+    public IsDestroyedOnEmptyColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
-        Verse.ThingDef thingDef = record.ThingDef;
-        CompProperties_ApparelReloadable? reloadableCompProperties = thingDef.GetCompProperties<CompProperties_ApparelReloadable>();
+    }
 
-        return reloadableCompProperties?.destroyOnEmpty == true;
+    public override bool IsRefreshable => false;
+
+    protected override bool GetValueFromRecord(TRecord record)
+    {
+        CompProperties_ApparelReloadable? reloadableCompProps = record.ThingDef.GetCompProperties<CompProperties_ApparelReloadable>();
+
+        return reloadableCompProps?.destroyOnEmpty == true;
     }
 }

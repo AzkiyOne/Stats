@@ -1,34 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Stats.Columns.Cells;
 using Stats.TableRecords;
-using Stats.Tables;
-using Verse;
 
 namespace Stats.Columns.AnimalDef;
 
-public sealed class TrainabilityColumn<TRecord>(ColumnDef columnDef) :
-    DefColumn<TRecord, DefColumnCell>(columnDef)
-        where TRecord :
-            IPawnDefTableRecord
+public sealed class TrainabilityColumn<TRecord> : DefColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override DefColumnCell MakeCell(TRecord record)
+    public TrainabilityColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetTrainabilityDefs(thingDefs))
     {
-        RaceProperties raceProperties = record.RaceProperties;
-        TrainabilityDef? trainability = raceProperties.trainability;
-
-        if (trainability != null)
-        {
-            return new DefColumnCell(trainability);
-        }
-
-        return default;
     }
 
-    protected override IEnumerable<Verse.Def?> GetValueFieldFilterOptions(Table tableWorker)
+    public override bool IsRefreshable => false;
+
+    protected override Verse.Def? GetValueFromRecord(TRecord record)
     {
-        return ((IRefRecordsProvider<Verse.ThingDef>)tableWorker).Records
-            .Select(thingDef => thingDef.race?.trainability)
+        return record.ThingDef.race?.trainability;
+    }
+
+    private static IEnumerable<Verse.Def?> GetTrainabilityDefs(IEnumerable<Verse.ThingDef> thingDefs)
+    {
+        return thingDefs
+            .Select<Verse.ThingDef, Verse.Def?>(thingDef => thingDef.race?.trainability)
             .Distinct();
     }
 }

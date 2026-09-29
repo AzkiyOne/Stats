@@ -1,18 +1,21 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
 using Stats.Extensions;
 using Stats.TableRecords;
 
 namespace Stats.Columns.EggLayerDef;
 
-public sealed class EggsNutritionPerDayColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberColumnCell>(columnDef)
-        where TRecord :
-            IEggLayerDefTableRecord
+public sealed class EggsNutritionPerDayColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberColumnCell MakeCell(TRecord record)
+    public EggsNutritionPerDayColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0.00/d")
     {
-        CompProperties_EggLayer? eggLayerCompProps = record.EggLayerCompProperties;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        CompProperties_EggLayer? eggLayerCompProps = record.ThingDef.GetCompProperties<CompProperties_EggLayer>();
 
         if (eggLayerCompProps is { eggLayIntervalDays: > 0f })
         {
@@ -21,9 +24,9 @@ public sealed class EggsNutritionPerDayColumn<TRecord>(ColumnDef columnDef) :
             float eggsPerDay = eggLayerCompProps.eggCountRange.Average / eggLayerCompProps.eggLayIntervalDays;
             float eggsNutritionPerDay = eggsPerDay * eggNutrition;
 
-            return new NumberColumnCell(eggsNutritionPerDay.ToDecimal(2), "0.00/d");
+            return eggsNutritionPerDay.ToDecimal(2);
         }
 
-        return default;
+        return 0m;
     }
 }

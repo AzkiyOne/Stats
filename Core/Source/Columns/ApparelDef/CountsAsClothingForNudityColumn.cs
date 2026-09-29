@@ -1,15 +1,18 @@
-﻿using Stats.TableRecords;
+﻿using System.Collections.Generic;
+using Stats.TableRecords;
 
 namespace Stats.Columns.ApparelDef;
 
-public sealed class CountsAsClothingForNudityColumn<TRecord> : BooleanColumn<TRecord> where TRecord : IApparelDefTableRecord
+public sealed class CountsAsClothingForNudityColumn<TRecord> : BooleanColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    public CountsAsClothingForNudityColumn(ColumnDef columnDef) : base(columnDef)
+    public CountsAsClothingForNudityColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
     }
 
-    protected override bool GetValue(TRecord record)
+    public override bool IsRefreshable => false;
+
+    protected override bool GetValueFromRecord(TRecord record)
     {
-        return record.ApparelProperties.countsAsClothingForNudity;
+        return record.ThingDef.apparel?.countsAsClothingForNudity ?? false;
     }
 }

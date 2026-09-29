@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Stats.Extensions;
 using UnityEngine;
 using Verse;
@@ -8,11 +7,11 @@ namespace Stats.Widgets.Filters;
 
 public sealed class BooleanFilter : Filter
 {
-    private readonly List<bool> _values;
+    private readonly Func<int, bool> _getValue;
 
-    public BooleanFilter(List<bool> values)
+    public BooleanFilter(Func<int, bool> getValue)
     {
-        _values = values;
+        _getValue = getValue;
     }
 
     public override bool IsActive => Value != null;
@@ -70,7 +69,7 @@ public sealed class BooleanFilter : Filter
 
     public override bool Eval(int i)
     {
-        return _values[i] == Value;
+        return _getValue(i) == Value;
     }
 
     public override void Reset()

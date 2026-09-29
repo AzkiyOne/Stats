@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Stats.Widgets.Filters;
 
 public sealed class OTMFilter<TOption> : NTMFilter<TOption, TOption>
 {
-    public OTMFilter(List<TOption> values, IEnumerable<NTMFilterOption<TOption>> options, string? label = null)
-        : base(values, options, Operators.List, Operators.IsIn.Instance, label)
+    public OTMFilter(Func<int, TOption> getValue, IEnumerable<NTMFilterOption<TOption>> options, string? label = null)
+        : base(getValue, options, Operators.List, Operators.IsIn.Instance, label)
     {
     }
 

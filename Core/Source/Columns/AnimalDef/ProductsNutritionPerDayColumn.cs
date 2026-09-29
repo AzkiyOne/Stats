@@ -1,21 +1,23 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
 using Stats.Extensions;
 using Stats.TableRecords;
 
 namespace Stats.Columns.AnimalDef;
 
-public sealed class ProductsNutritionPerDayColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberColumnCell>(columnDef)
-        where TRecord :
-            IMilkableDefTableRecord,
-            IEggLayerDefTableRecord
+public sealed class ProductsNutritionPerDayColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberColumnCell MakeCell(TRecord record)
+    public ProductsNutritionPerDayColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0.00/d")
+    {
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
     {
         // Milk
         float milkNutritionPerDay = 0f;
-        CompProperties_Milkable? milkableCompProps = record.MilkableCompProperties;
+        CompProperties_Milkable? milkableCompProps = record.ThingDef.GetCompProperties<CompProperties_Milkable>();
 
         if (milkableCompProps is { milkDef: not null, milkIntervalDays: > 0 })
         {
@@ -30,7 +32,7 @@ public sealed class ProductsNutritionPerDayColumn<TRecord>(ColumnDef columnDef) 
 
         // Eggs
         float eggsNutritionPerDay = 0f;
-        CompProperties_EggLayer? eggLayerCompProps = record.EggLayerCompProperties;
+        CompProperties_EggLayer? eggLayerCompProps = record.ThingDef.GetCompProperties<CompProperties_EggLayer>();
 
         if (eggLayerCompProps is { eggLayIntervalDays: > 0 })
         {
@@ -46,6 +48,6 @@ public sealed class ProductsNutritionPerDayColumn<TRecord>(ColumnDef columnDef) 
         // Result
         float productsNutritionPerDay = milkNutritionPerDay + eggsNutritionPerDay;
 
-        return new NumberColumnCell(productsNutritionPerDay.ToDecimal(2), "0.00/d");
+        return productsNutritionPerDay.ToDecimal(2);
     }
 }

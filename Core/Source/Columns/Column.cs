@@ -41,7 +41,9 @@ public abstract class Column
 
     public abstract void RefreshCells();
 
-    public abstract void Hide();
+    public virtual void Hide()
+    {
+    }
 }
 
 public abstract class Column<TRecord> : Column
@@ -83,7 +85,7 @@ public abstract class Column<TRecord, TValue> : Column<TRecord>
         SetValue(i, default(TValue));
     }
 
-    protected abstract void RemoveValue(int index);
+    protected abstract void RemoveValue(int i);
 
     public override void AddRecord(TRecord record)
     {

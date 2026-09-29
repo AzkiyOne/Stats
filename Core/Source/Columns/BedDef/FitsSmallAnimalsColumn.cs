@@ -1,14 +1,18 @@
-﻿using Stats.TableRecords;
+﻿using System.Collections.Generic;
+using Stats.TableRecords;
 
 namespace Stats.Columns.BedDef;
 
-public sealed class FitsSmallAnimalsColumn<TRecord>(ColumnDef columnDef) :
-    BooleanColumn<TRecord>(columnDef)
-        where TRecord :
-            IBuildingDefTableRecord
+public sealed class FitsSmallAnimalsColumn<TRecord> : BooleanColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override bool GetValue(TRecord record)
+    public FitsSmallAnimalsColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
-        return record.BuildingProperties.bed_humanlike == false;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override bool GetValueFromRecord(TRecord record)
+    {
+        return record.ThingDef.building?.bed_humanlike == false;
     }
 }

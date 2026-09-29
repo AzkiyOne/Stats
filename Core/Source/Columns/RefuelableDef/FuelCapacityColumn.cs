@@ -1,20 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
-using Stats.Columns.Cells;
 using Stats.TableRecords;
-using Stats.Tables;
+using Verse;
 
 namespace Stats.Columns.RefuelableDef;
 
-public sealed class FuelCapacityColumn<TRecord>(ColumnDef columnDef) :
-    ThingDefCountColumn<TRecord, ThingDefCountColumnCell>(columnDef)
-        where TRecord :
-            IRefuelableDefTableRecord
+public sealed class FuelCapacityColumn<TRecord> : ThingDefCountColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override ThingDefCountColumnCell MakeCell(TRecord record)
+    public FuelCapacityColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetFuelDefs(thingDefs))
     {
-        CompProperties_Refuelable? refuelableCompProps = record.RefuelableCompProperties;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override ThingDefCount? GetValueFromRecord(TRecord record)
+    {
+        CompProperties_Refuelable? refuelableCompProps = record.ThingDef.GetCompProperties<CompProperties_Refuelable>();
 
         if (refuelableCompProps != null)
         {
@@ -24,16 +26,16 @@ public sealed class FuelCapacityColumn<TRecord>(ColumnDef columnDef) :
             {
                 float fuelCapacity = refuelableCompProps.fuelCapacity;
 
-                return new ThingDefCountColumnCell(fuelType, fuelCapacity);
+                return new ThingDefCount(fuelType, (int)fuelCapacity);
             }
         }
 
-        return default;
+        return null;
     }
 
-    protected override IEnumerable<Verse.ThingDef?> GetTypeFieldFilterOptions(Table tableWorker)
+    private static IEnumerable<Verse.ThingDef?> GetFuelDefs(IEnumerable<Verse.ThingDef> thingDefs)
     {
-        return ((IRefRecordsProvider<Verse.ThingDef>)tableWorker).Records
+        return thingDefs
             .Select(thingDef => thingDef.GetCompProperties<CompProperties_Refuelable>()?.fuelFilter?.AnyAllowedDef)
             .Distinct();
     }

@@ -1,25 +1,26 @@
-﻿using RimWorld;
-using Stats.Columns.Cells;
+﻿using System.Collections.Generic;
+using RimWorld;
 using Stats.TableRecords;
 
 namespace Stats.Columns.MilkableDef;
 
-public sealed class MilkingIntervalColumn<TRecord>(ColumnDef columnDef) :
-    NumberColumn<TRecord, NumberColumnCell>(columnDef)
-        where TRecord :
-            IMilkableDefTableRecord
+public sealed class MilkingIntervalColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override NumberColumnCell MakeCell(TRecord record)
+    public MilkingIntervalColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0 d")
     {
-        CompProperties_Milkable? milkableCompProps = record.MilkableCompProperties;
+    }
+
+    public override bool IsRefreshable => false;
+
+    protected override decimal GetValueFromRecord(TRecord record)
+    {
+        CompProperties_Milkable? milkableCompProps = record.ThingDef.GetCompProperties<CompProperties_Milkable>();
 
         if (milkableCompProps != null)
         {
-            decimal milkIntervalDays = milkableCompProps.milkIntervalDays;
-
-            return new NumberColumnCell(milkIntervalDays, "0 d");
+            return milkableCompProps.milkIntervalDays;
         }
 
-        return default;
+        return 0m;
     }
 }

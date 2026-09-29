@@ -17,7 +17,7 @@ public abstract class NTMFilter<TValue, TOption> : Filter
     private const float ButtonPadHor = GUIStyles.Global.PadSm;
 
     private readonly RelOperator<TValue, HashSet<TOption>> _defaultOperator;
-    private readonly List<TValue> _values;
+    private readonly Func<int, TValue> _getValue;
     private readonly IEnumerable<RelOperator<TValue, HashSet<TOption>>> _operators;
     private readonly string _buttonTextWhenInactive;
     private readonly HashSet<TOption> _selectedOptions = [];
@@ -27,14 +27,14 @@ public abstract class NTMFilter<TValue, TOption> : Filter
     private string? _info;
 
     protected NTMFilter(
-        List<TValue> values,
+        Func<int, TValue> getValue,
         IEnumerable<NTMFilterOption<TOption>> options,
         IEnumerable<RelOperator<TValue, HashSet<TOption>>> operators,
         RelOperator<TValue, HashSet<TOption>> defaultOperator,
         string? label = null
     )
     {
-        _values = values;
+        _getValue = getValue;
         _operator = _defaultOperator = defaultOperator;
         _options = options;
         _buttonTextWhenInactive = label ?? "...";
@@ -125,7 +125,7 @@ public abstract class NTMFilter<TValue, TOption> : Filter
 
     public override bool Eval(int i)
     {
-        return Operator.Eval(_values[i], _selectedOptions);
+        return Operator.Eval(_getValue(i), _selectedOptions);
     }
 
     public sealed override void Reset()

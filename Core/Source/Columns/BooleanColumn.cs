@@ -7,17 +7,17 @@ namespace Stats.Columns;
 public abstract class BooleanColumn<TRecord> : Column<TRecord, bool>
 {
     private static readonly Texture2D _textureTrue = Verse.Widgets.CheckboxOnTex;
-    private readonly List<bool> _cellValueComp;
+    private readonly List<bool> _cellValue;
 
     protected BooleanColumn(ColumnDef def, List<TRecord> records) : base(def, records)
     {
-        string name = def.LabelCap;
-        _cellValueComp = new List<bool>(records.Capacity);
+        string label = def.LabelCap;
+        _cellValue = new List<bool>(records.Capacity);
         SortOptions = [
-            new ColumnSortOption<bool>(name, _cellValueComp)
+            new ColumnSortOption<bool>(label, i => _cellValue[i])
         ];
         FilterOptions = [
-            new BooleanColumnFilterOption(name, _cellValueComp)
+            new BooleanColumnFilterOption(label, i => _cellValue[i])
         ];
     }
 
@@ -29,22 +29,22 @@ public abstract class BooleanColumn<TRecord> : Column<TRecord, bool>
 
     protected override void AddValue(bool value)
     {
-        _cellValueComp.Add(value);
+        _cellValue.Add(value);
     }
 
     protected override void SetValue(int i, bool value)
     {
-        _cellValueComp[i] = value;
+        _cellValue[i] = value;
     }
 
     protected override void RemoveValue(int index)
     {
-        _cellValueComp.ReplaceWithLast(index);
+        _cellValue.ReplaceWithLast(index);
     }
 
     public override void DrawCell(Rect rect, int i)
     {
-        if (Event.current.type == EventType.Repaint && _cellValueComp[i])
+        if (Event.current.type == EventType.Repaint && _cellValue[i])
         {
             rect.ContractedByObjectTableCellPadding()
                 .DrawTextureFitted(_textureTrue);
@@ -59,9 +59,5 @@ public abstract class BooleanColumn<TRecord> : Column<TRecord, bool>
     protected override float GetCellWidth(int i)
     {
         return Verse.Text.LineHeight;
-    }
-
-    public override void Hide()
-    {
     }
 }
