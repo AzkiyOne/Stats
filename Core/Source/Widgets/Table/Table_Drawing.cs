@@ -17,20 +17,6 @@ public sealed partial class Table<TRecord>
             _beforeDraw = null;
         }
 
-        if (Event.current.type == EventType.Layout)
-        {
-            foreach (ColumnWidget column in _columns)
-            {
-                column.RefreshCells(_records);
-            }
-
-            // Run filters here
-
-            RecalcLayout();
-
-            // Sort
-        }
-
         // Layout
         rect.CutTop(out Rect toolbarRect, GUIStyles.TableToolbar.Height)
             .TakeRest(out Rect tableRect);
@@ -59,6 +45,9 @@ public sealed partial class Table<TRecord>
             contentRect.height -= GenUI.ScrollBarWidth;
         }
 
+        // Because of "sticky" columns and column headers we can't use scroll widget normally.
+        // We only need to display two scrollbars tho, but i'm not in a mood to implement
+        // what is basically a fake scroll widget. So we'll use the real one as background.
         using (new GUIScrollScope(tableRect, ref _scrollPosition, contentRect)) { }
 
         DrawVisibleContent(viewportRect);
@@ -67,7 +56,40 @@ public sealed partial class Table<TRecord>
     // TODO: We don't need 2 Draw() methods
     private void DrawVisibleContent(Rect rect)
     {
-        Event @event = Event.current;
+        EventType eventType = Event.current.type;
+
+        if (eventType == EventType.Layout)
+        {
+            _framesSinceLastFilterAndSort++;
+
+            if (_columnsToRefresh.Count > 0)
+            {
+                _columnsToRefresh.Pop().RefreshCells();
+            }
+            // Filtering and sorting of rows is performed only after every column has been refreshed, but:
+            // - No often than every 60 frames.
+            // - Regardless of how many refreshable columns there are.
+            else if (_framesSinceLastFilterAndSort >= 60)
+            {
+                // Filter
+                // It is important to filter rows as early as possible because
+                // they'll be then used by columns to calculate their width.
+
+                // Sort
+
+                // Reset
+                foreach (ColumnWidget column in _columns)
+                {
+                    if (column.IsRefreshable)
+                    {
+                        _columnsToRefresh.Push(column);
+                    }
+                }
+
+                _framesSinceLastFilterAndSort = 0;
+            }
+        }
+
         // O(1) scroll content culling.
         // Since all rows have constant height, we can calculate:
         // - From what row/y to start drawing rows.
@@ -110,7 +132,7 @@ public sealed partial class Table<TRecord>
         {
             DrawColumns(leftColumnsRect, Vector2.zero, LeftColumns, topRows, visibleBottomRows, firstVisibleBottomRowY);
             // Separator line
-            if (@event.type == EventType.Repaint)
+            if (eventType == EventType.Repaint)
             {
                 leftColumnsRect.DrawBorderRight(FixedPartSeparatorLineColor);
             }
@@ -126,11 +148,16 @@ public sealed partial class Table<TRecord>
         }
 
         DoHorScrollControl(mouseDragScrollAreaRect);
+
+        if (eventType == EventType.Layout)
+        {
+            RecalcLayout();
+        }
     }
 
     private void DrawColumns(Rect rect, Vector2 scrollPosition, ReadOnlyListSegment<ColumnWidget> columns, Span<int> topRows, Span<int> bottomRows, float bottomRowsY)
     {
-        Event @event = Event.current;
+        EventType eventType = Event.current.type;
         float scrollX = scrollPosition.x;
         float xMin = rect.xMin + scrollX;
         float xMax = rect.xMax + scrollX;
@@ -140,20 +167,24 @@ public sealed partial class Table<TRecord>
         for (int i = 0; i < columnsCount; i++)
         {
             ColumnWidget column = columns[i];
-            columnRect.width = column.Width;
-            float columnRectXmax = columnRect.xMax;
 
-            if (columnRectXmax > xMin)
+            if (column.IsHidden == false)
             {
-                column.Draw(columnRect, topRows, bottomRows, bottomRowsY, _dragManager);
-            }
+                columnRect.width = column.Width;
+                float columnRectXmax = columnRect.xMax;
 
-            if (columnRectXmax > xMax)
-            {
-                break;
-            }
+                if (columnRectXmax > xMin || eventType == EventType.Layout)
+                {
+                    column.Draw(columnRect, _rows, topRows, bottomRows, bottomRowsY, _dragManager);
+                }
 
-            columnRect.x = columnRectXmax;
+                if (columnRectXmax > xMax && eventType != EventType.Layout)
+                {
+                    break;
+                }
+
+                columnRect.x = columnRectXmax;
+            }
         }
     }
 

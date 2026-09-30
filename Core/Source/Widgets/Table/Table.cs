@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Stats.Columns;
@@ -65,6 +64,9 @@ public sealed partial class Table<TRecord> : TabBodyWidget
 
     // Rows
     private readonly List<TRecord> _records;
+    // Why is this called "rows"?
+    // Think of it as a list of "Row" objects with a single field - "tableRecordId" ("Id" being an "InDex").
+    // Storing just id's as ints is a little bit more efficient.
     private readonly List<int> _rows;
     private int _topRowsCount;
     private int BottomRowsCount => _rows.Count - _topRowsCount;
@@ -75,6 +77,7 @@ public sealed partial class Table<TRecord> : TabBodyWidget
     private int RightColumnsCount => _columns.Count - _leftColumnsCount;
     private ReadOnlyListSegment<ColumnWidget> LeftColumns => new(_columns, 0, _leftColumnsCount);
     private ReadOnlyListSegment<ColumnWidget> RightColumns => new(_columns, _leftColumnsCount, RightColumnsCount);
+    private readonly Stack<ColumnWidget> _columnsToRefresh;
 
     // Layout
     private float _topRowsHeight;
@@ -95,6 +98,7 @@ public sealed partial class Table<TRecord> : TabBodyWidget
 
     // Misc
     private readonly DragManager<ColumnWidget> _dragManager;
+    private int _framesSinceLastFilterAndSort = 0;
 
     public Table(TableDef def, int capacity, object[]? extraColumnCtorArgs = null) : this(def, new List<TRecord>(capacity), extraColumnCtorArgs)
     {
@@ -149,6 +153,7 @@ public sealed partial class Table<TRecord> : TabBodyWidget
         _records = records;
         _rows = [.. Enumerable.Range(0, records.Count)];
         _columns = columns;
+        _columnsToRefresh = new Stack<ColumnWidget>(columns.Count);
         if (columns.Count > 0)
         {
             _leftColumnsCount = 1;
@@ -198,5 +203,10 @@ public sealed partial class Table<TRecord> : TabBodyWidget
         {
             column.RemoveRecord(i);
         }
+    }
+
+    public override void Dispose()
+    {
+        // TODO?
     }
 }

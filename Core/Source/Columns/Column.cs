@@ -41,6 +41,10 @@ public abstract class Column
 
     public abstract void RefreshCells();
 
+    public virtual void Show()
+    {
+    }
+
     public virtual void Hide()
     {
     }

@@ -13,18 +13,21 @@ public sealed partial class Table<TRecord>
         int leftColumnsCount = _leftColumnsCount;
         float leftColumnsWidth = 0f;
         float rightColumnsWidth = 0f;
+
         for (int i = 0; i < columnsCount; i++)
         {
             ColumnWidget column = columns[i];
-            column.UpdateLayout(_rows);
 
-            if (i < leftColumnsCount)
+            if (column.IsHidden == false)
             {
-                leftColumnsWidth += column.Width;
-            }
-            else
-            {
-                rightColumnsWidth += column.Width;
+                if (i < leftColumnsCount)
+                {
+                    leftColumnsWidth += column.Width;
+                }
+                else
+                {
+                    rightColumnsWidth += column.Width;
+                }
             }
         }
 

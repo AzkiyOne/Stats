@@ -91,7 +91,7 @@ public sealed partial class Table<TRecord>
                 //}, TexButton.ReorderDown, Color.white),
                 new FloatMenuOption("Pin", () => OnPin?.Invoke(this)),
                 new FloatMenuOption("Unpin", () => OnUnpin?.Invoke(this)),
-                //new FloatMenuOption("Remove", () => OnRemove?.Invoke(this), TexButton.Delete, Color.white)
+                new FloatMenuOption("Hide", () => IsHidden = true, TexButton.Suspend, Color.white)
             ]);
         }
 
@@ -99,15 +99,52 @@ public sealed partial class Table<TRecord>
 
         public event Action<ColumnWidget>? OnUnpin;
 
-        public void Draw(Rect rect, Span<int> topRows, Span<int> bottomRows, float bottomRowsY, DragManager<ColumnWidget> dragManager)
+        public event Action<ColumnWidget>? OnShow;
+
+        public event Action<ColumnWidget>? OnHide;
+
+        public float Width { get; private set; }
+
+        public bool IsRefreshable => _column.IsRefreshable;
+
+        public bool IsHidden
+        {
+            get;
+            set
+            {
+                if (field != value)
+                {
+                    field = value;
+
+                    if (value == true)
+                    {
+                        _column.Hide();
+                        OnHide?.Invoke(this);
+                    }
+                    else
+                    {
+                        _column.Show();
+                        OnShow?.Invoke(this);
+                    }
+                }
+            }
+        }
+
+        public ColumnDef Def => _column.Def;
+
+        public void Draw(Rect rect, List<int> rows, Span<int> topRows, Span<int> visibleBottomRows, float bottomRowsY, DragManager<ColumnWidget> dragManager)
         {
             float topRowsHeight = topRows.Length * RowHeight;
+
             rect.CutTop(out Rect headerCellRect, HeadersRowHeight)
                 .CutTop(out Rect topRowsRect, topRowsHeight)
                 .TakeRest(out Rect bottomRowsRect);
 
             DrawHeaderCell(headerCellRect, dragManager);
 
+            // Do we actually need to draw cells on Layout event?
+            // Normally we would, so they can refresh themselves.
+            // But given how column's cells are refreshed, there is no point in doing this.
             if (topRows.Length > 0)
             {
                 using (new GUIClipScope(topRowsRect))
@@ -116,20 +153,29 @@ public sealed partial class Table<TRecord>
                 }
             }
 
-            if (bottomRows.Length > 0)
+            if (visibleBottomRows.Length > 0)
             {
                 using (new GUIClipScope(bottomRowsRect, new Vector2(0f, bottomRowsY)))
                 {
-                    DrawCells(bottomRowsRect with { x = 0f, y = 0f }, bottomRows);
+                    DrawCells(bottomRowsRect with { x = 0f, y = 0f }, visibleBottomRows);
                 }
+            }
+
+            if (Event.current.type == EventType.Layout && _isManuallyResized == false)
+            {
+                // TODO: 
+                // - Make columns return cell width with padding. Reason - consistency with DrawCell methods.
+                // - Make PadHor/Ver be a sum of left + right/top + bottom padding.
+                // - Introduce PadLR/PadTB.
+                Width = Mathf.Max(_labelWidget.Size.x, _column.GetMinWidth(rows)) + GUIStyles.TableCell.PadHor * 2f;
             }
         }
 
         private void DrawCells(Rect rect, Span<int> rows)
         {
-            ref Rect cellRect = ref rect;
-            cellRect.height = RowHeight;
+            Rect cellRect = rect with { height = RowHeight };
             int rowsCount = rows.Length;
+
             for (int i = 0; i < rowsCount; i++)
             {
                 try
@@ -143,6 +189,7 @@ public sealed partial class Table<TRecord>
                     // - Make the whole thing into a separate non-inlineable method.
                     cellRect.Fill(Color.red);
                 }
+
                 cellRect.y = cellRect.yMax;
             }
         }
@@ -301,20 +348,6 @@ public sealed partial class Table<TRecord>
             //GUI.SetNextControlName($"{Def.defName}_ColumnResizeControl");
             rect.DrawButtonEmpty();
         }
-
-        public void UpdateLayout(List<int> rows)
-        {
-            if (_isManuallyResized == false)
-            {
-                // TODO: 
-                // - Make columns return cell width with padding. Reason - consistency with DrawCell methods.
-                // - Make PadHor/Ver be a sum of left + right/top + bottom padding.
-                // - Introduce PadLR/PadTB.
-                Width = Mathf.Max(_labelWidget.Size.x, _column.GetMinWidth(rows)) + GUIStyles.TableCell.PadHor * 2f;
-            }
-        }
-
-        public float Width { get; private set; }
 
         public void Unfocus()
         {
