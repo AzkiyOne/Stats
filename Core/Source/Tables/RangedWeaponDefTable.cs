@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using RimWorld;
 using Stats.Extensions;
 using Stats.TableRecords;
@@ -10,22 +9,21 @@ namespace Stats.Tables;
 
 public sealed class RangedWeaponDefTable : Tab
 {
-    public RangedWeaponDefTable(TableDef def) : base(def)
-    {
-        Widget = new Table<ThingDefTableRecord>(def, Records, [Records.Select(rec => rec.ThingDef)]);
-    }
-
-    protected override TabBodyWidget Widget { get; }
+    private static readonly List<ThingDefTableRecord> _records;
+    private static readonly List<ThingDef> _thingDefs;
 
     static RangedWeaponDefTable()
     {
-        List<ThingDefTableRecord> records = new(100);
+        List<ThingDefTableRecord> records = new(200);
+        List<ThingDef> thingDefs = new(100);
 
         foreach (ThingDef thingDef in DefDatabase<ThingDef>.AllDefsListForReading)
         {
             if (thingDef is { IsRangedWeapon: true, destroyOnDrop: false }
                 && thingDef.GetCompProperties<CompProperties_UniqueWeapon>() == null)
             {
+                thingDefs.Add(thingDef);
+
                 HashSet<ThingDef>? stuffDefs = thingDef.GetAllowedStuffs();
 
                 if (stuffDefs?.Count > 0)
@@ -46,8 +44,14 @@ public sealed class RangedWeaponDefTable : Tab
             }
         }
 
-        Records = records;
+        _records = records;
+        _thingDefs = thingDefs;
     }
 
-    private static List<ThingDefTableRecord> Records { get; }
+    public RangedWeaponDefTable(TableDef def) : base(def)
+    {
+        Widget = new Table<ThingDefTableRecord>(def, _records, [_thingDefs]);
+    }
+
+    protected override TabBodyWidget Widget { get; }
 }

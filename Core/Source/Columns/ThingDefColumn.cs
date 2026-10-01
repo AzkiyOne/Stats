@@ -75,7 +75,7 @@ public abstract class ThingDefColumn<TRecord> : Column<TRecord, Verse.ThingDef?>
             text = thingDef.LabelCap;
             icon = new ThingDefIconInteractive(thingDef);
             float textWidth = text.CalcSize(GUIStyles.TableCell.StringNoPad).x;
-            width = icon.Size.x + GUIStyles.TableCell.ContentSpacing + textWidth + GUIStyles.TableCell.PadLR;
+            width = icon.Size.x + GUIStyles.TableCell.ContentSpacing + textWidth + GUIStyles.TableCell.PadHor;
         }
         else
         {

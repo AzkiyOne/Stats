@@ -1,47 +1,104 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Stats.Columns;
+using Stats.Extensions;
 using Stats.TableRecords;
 using Stats.Widgets.Filters;
+using UnityEngine;
 using Verse;
 
 namespace Stats.Columns.Def;
 
-public sealed class ModContentPackColumn<TRecord> : Column<TRecord, ModContentPackColumnCell> where TRecord : IDefTableRecord
+public sealed class ModContentPackColumn<TRecord> : Column<TRecord, ModContentPack?> where TRecord : IDefTableRecord
 {
-    private readonly string _label;
-    private readonly IEnumerable<NTMFilterOption<ModContentPack?>> _filterOptions;
+    private readonly List<ModContentPack?> _cellValue;
+    private readonly List<string> _cellText;
+    private readonly List<float> _cellWidth;
 
-    public ModContentPackColumn(ModContentPackColumnDef def) : base(def)
+    public ModContentPackColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.Def> defs) : base(def, records)
     {
-        _label = def.LabelCap;
-        _filterOptions = def.ModContentPackOptions
+        string label = def.LabelCap;
+        int capacity = records.Capacity;
+        _cellValue = new List<ModContentPack?>(capacity);
+        _cellText = new List<string>(capacity);
+        _cellWidth = new List<float>(capacity);
+        SortOptions = [
+            new ColumnSortOption<string>(label, i => _cellText[i]),
+        ];
+        IEnumerable<NTMFilterOption<ModContentPack?>> filterOptions = defs
+            .Select(def => def.modContentPack)
             .OrderBy(mod => mod?.Name)
             .Select<ModContentPack?, NTMFilterOption<ModContentPack?>>(
                 mod => mod == null ? new() : new(mod, mod.Name, null, mod.PackageIdPlayerFacing)
             );
+        FilterOptions = [
+            new OTMColumnFilterOption<ModContentPack?>(label, i => _cellValue[i], filterOptions),
+        ];
     }
+
+    public override bool IsRefreshable => false;
 
     public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Left;
 
-    public override ICollection<ColumnSortOption> SortOptions => [
-        new ColumnSortOption(_label, (i1, i2) => Comparer<string?>.Default.Compare(this[i1].Text, this[i2].Text))
-    ];
+    public override ICollection<ColumnSortOption> SortOptions { get; }
 
-    public override ICollection<ColumnFilterOption> FilterOptions => [
-        new ColumnFilterOption(_label, () => new OTMFilter<ModContentPack?>(i => this[i].Value, _filterOptions))
-    ];
+    public override ICollection<ColumnFilterOption> FilterOptions { get; }
 
-    protected override ModContentPackColumnCell MakeCell(TRecord record)
+    protected override ModContentPack? GetValueFromRecord(TRecord record)
     {
-        Verse.Def def = record.Def;
-        ModContentPack? modContentPack = def.modContentPack;
+        return record.Def.modContentPack;
+    }
 
-        if (modContentPack != null)
+    public override void DrawCell(Rect rect, int i)
+    {
+        _cellText[i].Draw(rect, GUIStyles.TableCell.String);
+
+        if (Mouse.IsOver(rect))
         {
-            return new ModContentPackColumnCell(modContentPack);
+            rect.Tip(_cellValue[i]?.PackageIdPlayerFacing);
         }
+    }
 
-        return default;
+    protected override float GetCellWidth(int i)
+    {
+        return _cellWidth[i];
+    }
+
+    private void GetCellValues(ModContentPack? mod, out string text, out float width)
+    {
+        if (mod != null)
+        {
+            text = mod.Name;
+            width = text.CalcSize(GUIStyles.TableCell.String).x;
+        }
+        else
+        {
+            text = "";
+            width = 0f;
+        }
+    }
+
+    protected override void AddValue(ModContentPack? mod)
+    {
+        GetCellValues(mod, out string text, out float width);
+
+        _cellValue.Add(mod);
+        _cellText.Add(text);
+        _cellWidth.Add(width);
+    }
+
+    protected override void SetValue(int i, ModContentPack? mod)
+    {
+        GetCellValues(mod, out string text, out float width);
+
+        _cellValue[i] = mod;
+        _cellText[i] = text;
+        _cellWidth[i] = width;
+    }
+
+    protected override void RemoveValue(int i)
+    {
+        _cellValue.ReplaceWithLast(i);
+        _cellText.ReplaceWithLast(i);
+        _cellWidth.ReplaceWithLast(i);
     }
 }

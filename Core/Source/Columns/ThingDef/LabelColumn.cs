@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
-using Stats.Columns;
+using System.Linq;
+using Stats.Extensions;
 using Stats.TableRecords;
 using Stats.Widgets;
 using Stats.Widgets.Filters;
+using UnityEngine;
 using Verse;
 
 namespace Stats.Columns.ThingDef;
@@ -11,32 +13,136 @@ namespace Stats.Columns.ThingDef;
 // modded stuffs may have the same color as vanilla ones or other modded stuffs.
 // Replacing label with icon won't do, because ex. all of the leathers have the same
 // icon but of different color.
-public sealed class LabelColumn<TRecord> : ThingDefColumn<TRecord> where TRecord : IThingDefTableRecord
+public sealed class LabelColumn<TRecord> : Column<TRecord, LabelColumnValue> where TRecord : IThingDefTableRecord
 {
-    public LabelColumn(LabelColumnDef def) : base(def)
+    private static readonly HashSet<Verse.ThingDef> _nullSet = [null];
+
+    private readonly List<Verse.ThingDef> _cellThingDef;
+    private readonly List<Verse.ThingDef?> _cellStuffDef;
+    private readonly List<string> _cellText;
+    private readonly List<Widget> _cellIcon;
+    private readonly List<float> _cellWidth;
+
+    public LabelColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records)
     {
-        ThingDefOptions = def.ThingDefOptions;
+        string label = def.LabelCap;
+        int capacity = records.Capacity;
+        _cellThingDef = new List<Verse.ThingDef>(capacity);
+        _cellStuffDef = new List<Verse.ThingDef?>(capacity);
+        _cellText = new List<string>(capacity);
+        _cellIcon = new List<Widget>(capacity);
+        _cellWidth = new List<float>(capacity);
+        SortOptions = [
+            new ColumnSortOption<string>("Label", i => _cellText[i])
+        ];
+        IEnumerable<NTMFilterOption<Verse.ThingDef>> thingDefFilterOptions = thingDefs
+            .OrderBy(thingDef => thingDef.label)
+            .Select<Verse.ThingDef, NTMFilterOption<Verse.ThingDef>>(
+                thingDef => new(thingDef, thingDef.LabelCap, new Widgets_Legacy.ThingDefIcon(thingDef))
+            );
+        IEnumerable<NTMFilterOption<Verse.ThingDef?>> stuffDefFilterOptions = thingDefs
+            .SelectMany(thingDef => thingDef.GetAllowedStuffs() ?? _nullSet)
+            .Distinct()
+            .OrderBy(thingDef => thingDef?.label)
+            .Select<Verse.ThingDef?, NTMFilterOption<Verse.ThingDef?>>(
+                thingDef => thingDef == null ? new() : new(thingDef, thingDef.LabelCap, new Widgets_Legacy.ThingDefIcon(thingDef))
+            );
+        FilterOptions = [
+            new OTMColumnFilterOption<Verse.ThingDef>("Type", i => _cellThingDef[i], thingDefFilterOptions),
+            new OTMColumnFilterOption<Verse.ThingDef?>("Material", i => _cellStuffDef[i], stuffDefFilterOptions),
+            new StringColumnFilterOption("Label", i => _cellText[i]),
+        ];
     }
 
-    protected override IEnumerable<Verse.ThingDef?> ThingDefOptions { get; }
+    public override bool IsRefreshable => false;
 
-    // TODO: Add stuff (material) filter. Remember that it should only appear when it makes sense.
-    public override ICollection<ColumnFilterOption> FilterOptions => [
-        new ColumnFilterOption("Label", () => new StringFilter(i => this[i].Text ?? "")),
-        ..base.FilterOptions
-    ];
+    public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Left;
 
-    protected override ThingDefColumnCell MakeCell(TRecord record)
+    public override ICollection<ColumnSortOption> SortOptions { get; }
+
+    public override ICollection<ColumnFilterOption> FilterOptions { get; }
+
+    protected override LabelColumnValue GetValueFromRecord(TRecord record)
     {
-        Verse.ThingDef thingDef = record.ThingDef;
-        Verse.ThingDef? stuffDef = record.StatRequest.StuffDef;
-        string text = stuffDef == null
+        return new LabelColumnValue(record.ThingDef, record.StatRequest.StuffDef);
+    }
+
+    public override void DrawCell(Rect rect, int i)
+    {
+        string text = _cellText[i];
+        Widget icon = _cellIcon[i];
+
+        rect.ContractedBy(GUIStyles.TableCell.PadLR, GUIStyles.TableCell.PadTB)
+            .CutLeft(out Rect iconRect, icon.Size.x)
+            .CutLeft(GUIStyles.TableCell.ContentSpacing)
+            .TakeRest(out Rect labelRect);
+
+        icon.Draw(iconRect);
+
+        if (Event.current.type == EventType.Repaint)
+        {
+            text.Draw(labelRect, GUIStyles.TableCell.StringNoPad);
+        }
+    }
+
+    protected override float GetCellWidth(int i)
+    {
+        return _cellWidth[i];
+    }
+
+    private void GetCellValues(LabelColumnValue value, out string text, out Widget icon, out float width)
+    {
+        (Verse.ThingDef thingDef, Verse.ThingDef? stuffDef) = value;
+        text = stuffDef == null
             ? thingDef.LabelCap.RawText
             : $"{stuffDef.LabelAsStuff.CapitalizeFirst()} {thingDef.label}";
-        Widget icon = new ThingDefIconInteractive(thingDef, stuffDef);
-
-        return new ThingDefColumnCell(thingDef, text, icon);
+        icon = new ThingDefIconInteractive(thingDef, stuffDef);
+        float textWidth = text.CalcSize(GUIStyles.TableCell.StringNoPad).x;
+        width = icon.Size.x + GUIStyles.TableCell.ContentSpacing + textWidth + GUIStyles.TableCell.PadHor;
     }
+
+    protected override void AddValue(LabelColumnValue value)
+    {
+        GetCellValues(value, out string text, out Widget icon, out float width);
+
+        _cellThingDef.Add(value.ThingDef);
+        _cellStuffDef.Add(value.StuffDef);
+        _cellText.Add(text);
+        _cellIcon.Add(icon);
+        _cellWidth.Add(width);
+    }
+
+    protected override void RemoveValue(int i)
+    {
+        _cellThingDef.ReplaceWithLast(i);
+        _cellStuffDef.ReplaceWithLast(i);
+        _cellText.ReplaceWithLast(i);
+        _cellIcon.ReplaceWithLast(i);
+        _cellWidth.ReplaceWithLast(i);
+    }
+
+    protected override void SetValue(int i, LabelColumnValue value)
+    {
+        GetCellValues(value, out string text, out Widget icon, out float width);
+
+        _cellThingDef[i] = value.ThingDef;
+        _cellStuffDef[i] = value.StuffDef;
+        _cellText[i] = text;
+        _cellIcon[i] = icon;
+        _cellWidth[i] = width;
+    }
+
+    //protected override ThingDefColumnCell MakeCell(TRecord record)
+    //{
+    //    Verse.ThingDef thingDef = record.ThingDef;
+    //    Verse.ThingDef? stuffDef = record.StatRequest.StuffDef;
+    //    string text = stuffDef == null
+    //        ? thingDef.LabelCap.RawText
+    //        : $"{stuffDef.LabelAsStuff.CapitalizeFirst()} {thingDef.label}";
+    //    Widget icon = new ThingDefIconInteractive(thingDef, stuffDef);
+
+    //    return new ThingDefColumnCell(thingDef, text, icon);
+    //}
 
     // TODO: Make a separate "Researched" column.
     //IEnumerable<ObjectTableWidget.ColumnPart> IColumnWorker<VirtualThing>.GetObjectProps()
@@ -70,88 +176,6 @@ public sealed class LabelColumn<TRecord> : ThingDefColumn<TRecord> where TRecord
     //        yield return new(new Label("Material"), stuffFilter);
     //    }
     //}
-
-    /*
-    
-    TODO: 
-    
-    Instead of having this "filter", have two sets of tables for thing defs that can be made from stuff:
-    - A table that lists every def + stuff variant. Default columns are ones whose values depend on stuff.
-    - A table that lists bases (without default stuff). Default columns are ones whose values do not depend on stuff.
-
-    Note:
-
-    This being a filter is a hack. It doesn't work in "OR" mode and is semantically incorrect.
-    
-    There are 2 ways of fixing this issue.
-
-    The easy way is to introduce some special/pre filters that would be displayed in window's toolbar 
-    and be applied separatedly.
-
-    The hard way is to allow for grouping table's rows by a column.
-    The issue that is being solved by this filter is "show me only values that do not depend on stuff".
-    Grouping can be implemented by implementing "Equals" on a cell.
-    
-    */
-    //private sealed class StuffedVariantsDisplayModeToggleButton : FilterWidget
-    //{
-    //    private bool _IsActive = false;
-    //    public override bool IsActive => _IsActive;
-    //    public override event Action? OnChange;
-    //    private Texture2D Texture => _IsActive ? Verse.Widgets.CheckboxOnTex : Verse.Widgets.CheckboxOffTex;
-    //    private static readonly TipSignal Manual =
-    //        "Click to show only distinct item material variants.\n\n" +
-    //        "Material for each distinct variant is chosen based on item's type definition.";
-    //    public StuffedVariantsDisplayModeToggleButton()
-    //    {
-    //    }
-    //    protected override Vector2 GetSize()
-    //    {
-    //        return new Vector2(Text.LineHeight, Text.LineHeight);
-    //    }
-    //    public override void Draw(Rect rect, Vector2 _)
-    //    {
-    //        var origTextAnchor = Text.Anchor;
-    //        Text.Anchor = TextAnchor.LowerLeft;
-
-    //        var origGUIColor = GUI.color;
-    //        if (_IsActive == false)
-    //        {
-    //            GUI.color = Globals.GUI.TextColorSecondary;
-    //        }
-
-    //        if (Widgets.Draw.ButtonImageSubtle(rect, Texture))
-    //        {
-    //            _IsActive = !_IsActive;
-
-    //            OnChange?.Invoke();
-    //        }
-
-    //        Text.Anchor = origTextAnchor;
-    //        GUI.color = origGUIColor;
-
-    //        TooltipHandler.TipRegion(rect, Manual);
-    //    }
-    //    public override bool Eval(ObjectTableWidget.Cell cell)
-    //    {
-    //        if (_IsActive)
-    //        {
-    //            // Do not filter out stuffless things.
-    //            // - You can filter them out with stuff filter.
-    //            // - There are cases where one may want to compare
-    //            //   things by stats unrelated to stuff. Ex. equipped
-    //            //   stat offsets.
-    //            return ((Cell)cell).IsMadeFromDefaultStuff;
-    //        }
-
-    //        return true;
-    //    }
-    //    public override void Reset()
-    //    {
-    //    }
-    //    public override void NotifyChanged()
-    //    {
-    //        OnChange?.Invoke();
-    //    }
-    //}
 }
+
+public readonly record struct LabelColumnValue(Verse.ThingDef ThingDef, Verse.ThingDef? StuffDef);

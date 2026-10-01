@@ -1,47 +1,99 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
-using Stats.Columns;
+using Stats.Extensions;
 using Stats.TableRecords;
 using Stats.Widgets.Filters;
+using UnityEngine;
 using Verse;
 
 namespace Stats.Columns.ThingDef;
 
-public abstract class TechLevelColumn<TRecord> : Column<TRecord, TechLevelColumnCell> where TRecord : IThingDefTableRecord
+public sealed class TechLevelColumn<TRecord> : Column<TRecord, TechLevel> where TRecord : IThingDefTableRecord
 {
-    private readonly string _label;
-    private readonly IEnumerable<NTMFilterOption<TechLevel>> _filterOptions;
+    private static readonly string[] _cellText;
+    private static readonly float[] _cellWidth;
 
-    public TechLevelColumn(ColumnDef def, ThingDefTableDef tableDef) : base(def)
+    static TechLevelColumn()
     {
-        _label = def.LabelCap;
-        _filterOptions = tableDef.ThingDefOptions
-            .Select(GetTechLevel)
+        Array techLevels = Enum.GetValues(typeof(TechLevel));
+        int techLevelsCount = techLevels.Length;
+
+        _cellText = new string[techLevelsCount];
+        _cellWidth = new float[techLevelsCount];
+
+        foreach (TechLevel techLevel in techLevels)
+        {
+            byte i = (byte)techLevel;
+            string text = techLevel.ToStringHuman().CapitalizeFirst();
+            float width = text.CalcSize(GUIStyles.TableCell.String).x;
+
+            _cellText[i] = text;
+            _cellWidth[i] = width;
+        }
+    }
+
+    private readonly List<TechLevel> _cellValue;
+
+    public TechLevelColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records)
+    {
+        string label = def.LabelCap;
+        int capacity = records.Capacity;
+        _cellValue = new List<TechLevel>(capacity);
+        SortOptions = [
+            new ColumnSortOption<TechLevel>(label, i => _cellValue[i])
+        ];
+        IEnumerable<NTMFilterOption<TechLevel>> filterOptions = thingDefs
+            .Select(thingDef => thingDef.techLevel)
             .Distinct()
             .OrderBy(techLevel => techLevel)
-            .Select(techLevel => new NTMFilterOption<TechLevel>(techLevel, techLevel.ToStringHuman().CapitalizeFirst()));
+            .Select(techLevel => new NTMFilterOption<TechLevel>(techLevel, _cellText[(byte)techLevel]));
+        FilterOptions = [
+            new OTMColumnFilterOption<TechLevel>(label, i => _cellValue[i], filterOptions)
+        ];
     }
+
+    public override bool IsRefreshable => false;
 
     public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Left;
 
-    public override ICollection<ColumnSortOption> SortOptions => [
-        new ColumnSortOption(_label, (i1, i2) => this[i1].Value.CompareTo(this[i2].Value))
-    ];
+    public override ICollection<ColumnSortOption> SortOptions { get; }
 
-    public override ICollection<ColumnFilterOption> FilterOptions => [
-        new ColumnFilterOption(_label, () => new OTMFilter<TechLevel>(i => this[i].Value, _filterOptions))
-    ];
+    public override ICollection<ColumnFilterOption> FilterOptions { get; }
 
-    protected override TechLevelColumnCell MakeCell(TRecord record)
+    protected override TechLevel GetValueFromRecord(TRecord record)
     {
-        TechLevel techLevel = GetTechLevel(record.ThingDef);
-
-        return new TechLevelColumnCell(techLevel);
+        return record.ThingDef.techLevel;
     }
 
-    private static TechLevel GetTechLevel(Verse.ThingDef thingDef)
+    public override void DrawCell(Rect rect, int i)
     {
-        return thingDef.techLevel;
+        TechLevel techLevel = _cellValue[i];
+        string text = _cellText[(byte)techLevel];
+
+        text.Draw(rect, GUIStyles.TableCell.String);
+    }
+
+    protected override float GetCellWidth(int i)
+    {
+        TechLevel techLevel = _cellValue[i];
+
+        return _cellWidth[(byte)techLevel];
+    }
+
+    protected override void AddValue(TechLevel techLevel)
+    {
+        _cellValue.Add(techLevel);
+    }
+
+    protected override void SetValue(int i, TechLevel techLevel)
+    {
+        _cellValue[i] = techLevel;
+    }
+
+    protected override void RemoveValue(int i)
+    {
+        _cellValue.ReplaceWithLast(i);
     }
 }

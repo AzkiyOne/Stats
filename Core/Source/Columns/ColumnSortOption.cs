@@ -14,7 +14,7 @@ public abstract class ColumnSortOption
     public abstract int Compare(int i1, int i2);
 }
 
-public class ColumnSortOption<T> : ColumnSortOption where T : IComparable<T>
+public class ColumnSortOption<T> : ColumnSortOption where T : IComparable
 {
     private readonly Func<int, T> _getValue;
 
