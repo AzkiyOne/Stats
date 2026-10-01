@@ -70,6 +70,7 @@ public sealed partial class Table<TRecord>
         private readonly Column<TRecord> _column;
         private readonly ColumnContentAlignment _contentAlignment;
         private readonly Widget _labelWidget;
+        private readonly float _headerCellWidth;
         private readonly TipSignal _tooltip;
         private readonly FloatMenu _menu;
         private bool _isResized;
@@ -81,6 +82,7 @@ public sealed partial class Table<TRecord>
             _contentAlignment = _column.ContentAlignment;
             ColumnDef columnDef = column.Def;
             _labelWidget = columnDef.LabelWidget;
+            _headerCellWidth = _labelWidget.Size.x + GUIStyles.TableCell.PadHor;
             _tooltip = $"<i>{columnDef.LabelCap}</i>\n\n{columnDef.description}";
             _menu = new FloatMenu([
                 //new FloatMenuOption("Sort Asc", () => {
@@ -116,19 +118,28 @@ public sealed partial class Table<TRecord>
                 {
                     field = value;
 
-                    if (value == true)
+                    try
                     {
-                        _column.Hide();
-                        OnHide?.Invoke(this);
+                        if (value == true)
+                        {
+                            _column.Hide();
+                            OnHide?.Invoke(this);
+                        }
+                        else
+                        {
+                            _column.Show();
+                            OnShow?.Invoke(this);
+                        }
                     }
-                    else
+                    catch (Exception e)
                     {
-                        _column.Show();
-                        OnShow?.Invoke(this);
+                        field = !field;
+
+                        Log.Error($"Unable to Show/Hide column {_column.Def.defName}: {e.Message}");
                     }
                 }
             }
-        }
+        } = true;
 
         public ColumnDef Def => _column.Def;
 
@@ -163,11 +174,7 @@ public sealed partial class Table<TRecord>
 
             if (Event.current.type == EventType.Layout && _isManuallyResized == false)
             {
-                // TODO: 
-                // - Make columns return cell width with padding. Reason - consistency with DrawCell methods.
-                // - Make PadHor/Ver be a sum of left + right/top + bottom padding.
-                // - Introduce PadLR/PadTB.
-                Width = Mathf.Max(_labelWidget.Size.x, _column.GetMinWidth(rows)) + GUIStyles.TableCell.PadHor * 2f;
+                Width = Mathf.Max(_headerCellWidth, _column.GetMinWidth(rows));
             }
         }
 
@@ -199,13 +206,13 @@ public sealed partial class Table<TRecord>
             Event @event = Event.current;
             ColumnContentAlignment contentAlignment = _contentAlignment;
             const float SideControlMargin = 1f;
-            rect.CutLeft(out Rect sortControlRect, GUIStyles.TableCell.PadHor - SideControlMargin)
-                .CutRight(out Rect resizeControlRect, GUIStyles.TableCell.PadHor - SideControlMargin)
+            rect.CutLeft(out Rect sortControlRect, GUIStyles.TableCell.PadLR - SideControlMargin)
+                .CutRight(out Rect resizeControlRect, GUIStyles.TableCell.PadLR - SideControlMargin)
                 .TakeRest(out Rect labelControlRect);
 
             if (@event.type == EventType.Repaint)
             {
-                Rect labelClipRect = labelControlRect.ContractedBy(SideControlMargin, GUIStyles.TableCell.PadVer);
+                Rect labelClipRect = labelControlRect.ContractedBy(SideControlMargin, GUIStyles.TableCell.PadTB);
                 GUI.BeginClip(labelClipRect);
 
                 float labelWidgetWidth = _labelWidget.Size.x;

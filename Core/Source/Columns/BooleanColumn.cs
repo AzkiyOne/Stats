@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Stats.Extensions;
 using UnityEngine;
+using Verse;
 
 namespace Stats.Columns;
 
@@ -46,7 +47,7 @@ public abstract class BooleanColumn<TRecord> : Column<TRecord, bool>
     {
         if (Event.current.type == EventType.Repaint && _cellValue[i])
         {
-            rect.ContractedByObjectTableCellPadding()
+            rect.ContractedBy(GUIStyles.TableCell.PadLR, GUIStyles.TableCell.PadTB)
                 .DrawTextureFitted(_textureTrue);
         }
     }
@@ -58,6 +59,6 @@ public abstract class BooleanColumn<TRecord> : Column<TRecord, bool>
 
     protected override float GetCellWidth(int i)
     {
-        return Verse.Text.LineHeight;
+        return Verse.Text.LineHeight + GUIStyles.TableCell.PadHor;
     }
 }

@@ -4,6 +4,7 @@ using Stats.Extensions;
 using Stats.Widgets;
 using Stats.Widgets.Filters;
 using UnityEngine;
+using Verse;
 
 namespace Stats.Columns;
 
@@ -48,7 +49,7 @@ public abstract class ThingDefColumn<TRecord> : Column<TRecord, Verse.ThingDef?>
 
         if (icon != null)
         {
-            rect.ContractedByObjectTableCellPadding()
+            rect.ContractedBy(GUIStyles.TableCell.PadLR, GUIStyles.TableCell.PadTB)
                 .CutLeft(out Rect iconRect, icon.Size.x)
                 .CutLeft(GUIStyles.TableCell.ContentSpacing)
                 .TakeRest(out Rect labelRect);
@@ -74,7 +75,7 @@ public abstract class ThingDefColumn<TRecord> : Column<TRecord, Verse.ThingDef?>
             text = thingDef.LabelCap;
             icon = new ThingDefIconInteractive(thingDef);
             float textWidth = text.CalcSize(GUIStyles.TableCell.StringNoPad).x;
-            width = icon.Size.x + GUIStyles.TableCell.ContentSpacing + textWidth;
+            width = icon.Size.x + GUIStyles.TableCell.ContentSpacing + textWidth + GUIStyles.TableCell.PadLR;
         }
         else
         {

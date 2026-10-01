@@ -2,11 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using Stats.Columns;
+using Stats.Extensions;
 using UnityEngine;
 using Verse;
 
 namespace Stats.Widgets;
 
+// There are two sides to this class:
+// - Externally it is a list of TRecord.
+// - Internally it is a SOA, where components are:
+//   - Columns.
+//   - List<TRecord>. So column[i] contains data related to records[i].
+//
+// Rows list acts as a mask and contains indexes of records, that have passed through
+// current set of filters, in order defined by current sort settings.
+//
 // Lack of abstraction/leaking abstractions is (almost) intentional here.
 // Because abstractions are not free.
 public sealed partial class Table<TRecord> : TabBodyWidget
@@ -159,7 +169,7 @@ public sealed partial class Table<TRecord> : TabBodyWidget
             _leftColumnsCount = 1;
             _sortColumn = columns[0];
         }
-        _toolbar = new Toolbar(this);
+        _toolbar = new Toolbar(columns);
         _dragManager = dragManager;
     }
 
@@ -196,7 +206,7 @@ public sealed partial class Table<TRecord> : TabBodyWidget
     {
         int i = _records.IndexOf(record);
 
-        _records.RemoveAt(i);
+        _records.ReplaceWithLast(i);
         // _rows.Remove?
 
         foreach (ColumnWidget column in _columns)

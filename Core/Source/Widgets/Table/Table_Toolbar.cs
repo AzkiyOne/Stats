@@ -34,8 +34,7 @@ public sealed partial class Table<TRecord>
         public void Draw(Rect rect)
         {
             // Layout
-            rect
-                .CutLeft(out Rect filtersTabButtonRect, _filtersButton.Width)
+            rect.CutLeft(out Rect filtersTabButtonRect, _filtersButton.Width)
                 .CutLeft(Style.Gap)
                 .CutLeft(out Rect columnsMenuButtonRect, _columnsMenuButton.Width)
                 .CutLeft(Style.Gap)
@@ -53,7 +52,7 @@ public sealed partial class Table<TRecord>
             _columnPresetsButton.Draw(columnPresetsButtonRect);
 
             infoIconRect
-                .ContractedBy(ButtonStyle.PadVer)
+                .ContractedBy(ButtonStyle.PadTB)
                 .DrawTextureFitted(TexButton.Info)
                 .Tip(_manual);
 
@@ -80,7 +79,7 @@ public sealed partial class Table<TRecord>
                 _iconScale = iconScale;
                 _label = label;
                 float labelWidth = label.CalcSize(ButtonStyle.LabelStyle).x;
-                Width = ButtonStyle.PadHor * 2f + ButtonStyle.IconWidth + labelWidth;
+                Width = ButtonStyle.PadLR * 2f + ButtonStyle.IconWidth + labelWidth;
             }
 
             public float Width { get; }
@@ -89,8 +88,7 @@ public sealed partial class Table<TRecord>
             {
                 if (Event.current.type == EventType.Repaint)
                 {
-                    rect
-                        .ContractedBy(ButtonStyle.PadHor, ButtonStyle.PadVer)
+                    rect.ContractedBy(ButtonStyle.PadLR, ButtonStyle.PadTB)
                         .CutLeft(out Rect iconRect, ButtonStyle.IconWidth)
                         .TakeRest(out Rect labelRect);
 

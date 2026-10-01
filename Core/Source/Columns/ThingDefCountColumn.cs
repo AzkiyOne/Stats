@@ -55,7 +55,7 @@ public abstract class ThingDefCountColumn<TRecord> : Column<TRecord, ThingDefCou
         {
             (string text, Widget icon) = drawData.Value;
 
-            rect.ContractedByObjectTableCellPadding()
+            rect.ContractedBy(GUIStyles.TableCell.PadLR, GUIStyles.TableCell.PadTB)
                 .CutRight(out Rect iconRect, icon.Size.x)
                 .CutRight(GUIStyles.TableCell.ContentSpacing)
                 .TakeRest(out Rect labelRect);

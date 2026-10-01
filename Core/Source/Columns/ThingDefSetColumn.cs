@@ -4,6 +4,7 @@ using Stats.Extensions;
 using Stats.Widgets;
 using Stats.Widgets.Filters;
 using UnityEngine;
+using Verse;
 
 namespace Stats.Columns;
 
@@ -49,6 +50,8 @@ public abstract class ThingDefSetColumn<TRecord> : Column<TRecord, IReadOnlyColl
 
         if (icons != null)
         {
+            rect = rect.ContractedBy(GUIStyles.TableCell.PadLR, GUIStyles.TableCell.PadTB);
+
             for (int i = 0; i < icons.Length; i++)
             {
                 Widget icon = icons[i];
@@ -67,14 +70,41 @@ public abstract class ThingDefSetColumn<TRecord> : Column<TRecord, IReadOnlyColl
         return _cellWidth[i];
     }
 
-    private void GetCellValues(IReadOnlyCollection<Verse.ThingDef>? value)
+    private void GetCellValues(IReadOnlyCollection<Verse.ThingDef>? value, out int thingDefsCount, out Widget[]? icons, out float width)
     {
+        if (value != null)
+        {
+            thingDefsCount = value.Count;
+            icons = new Widget[thingDefsCount];
 
+            int i = 0;
+            // TODO: Can we do sorting faster or get rid of it?
+            foreach (Verse.ThingDef thingDef in value.OrderBy(thingDef => thingDef.label))
+            {
+                icons[i] = new ThingDefIconInteractive(thingDef);
+
+                i++;
+            }
+
+            float iconWidth = GUIStyles.Text.LineHeight;
+            width = iconWidth * thingDefsCount + GUIStyles.TableCell.ContentSpacing * (thingDefsCount - 1) + GUIStyles.TableCell.PadHor;
+        }
+        else
+        {
+            thingDefsCount = 0;
+            icons = null;
+            width = 0f;
+        }
     }
 
     protected override void AddValue(IReadOnlyCollection<Verse.ThingDef>? value)
     {
+        GetCellValues(value, out int thingDefsCount, out Widget[]? icons, out float width);
+
         _cellValue.Add(value ?? _emptyThingDefHashSet);
+        _cellThingDefsCount.Add(thingDefsCount);
+        _cellIcons.Add(icons);
+        _cellWidth.Add(width);
     }
 
     protected override void RemoveValue(int i)
@@ -87,6 +117,11 @@ public abstract class ThingDefSetColumn<TRecord> : Column<TRecord, IReadOnlyColl
 
     protected override void SetValue(int i, IReadOnlyCollection<Verse.ThingDef>? value)
     {
-        throw new System.NotImplementedException();
+        GetCellValues(value, out int thingDefsCount, out Widget[]? icons, out float width);
+
+        _cellValue[i] = value ?? _emptyThingDefHashSet;
+        _cellThingDefsCount[i] = thingDefsCount;
+        _cellIcons[i] = icons;
+        _cellWidth[i] = width;
     }
 }

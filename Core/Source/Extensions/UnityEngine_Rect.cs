@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
-using Verse;
 
 namespace Stats.Extensions;
 
@@ -83,11 +82,5 @@ public static class UnityEngine_Rect
     internal static Rect TakeRest(this Rect rect, out Rect result)
     {
         return result = rect;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Rect ContractedByObjectTableCellPadding(this Rect rect)
-    {
-        return rect.ContractedBy(GUIStyles.TableCell.PadHor, GUIStyles.TableCell.PadVer);
     }
 }
