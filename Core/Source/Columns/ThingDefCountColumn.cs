@@ -8,7 +8,7 @@ using Verse;
 
 namespace Stats.Columns;
 
-public abstract class ThingDefCountColumn<TRecord> : Column<TRecord, ThingDefCount?>
+public abstract class ThingDefCountColumn<TRecord> : Column<TRecord>
 {
     private readonly List<decimal> _cellCount;
     private readonly List<Verse.ThingDef?> _cellThingDef;
@@ -74,18 +74,22 @@ public abstract class ThingDefCountColumn<TRecord> : Column<TRecord, ThingDefCou
         return _cellWidth[i];
     }
 
+    protected abstract ThingDefCount? GetThingDefCount(TRecord record);
+
     private void GetCellValues(
-        ThingDefCount? value,
+        TRecord record,
         out decimal count,
         out Verse.ThingDef? thingDef,
         out string thingDefLabel,
         out CellDrawData? cellDrawData,
         out float cellWidth)
     {
-        if (value.HasValue)
+        ThingDefCount? thingDefCount = GetThingDefCount(record);
+
+        if (thingDefCount.HasValue)
         {
-            count = value.Value.Count;
-            thingDef = value.Value.ThingDef;
+            count = thingDefCount.Value.Count;
+            thingDef = thingDefCount.Value.ThingDef;
             thingDefLabel = thingDef.LabelCap;
             string cellText = count.ToString();
             Widget cellIcon = new ThingDefIconInteractive(thingDef);
@@ -104,10 +108,10 @@ public abstract class ThingDefCountColumn<TRecord> : Column<TRecord, ThingDefCou
         }
     }
 
-    protected override void AddValue(ThingDefCount? value)
+    public override void Add(TRecord record)
     {
         GetCellValues(
-            value,
+            record,
             out decimal count,
             out Verse.ThingDef? thingDef,
             out string thingDefLabel,
@@ -121,19 +125,10 @@ public abstract class ThingDefCountColumn<TRecord> : Column<TRecord, ThingDefCou
         _cellWidth.Add(cellWidth);
     }
 
-    protected override void RemoveValue(int i)
-    {
-        _cellCount.ReplaceWithLast(i);
-        _cellThingDef.ReplaceWithLast(i);
-        _cellThingDefLabel.ReplaceWithLast(i);
-        _cellDrawData.ReplaceWithLast(i);
-        _cellWidth.ReplaceWithLast(i);
-    }
-
-    protected override void SetValue(int i, ThingDefCount? value)
+    public override void Refresh(int i, TRecord record)
     {
         GetCellValues(
-            value,
+            record,
             out decimal count,
             out Verse.ThingDef? thingDef,
             out string thingDefLabel,
@@ -145,6 +140,15 @@ public abstract class ThingDefCountColumn<TRecord> : Column<TRecord, ThingDefCou
         _cellThingDefLabel[i] = thingDefLabel;
         _cellDrawData[i] = cellDrawData;
         _cellWidth[i] = cellWidth;
+    }
+
+    public override void Remove(int i)
+    {
+        _cellCount.ReplaceWithLast(i);
+        _cellThingDef.ReplaceWithLast(i);
+        _cellThingDefLabel.ReplaceWithLast(i);
+        _cellDrawData.ReplaceWithLast(i);
+        _cellWidth.ReplaceWithLast(i);
     }
 
     private readonly record struct CellDrawData(string Text, Widget Icon);

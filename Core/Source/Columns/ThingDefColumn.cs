@@ -8,7 +8,7 @@ using Verse;
 
 namespace Stats.Columns;
 
-public abstract class ThingDefColumn<TRecord> : Column<TRecord, Verse.ThingDef?>
+public abstract class ThingDefColumn<TRecord> : Column<TRecord>
 {
     private readonly List<Verse.ThingDef?> _cellValue;
     private readonly List<string> _cellText;
@@ -68,8 +68,12 @@ public abstract class ThingDefColumn<TRecord> : Column<TRecord, Verse.ThingDef?>
         return _cellWidth[i];
     }
 
-    private void GetCellValues(Verse.ThingDef? thingDef, out string text, out Widget? icon, out float width)
+    protected abstract Verse.ThingDef? GetThingDef(TRecord record);
+
+    private void GetCellValues(TRecord record, out Verse.ThingDef? thingDef, out string text, out Widget? icon, out float width)
     {
+        thingDef = GetThingDef(record);
+
         if (thingDef != null)
         {
             text = thingDef.LabelCap;
@@ -85,9 +89,9 @@ public abstract class ThingDefColumn<TRecord> : Column<TRecord, Verse.ThingDef?>
         }
     }
 
-    protected override void AddValue(Verse.ThingDef? thingDef)
+    public override void Add(TRecord record)
     {
-        GetCellValues(thingDef, out string text, out Widget? icon, out float width);
+        GetCellValues(record, out Verse.ThingDef? thingDef, out string text, out Widget? icon, out float width);
 
         _cellValue.Add(thingDef);
         _cellText.Add(text);
@@ -95,21 +99,21 @@ public abstract class ThingDefColumn<TRecord> : Column<TRecord, Verse.ThingDef?>
         _cellWidth.Add(width);
     }
 
-    protected override void RemoveValue(int i)
+    public override void Refresh(int i, TRecord record)
     {
-        _cellValue.ReplaceWithLast(i);
-        _cellText.ReplaceWithLast(i);
-        _cellIcon.ReplaceWithLast(i);
-        _cellWidth.ReplaceWithLast(i);
-    }
-
-    protected override void SetValue(int i, Verse.ThingDef? thingDef)
-    {
-        GetCellValues(thingDef, out string text, out Widget? icon, out float width);
+        GetCellValues(record, out Verse.ThingDef? thingDef, out string text, out Widget? icon, out float width);
 
         _cellValue[i] = thingDef;
         _cellText[i] = text;
         _cellIcon[i] = icon;
         _cellWidth[i] = width;
+    }
+
+    public override void Remove(int i)
+    {
+        _cellValue.ReplaceWithLast(i);
+        _cellText.ReplaceWithLast(i);
+        _cellIcon.ReplaceWithLast(i);
+        _cellWidth.ReplaceWithLast(i);
     }
 }

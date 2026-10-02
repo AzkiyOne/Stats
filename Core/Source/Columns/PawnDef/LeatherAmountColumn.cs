@@ -15,7 +15,7 @@ public sealed class LeatherAmountColumn<TRecord> : ThingDefCountColumn<TRecord> 
 
     public override bool IsRefreshable => false;
 
-    protected override ThingDefCount? GetValueFromRecord(TRecord record)
+    protected override ThingDefCount? GetThingDefCount(TRecord record)
     {
         Verse.ThingDef? leatherDef = record.ThingDef.race?.leatherDef;
 

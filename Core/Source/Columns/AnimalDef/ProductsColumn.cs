@@ -15,7 +15,7 @@ public sealed class ProductsColumn<TRecord> : ThingDefSetColumn<TRecord> where T
 
     public override bool IsRefreshable => false;
 
-    protected override IReadOnlyCollection<Verse.ThingDef>? GetValueFromRecord(TRecord record)
+    protected override IReadOnlyCollection<Verse.ThingDef>? GetThingDefs(TRecord record)
     {
         return GetProducts(record.ThingDef);
     }

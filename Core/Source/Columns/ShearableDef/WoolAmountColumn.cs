@@ -14,7 +14,7 @@ public sealed class WoolAmountColumn<TRecord> : ThingDefCountColumn<TRecord> whe
 
     public override bool IsRefreshable => false;
 
-    protected override ThingDefCount? GetValueFromRecord(TRecord record)
+    protected override ThingDefCount? GetThingDefCount(TRecord record)
     {
         CompProperties_Shearable? shearableCompProps = record.ThingDef.GetCompProperties<CompProperties_Shearable>();
 

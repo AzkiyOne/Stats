@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Stats.Columns;
 
-public abstract class NumberColumn<TRecord> : Column<TRecord, decimal>
+public abstract class NumberColumn<TRecord> : Column<TRecord>
 {
     private readonly List<decimal> _cellValue;
     private List<string>? _cellText;
@@ -74,21 +74,27 @@ public abstract class NumberColumn<TRecord> : Column<TRecord, decimal>
         _cellWidth = null;
     }
 
-    protected override void AddValue(decimal value)
+    protected abstract decimal GetValueFromRecord(TRecord record);
+
+    public override void Add(TRecord record)
     {
+        decimal value = GetValueFromRecord(record);
+
         _cellValue.Add(value);
         _cellText?.Add(FormatValue(value));
         _cellWidth?.Add(GetCellWidth(CellText[^1]));
     }
 
-    protected override void SetValue(int i, decimal value)
+    public override void Refresh(int i, TRecord record)
     {
+        decimal value = GetValueFromRecord(record);
+
         _cellValue[i] = value;
         _cellText?[i] = FormatValue(value);
         _cellWidth?[i] = GetCellWidth(CellText[i]);
     }
 
-    protected override void RemoveValue(int index)
+    public override void Remove(int index)
     {
         _cellValue.ReplaceWithLast(index);
         _cellText?.ReplaceWithLast(index);

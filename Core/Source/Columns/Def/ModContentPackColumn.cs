@@ -8,7 +8,7 @@ using Verse;
 
 namespace Stats.Columns.Def;
 
-public sealed class ModContentPackColumn<TRecord> : Column<TRecord, ModContentPack?> where TRecord : IDefTableRecord
+public sealed class ModContentPackColumn<TRecord> : Column<TRecord> where TRecord : IDefTableRecord
 {
     private readonly List<ModContentPack?> _cellValue;
     private readonly List<string> _cellText;
@@ -43,11 +43,6 @@ public sealed class ModContentPackColumn<TRecord> : Column<TRecord, ModContentPa
 
     public override ICollection<ColumnFilterOption> FilterOptions { get; }
 
-    protected override ModContentPack? GetValueFromRecord(TRecord record)
-    {
-        return record.Def.modContentPack;
-    }
-
     public override void DrawCell(Rect rect, int i)
     {
         _cellText[i].Draw(rect, GUIStyles.TableCell.String);
@@ -63,8 +58,12 @@ public sealed class ModContentPackColumn<TRecord> : Column<TRecord, ModContentPa
         return _cellWidth[i];
     }
 
-    private void GetCellValues(ModContentPack? mod, out string text, out float width)
+    public override void Add(TRecord record)
     {
+        ModContentPack? mod = record.Def.modContentPack;
+        string text;
+        float width;
+
         if (mod != null)
         {
             text = mod.Name;
@@ -75,27 +74,17 @@ public sealed class ModContentPackColumn<TRecord> : Column<TRecord, ModContentPa
             text = "";
             width = 0f;
         }
-    }
-
-    protected override void AddValue(ModContentPack? mod)
-    {
-        GetCellValues(mod, out string text, out float width);
 
         _cellValue.Add(mod);
         _cellText.Add(text);
         _cellWidth.Add(width);
     }
 
-    protected override void SetValue(int i, ModContentPack? mod)
+    public override void Refresh(int i, TRecord record)
     {
-        GetCellValues(mod, out string text, out float width);
-
-        _cellValue[i] = mod;
-        _cellText[i] = text;
-        _cellWidth[i] = width;
     }
 
-    protected override void RemoveValue(int i)
+    public override void Remove(int i)
     {
         _cellValue.ReplaceWithLast(i);
         _cellText.ReplaceWithLast(i);

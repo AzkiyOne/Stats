@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Stats.Columns;
 using Stats.Extensions;
 using Stats.GUIScopes;
@@ -135,7 +136,7 @@ public sealed partial class Table<TRecord>
                     {
                         field = !field;
 
-                        Log.Error($"Unable to Show/Hide column {_column.Def.defName}: {e.Message}");
+                        LogUnableToChangeVisibility(e);
                     }
                 }
             }
@@ -174,7 +175,18 @@ public sealed partial class Table<TRecord>
 
             if (Event.current.type == EventType.Layout && _isManuallyResized == false)
             {
-                Width = Mathf.Max(_headerCellWidth, _column.GetMinWidth(rows));
+                float maxBodyCellWidth = 0f;
+
+                try
+                {
+                    maxBodyCellWidth = _column.GetMaxCellWidth(rows);
+                }
+                catch (Exception e)
+                {
+                    LogUnableToUpdateWidth(e);
+                }
+
+                Width = Mathf.Max(_headerCellWidth, maxBodyCellWidth);
             }
         }
 
@@ -189,12 +201,9 @@ public sealed partial class Table<TRecord>
                 {
                     _column.DrawCell(cellRect, rows[i]);
                 }
-                catch
+                catch (Exception e)
                 {
-                    // TODO:
-                    // - Add tooltip with exception's message.
-                    // - Make the whole thing into a separate non-inlineable method.
-                    cellRect.Fill(Color.red);
+                    DrawFaultyCell(cellRect, e);
                 }
 
                 cellRect.y = cellRect.yMax;
@@ -366,17 +375,45 @@ public sealed partial class Table<TRecord>
 
         public void AddRecord(TRecord record)
         {
-            _column.AddRecord(record);
+            _column.Add(record);
         }
 
         public void RemoveRecord(int i)
         {
-            _column.RemoveRecord(i);
+            _column.Remove(i);
         }
 
-        public void RefreshCells()
+        public void RefreshCells(List<TRecord> records)
         {
-            _column.RefreshCells();
+            for (int i = 0; i < records.Count; i++)
+            {
+                TRecord record = records[i];
+
+                _column.Refresh(i, record);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void LogUnableToChangeVisibility(Exception e)
+        {
+            Log.Error($"Unable to change visibility of \"{_column.Def.defName}\" column: {e.Message}");
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void LogUnableToUpdateWidth(Exception e)
+        {
+            Log.Error($"Unable to update width of \"{_column.Def.defName}\" column: {e.Message}");
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void DrawFaultyCell(Rect rect, Exception e)
+        {
+            rect.Fill(Color.red);
+
+            if (Mouse.IsOver(rect))
+            {
+                rect.Tip(e.Message);
+            }
         }
     }
 }

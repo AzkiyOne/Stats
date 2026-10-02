@@ -9,7 +9,7 @@ using Verse;
 
 namespace Stats.Columns.ThingDef;
 
-public sealed class SizeColumn<TRecord> : Column<TRecord, IntVec2> where TRecord : IThingDefTableRecord
+public sealed class SizeColumn<TRecord> : Column<TRecord> where TRecord : IThingDefTableRecord
 {
     private readonly List<decimal> _cellValue;
     private readonly List<string> _cellText;
@@ -43,11 +43,6 @@ public sealed class SizeColumn<TRecord> : Column<TRecord, IntVec2> where TRecord
 
     public override ICollection<ColumnFilterOption> FilterOptions { get; }
 
-    protected override IntVec2 GetValueFromRecord(TRecord record)
-    {
-        return NormalizeSize(record.ThingDef.size);
-    }
-
     private static IntVec2 NormalizeSize(IntVec2 vec2)
     {
         // Because 4x5 == 5x4.
@@ -64,13 +59,16 @@ public sealed class SizeColumn<TRecord> : Column<TRecord, IntVec2> where TRecord
         return _cellWidth[i];
     }
 
-    private void GetCellValues(IntVec2 size, out decimal area, out string text, out float width)
+    public override void Add(TRecord record)
     {
-        area = size.Area;
+        IntVec2 size = record.ThingDef.size;
+        int area = size.Area;
+        string text;
+        float width;
 
         if (area != 0m)
         {
-            text = size.ToStringCross();
+            text = NormalizeSize(size).ToStringCross();
             width = text.CalcSize(GUIStyles.TableCell.Number).x;
         }
         else
@@ -78,27 +76,17 @@ public sealed class SizeColumn<TRecord> : Column<TRecord, IntVec2> where TRecord
             text = "";
             width = 0f;
         }
-    }
-
-    protected override void AddValue(IntVec2 value)
-    {
-        GetCellValues(value, out decimal area, out string text, out float width);
 
         _cellValue.Add(area);
         _cellText.Add(text);
         _cellWidth.Add(width);
     }
 
-    protected override void SetValue(int i, IntVec2 value)
+    public override void Refresh(int i, TRecord record)
     {
-        GetCellValues(value, out decimal area, out string text, out float width);
-
-        _cellValue[i] = area;
-        _cellText[i] = text;
-        _cellWidth[i] = width;
     }
 
-    protected override void RemoveValue(int i)
+    public override void Remove(int i)
     {
         _cellValue.ReplaceWithLast(i);
         _cellText.ReplaceWithLast(i);

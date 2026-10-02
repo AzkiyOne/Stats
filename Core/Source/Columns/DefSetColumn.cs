@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Stats.Columns;
 
-public abstract class DefSetColumn<TRecord> : Column<TRecord, IReadOnlyCollection<Verse.Def>?>
+public abstract class DefSetColumn<TRecord> : Column<TRecord>
 {
     private static readonly HashSet<Verse.Def> _emptyDefHashSet = [];
 
@@ -48,12 +48,16 @@ public abstract class DefSetColumn<TRecord> : Column<TRecord, IReadOnlyCollectio
         return _cellWidth[i];
     }
 
-    private void GetCellValues(IReadOnlyCollection<Verse.Def>? value, out string text, out float width)
+    protected abstract IReadOnlyCollection<Verse.Def>? GetDefs(TRecord record);
+
+    private void GetCellValues(TRecord record, out IReadOnlyCollection<Verse.Def>? defs, out string text, out float width)
     {
-        if (value != null)
+        defs = GetDefs(record);
+
+        if (defs != null)
         {
             // TODO: This may be too slow.
-            text = string.Join(" | ", value.Select(def => def.LabelCap).OrderBy(text => text));
+            text = string.Join(" | ", defs.Select(def => def.LabelCap).OrderBy(text => text));
             width = text.CalcSize(GUIStyles.TableCell.String).x;
         }
         else
@@ -63,28 +67,28 @@ public abstract class DefSetColumn<TRecord> : Column<TRecord, IReadOnlyCollectio
         }
     }
 
-    protected override void AddValue(IReadOnlyCollection<Verse.Def>? value)
+    public override void Add(TRecord record)
     {
-        GetCellValues(value, out string text, out float width);
+        GetCellValues(record, out IReadOnlyCollection<Verse.Def>? defs, out string text, out float width);
 
-        _cellValue.Add(value ?? _emptyDefHashSet);
+        _cellValue.Add(defs ?? _emptyDefHashSet);
         _cellText.Add(text);
         _cellWidth.Add(width);
     }
 
-    protected override void RemoveValue(int i)
+    public override void Refresh(int i, TRecord record)
+    {
+        GetCellValues(record, out IReadOnlyCollection<Verse.Def>? defs, out string text, out float width);
+
+        _cellValue[i] = defs ?? _emptyDefHashSet;
+        _cellText[i] = text;
+        _cellWidth[i] = width;
+    }
+
+    public override void Remove(int i)
     {
         _cellValue.ReplaceWithLast(i);
         _cellText.ReplaceWithLast(i);
         _cellWidth.ReplaceWithLast(i);
-    }
-
-    protected override void SetValue(int i, IReadOnlyCollection<Verse.Def>? value)
-    {
-        GetCellValues(value, out string text, out float width);
-
-        _cellValue[i] = value ?? _emptyDefHashSet;
-        _cellText[i] = text;
-        _cellWidth[i] = width;
     }
 }

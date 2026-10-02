@@ -64,7 +64,16 @@ public sealed partial class Table<TRecord>
 
             if (_columnsToRefresh.Count > 0)
             {
-                _columnsToRefresh.Pop().RefreshCells();
+                ColumnWidget column = _columnsToRefresh.Pop();
+
+                try
+                {
+                    column.RefreshCells(_records);
+                }
+                catch (Exception e)
+                {
+                    LogUnableToRefreshColumn(e, column);
+                }
             }
             // Filtering and sorting of rows is performed only after every column has been refreshed, but:
             // - No often than every 60 frames.

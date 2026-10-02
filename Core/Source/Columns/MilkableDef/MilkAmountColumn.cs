@@ -14,7 +14,7 @@ public sealed class MilkAmountColumn<TRecord> : ThingDefCountColumn<TRecord> whe
 
     public override bool IsRefreshable => false;
 
-    protected override ThingDefCount? GetValueFromRecord(TRecord record)
+    protected override ThingDefCount? GetThingDefCount(TRecord record)
     {
         CompProperties_Milkable? milkableCompProps = record.ThingDef.GetCompProperties<CompProperties_Milkable>();
 

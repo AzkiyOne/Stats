@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using RimWorld;
-using Stats.Columns.Cells;
 using Stats.TableRecords;
-using Stats.Tables;
+using Verse;
 
 namespace Stats.Columns.ApparelDef;
 
@@ -14,23 +12,25 @@ namespace Stats.Columns.ApparelDef;
 // Luckily, it looks like in a definition it is allowed to only list the whole
 // groups of body parts. The resulting list is of course significantly smaller
 // and can be safely displayed in a single row/column.
-public sealed class BodyPartGroupsColumn<TRecord>(ColumnDef columnDef) :
-    DefSetColumn<TRecord, DefSetColumnCell>(columnDef)
-        where TRecord :
-            IApparelDefTableRecord
+public sealed class BodyPartGroupsColumn<TRecord> : DefSetColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override DefSetColumnCell MakeCell(TRecord record)
-    {
-        ApparelProperties apparelProps = record.ApparelProperties;
-        List<Verse.BodyPartGroupDef> bodyPartGroups = apparelProps.bodyPartGroups;
+    private static readonly List<BodyPartGroupDef> _emptyList = [];
 
-        return new DefSetColumnCell(bodyPartGroups);
+    public BodyPartGroupsColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetBodyPartGroupDefs(thingDefs))
+    {
     }
 
-    protected override IEnumerable<Verse.Def?> GetValueFieldFilterOptions(Table tableWorker)
+    public override bool IsRefreshable => false;
+
+    protected override IReadOnlyCollection<Verse.Def>? GetDefs(TRecord record)
     {
-        return ((IRefRecordsProvider<Verse.ThingDef>)tableWorker).Records
-            .SelectMany(thingDef => thingDef.apparel?.bodyPartGroups)
+        return record.ThingDef.apparel?.bodyPartGroups;
+    }
+
+    private static IEnumerable<Verse.Def> GetBodyPartGroupDefs(IEnumerable<Verse.ThingDef> thingDefs)
+    {
+        return thingDefs
+            .SelectMany(thingDef => thingDef.apparel?.bodyPartGroups ?? _emptyList)
             .Distinct();
     }
 }

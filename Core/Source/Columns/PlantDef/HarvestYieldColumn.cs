@@ -15,7 +15,7 @@ public sealed class HarvestYieldColumn<TRecord> : ThingDefCountColumn<TRecord> w
 
     public override bool IsRefreshable => false;
 
-    protected override ThingDefCount? GetValueFromRecord(TRecord record)
+    protected override ThingDefCount? GetThingDefCount(TRecord record)
     {
         PlantProperties? plantProps = record.ThingDef.plant;
 

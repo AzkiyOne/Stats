@@ -15,7 +15,7 @@ public sealed class EggsAmountColumn<TRecord> : ThingDefCountColumn<TRecord> whe
 
     public override bool IsRefreshable => false;
 
-    protected override ThingDefCount? GetValueFromRecord(TRecord record)
+    protected override ThingDefCount? GetThingDefCount(TRecord record)
     {
         CompProperties_EggLayer? eggLayerCompProps = record.ThingDef.GetCompProperties<CompProperties_EggLayer>();
 

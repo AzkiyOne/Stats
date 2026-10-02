@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Stats.Columns;
 
-public abstract class DefColumn<TRecord> : Column<TRecord, Verse.Def?>
+public abstract class DefColumn<TRecord> : Column<TRecord>
 {
     private readonly List<Verse.Def?> _cellValue;
     private readonly List<string> _cellText;
@@ -48,34 +48,37 @@ public abstract class DefColumn<TRecord> : Column<TRecord, Verse.Def?>
         return _cellWidth[i];
     }
 
-    private void GetCellValues(Verse.Def? def, out string text, out float width)
+    protected abstract Verse.Def? GetDef(TRecord record);
+
+    private void GetCellValues(TRecord record, out Verse.Def? def, out string text, out float width)
     {
+        def = GetDef(record);
         text = def?.LabelCap ?? "";
         width = text.CalcSize(GUIStyles.TableCell.String).x;
     }
 
-    protected override void AddValue(Verse.Def? def)
+    public override void Add(TRecord record)
     {
-        GetCellValues(def, out string text, out float width);
+        GetCellValues(record, out Verse.Def? def, out string text, out float width);
 
         _cellValue.Add(def);
         _cellText.Add(text);
         _cellWidth.Add(width);
     }
 
-    protected override void RemoveValue(int i)
+    public override void Refresh(int i, TRecord record)
     {
-        _cellValue.ReplaceWithLast(i);
-        _cellText.ReplaceWithLast(i);
-        _cellWidth.ReplaceWithLast(i);
-    }
-
-    protected override void SetValue(int i, Verse.Def? def)
-    {
-        GetCellValues(def, out string text, out float width);
+        GetCellValues(record, out Verse.Def? def, out string text, out float width);
 
         _cellValue[i] = def;
         _cellText[i] = text;
         _cellWidth[i] = width;
+    }
+
+    public override void Remove(int i)
+    {
+        _cellValue.ReplaceWithLast(i);
+        _cellText.ReplaceWithLast(i);
+        _cellWidth.ReplaceWithLast(i);
     }
 }

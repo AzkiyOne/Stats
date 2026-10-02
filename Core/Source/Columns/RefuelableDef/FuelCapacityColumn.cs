@@ -14,7 +14,7 @@ public sealed class FuelCapacityColumn<TRecord> : ThingDefCountColumn<TRecord> w
 
     public override bool IsRefreshable => false;
 
-    protected override ThingDefCount? GetValueFromRecord(TRecord record)
+    protected override ThingDefCount? GetThingDefCount(TRecord record)
     {
         CompProperties_Refuelable? refuelableCompProps = record.ThingDef.GetCompProperties<CompProperties_Refuelable>();
 

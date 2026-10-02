@@ -12,7 +12,7 @@ public sealed class RecreationTypeColumn<TRecord> : DefColumn<TRecord> where TRe
 
     public override bool IsRefreshable => false;
 
-    protected override Verse.Def? GetValueFromRecord(TRecord record)
+    protected override Verse.Def? GetDef(TRecord record)
     {
         return record.ThingDef.building?.joyKind;
     }

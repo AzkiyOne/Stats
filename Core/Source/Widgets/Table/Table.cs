@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Stats.Columns;
 using Stats.Extensions;
 using UnityEngine;
@@ -109,6 +110,7 @@ public sealed partial class Table<TRecord> : TabBodyWidget
     // Misc
     private readonly DragManager<ColumnWidget> _dragManager;
     private int _framesSinceLastFilterAndSort = 0;
+    private readonly TableDef _def;
 
     public Table(TableDef def, int capacity, object[]? extraColumnCtorArgs = null) : this(def, new List<TRecord>(capacity), extraColumnCtorArgs)
     {
@@ -135,10 +137,12 @@ public sealed partial class Table<TRecord> : TabBodyWidget
                     ? [columnDef, records]
                     : [columnDef, records, .. extraColumnCtorArgs];
                 Column<TRecord> column = (Column<TRecord>)Activator.CreateInstance(columnType, columnCtorArgs);
+
                 foreach (TRecord record in records)
                 {
-                    column.AddRecord(record);
+                    column.Add(record);
                 }
+
                 ColumnWidget columnWidget = new(column);
 
                 columnWidget.OnPin += PinColumn;
@@ -148,7 +152,7 @@ public sealed partial class Table<TRecord> : TabBodyWidget
             }
             catch (Exception error)
             {
-                Log.Error(error.Message);
+                LogUnableToInitColumn(error, columnDef, def);
             }
         }
 
@@ -171,6 +175,7 @@ public sealed partial class Table<TRecord> : TabBodyWidget
         }
         _toolbar = new Toolbar(columns);
         _dragManager = dragManager;
+        _def = def;
     }
 
     public override void Focus()
@@ -198,7 +203,14 @@ public sealed partial class Table<TRecord> : TabBodyWidget
 
         foreach (ColumnWidget column in _columns)
         {
-            column.AddRecord(record);
+            try
+            {
+                column.AddRecord(record);
+            }
+            catch (Exception e)
+            {
+                LogUnableToAddRecordToColumn(e, record, column);
+            }
         }
     }
 
@@ -211,12 +223,43 @@ public sealed partial class Table<TRecord> : TabBodyWidget
 
         foreach (ColumnWidget column in _columns)
         {
-            column.RemoveRecord(i);
+            try
+            {
+                column.RemoveRecord(i);
+            }
+            catch (Exception e)
+            {
+                LogUnableToRemoveRecordFromColumn(e, record, column);
+            }
         }
     }
 
     public override void Dispose()
     {
         // TODO?
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void LogUnableToInitColumn(Exception e, ColumnDef columnDef, TableDef def)
+    {
+        Log.Error($"Unable to initialize column\"{columnDef.defName}\" of table \"{def.defName}\": {e.Message}");
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void LogUnableToAddRecordToColumn(Exception e, TRecord record, ColumnWidget column)
+    {
+        Log.Error($"Unable to add record \"{record}\" to \"{column.Def.defName}\" column of table \"{_def.defName}\": {e.Message}");
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void LogUnableToRemoveRecordFromColumn(Exception e, TRecord record, ColumnWidget column)
+    {
+        Log.Error($"Unable to remove record \"{record}\" from \"{column.Def.defName}\" column of table \"{_def.defName}\": {e.Message}");
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void LogUnableToRefreshColumn(Exception e, ColumnWidget column)
+    {
+        Log.Error($"Unable to refresh \"{column.Def.defName}\" column of \"{_def.defName}\" table: {e.Message}");
     }
 }

@@ -1,45 +1,68 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
-using Stats.Columns;
-using Stats.Defs;
+using Stats.Extensions;
 using Stats.TableRecords;
-using Stats.Widgets.Filters;
+using UnityEngine;
+using Verse;
 
 namespace Stats.Columns.BuildableDef;
 
-public class StatColumn<TRecord> : Column<TRecord, StatColumnCell> where TRecord : IBuildableDefTableRecord
+public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDefTableRecord
 {
     private readonly StatDef _statDef;
-    private readonly string _label;
+    private readonly int _digits;
+    private readonly string _formatString;
+    private readonly List<decimal> _cellValue;
+    private readonly List<string> _cellText;
+    private readonly List<float> _cellWidth;
+    private readonly List<Lazy<TipSignal>?> _cellTooltip;
 
-    public StatColumn(StatColumnDef def) : base(def)
+    public StatColumn(StatColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
+        string label = def.LabelCap;
+        int capacity = records.Capacity;
+        int digits = def.digits;
+        string uom = def.uom;
         _statDef = def.stat;
-        _label = def.LabelCap;
+        _digits = digits;
+        if (digits == 0)
+        {
+            _formatString = $"0{uom}";
+        }
+        else
+        {
+            _formatString = $"0.{string.Join("", Enumerable.Repeat("0", digits))}{uom}";
+        }
+        _cellValue = new List<decimal>(capacity);
+        _cellText = new List<string>(capacity);
+        _cellWidth = new List<float>(capacity);
+        _cellTooltip = new List<Lazy<TipSignal>?>(capacity);
+        SortOptions = [
+            new ColumnSortOption<decimal>(label, i => _cellValue[i])
+        ];
+        FilterOptions = [
+            new NumberColumnFilterOption(label, i => _cellValue[i])
+        ];
     }
+
+    public override bool IsRefreshable => typeof(TRecord) is IThingTableRecord;
 
     public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Right;
 
-    public override ICollection<ColumnSortOption> SortOptions => [
-        new ColumnSortOption(_label, (i1, i2) => this[i1].StatValue.CompareTo(this[i2].StatValue))
-    ];
+    public override ICollection<ColumnSortOption> SortOptions { get; }
 
-    public override ICollection<ColumnFilterOption> FilterOptions => [
-        new ColumnFilterOption(_label, () => new NumberFilter(i => this[i].Value))
-    ];
+    public override ICollection<ColumnFilterOption> FilterOptions { get; }
 
-    protected override StatColumnCell MakeCell(TRecord record)
+    public override void DrawCell(Rect rect, int i)
     {
-        StatRequest statRequest = GetStatRequest(record);
+        _cellText[i].Draw(rect, GUIStyles.TableCell.Number);
+    }
 
-        if (_statDef.Worker.ShouldShowFor(statRequest))
-        {
-            float statValue = _statDef.Worker.GetValue(statRequest);
-
-            return new StatColumnCell(statValue, statRequest, _statDef);
-        }
-
-        return default;
+    protected override float GetCellWidth(int i)
+    {
+        return _cellWidth[i];
     }
 
     protected virtual StatRequest GetStatRequest(TRecord record)
@@ -47,16 +70,53 @@ public class StatColumn<TRecord> : Column<TRecord, StatColumnCell> where TRecord
         return record.StatRequest;
     }
 
-    protected override bool IsRefreshable => typeof(TRecord) is IThingTableRecord;
-
-    protected override void RefreshCell(TRecord record, StatColumnCell cell, int i)
+    private void GetCellValues(TRecord record, out decimal value, out string text, out Lazy<TipSignal>? tooltip, out float width)
     {
         StatRequest statRequest = GetStatRequest(record);
-        float newStatValue = _statDef.Worker.GetValue(statRequest);
 
-        if (newStatValue != cell.StatValue)
+        if (_statDef.Worker.ShouldShowFor(statRequest))
         {
-            this[i] = new StatColumnCell(newStatValue, statRequest, _statDef);
+            float statValue = _statDef.Worker.GetValue(statRequest);
+
+            value = statValue.ToDecimal(_digits);
+            text = value.ToString(_formatString);
+            width = text.CalcSize(GUIStyles.TableCell.Number).x;
+            tooltip = new Lazy<TipSignal>(() => _statDef.Worker.GetExplanationFull(statRequest, ToStringNumberSense.Absolute, statValue));
         }
+        else
+        {
+            value = 0m;
+            text = "";
+            width = 0f;
+            tooltip = null;
+        }
+    }
+
+    public override void Add(TRecord record)
+    {
+        GetCellValues(record, out decimal value, out string text, out Lazy<TipSignal>? tooltip, out float width);
+
+        _cellValue.Add(value);
+        _cellText.Add(text);
+        _cellWidth.Add(width);
+        _cellTooltip.Add(tooltip);
+    }
+
+    public override void Refresh(int i, TRecord record)
+    {
+        GetCellValues(record, out decimal value, out string text, out Lazy<TipSignal>? tooltip, out float width);
+
+        _cellValue[i] = value;
+        _cellText[i] = text;
+        _cellWidth[i] = width;
+        _cellTooltip[i] = tooltip;
+    }
+
+    public override void Remove(int i)
+    {
+        _cellValue.ReplaceWithLast(i);
+        _cellText.ReplaceWithLast(i);
+        _cellWidth.ReplaceWithLast(i);
+        _cellTooltip.ReplaceWithLast(i);
     }
 }

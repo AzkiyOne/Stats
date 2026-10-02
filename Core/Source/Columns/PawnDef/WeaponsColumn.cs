@@ -13,7 +13,7 @@ public sealed class WeaponsColumn<TRecord> : ThingDefSetColumn<TRecord> where TR
 
     public override bool IsRefreshable => false;
 
-    protected override IReadOnlyCollection<Verse.ThingDef>? GetValueFromRecord(TRecord record)
+    protected override IReadOnlyCollection<Verse.ThingDef>? GetThingDefs(TRecord record)
     {
         return record.ThingDef.GetPossibleWeapons();
     }

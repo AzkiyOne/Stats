@@ -1,29 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using RimWorld;
-using Stats.Columns.Cells;
 using Stats.TableRecords;
-using Stats.Tables;
+using Verse;
 
 namespace Stats.Columns.ApparelDef;
 
-public sealed class LayersColumn<TRecord>(ColumnDef columnDef) :
-    DefSetColumn<TRecord, DefSetColumnCell>(columnDef)
-        where TRecord :
-            IApparelDefTableRecord
+public sealed class LayersColumn<TRecord> : DefSetColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    protected override DefSetColumnCell MakeCell(TRecord record)
-    {
-        ApparelProperties apparelProps = record.ApparelProperties;
-        List<Verse.ApparelLayerDef> layers = apparelProps.layers;
+    private static readonly List<ApparelLayerDef> _emptyList = [];
 
-        return new DefSetColumnCell(layers);
+    public LayersColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetLayerDefs(thingDefs))
+    {
     }
 
-    protected override IEnumerable<Verse.Def?> GetValueFieldFilterOptions(Table tableWorker)
+    public override bool IsRefreshable => false;
+
+    protected override IReadOnlyCollection<Verse.Def>? GetDefs(TRecord record)
     {
-        return ((IRefRecordsProvider<Verse.ThingDef>)tableWorker).Records
-            .SelectMany(thingDef => thingDef.apparel?.layers)
+        return record.ThingDef.apparel?.layers;
+    }
+
+    private static IEnumerable<Verse.Def> GetLayerDefs(IEnumerable<Verse.ThingDef> thingDefs)
+    {
+        return thingDefs
+            .SelectMany(thingDef => thingDef.apparel?.layers ?? _emptyList)
             .Distinct();
     }
 }

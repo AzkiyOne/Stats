@@ -13,7 +13,7 @@ namespace Stats.Columns.ThingDef;
 // modded stuffs may have the same color as vanilla ones or other modded stuffs.
 // Replacing label with icon won't do, because ex. all of the leathers have the same
 // icon but of different color.
-public sealed class LabelColumn<TRecord> : Column<TRecord, LabelColumnValue> where TRecord : IThingDefTableRecord
+public sealed class LabelColumn<TRecord> : Column<TRecord> where TRecord : IThingDefTableRecord
 {
     private static readonly HashSet<Verse.ThingDef> _nullSet = [null];
 
@@ -62,11 +62,6 @@ public sealed class LabelColumn<TRecord> : Column<TRecord, LabelColumnValue> whe
 
     public override ICollection<ColumnFilterOption> FilterOptions { get; }
 
-    protected override LabelColumnValue GetValueFromRecord(TRecord record)
-    {
-        return new LabelColumnValue(record.ThingDef, record.StatRequest.StuffDef);
-    }
-
     public override void DrawCell(Rect rect, int i)
     {
         string text = _cellText[i];
@@ -90,46 +85,35 @@ public sealed class LabelColumn<TRecord> : Column<TRecord, LabelColumnValue> whe
         return _cellWidth[i];
     }
 
-    private void GetCellValues(LabelColumnValue value, out string text, out Widget icon, out float width)
+    public override void Add(TRecord record)
     {
-        (Verse.ThingDef thingDef, Verse.ThingDef? stuffDef) = value;
-        text = stuffDef == null
+        Verse.ThingDef thingDef = record.ThingDef;
+        Verse.ThingDef? stuffDef = record.StatRequest.StuffDef;
+        string text = stuffDef == null
             ? thingDef.LabelCap.RawText
             : $"{stuffDef.LabelAsStuff.CapitalizeFirst()} {thingDef.label}";
-        icon = new ThingDefIconInteractive(thingDef, stuffDef);
+        Widget icon = new ThingDefIconInteractive(thingDef, stuffDef);
         float textWidth = text.CalcSize(GUIStyles.TableCell.StringNoPad).x;
-        width = icon.Size.x + GUIStyles.TableCell.ContentSpacing + textWidth + GUIStyles.TableCell.PadHor;
-    }
+        float width = icon.Size.x + GUIStyles.TableCell.ContentSpacing + textWidth + GUIStyles.TableCell.PadHor;
 
-    protected override void AddValue(LabelColumnValue value)
-    {
-        GetCellValues(value, out string text, out Widget icon, out float width);
-
-        _cellThingDef.Add(value.ThingDef);
-        _cellStuffDef.Add(value.StuffDef);
+        _cellThingDef.Add(thingDef);
+        _cellStuffDef.Add(stuffDef);
         _cellText.Add(text);
         _cellIcon.Add(icon);
         _cellWidth.Add(width);
     }
 
-    protected override void RemoveValue(int i)
+    public override void Refresh(int i, TRecord record)
+    {
+    }
+
+    public override void Remove(int i)
     {
         _cellThingDef.ReplaceWithLast(i);
         _cellStuffDef.ReplaceWithLast(i);
         _cellText.ReplaceWithLast(i);
         _cellIcon.ReplaceWithLast(i);
         _cellWidth.ReplaceWithLast(i);
-    }
-
-    protected override void SetValue(int i, LabelColumnValue value)
-    {
-        GetCellValues(value, out string text, out Widget icon, out float width);
-
-        _cellThingDef[i] = value.ThingDef;
-        _cellStuffDef[i] = value.StuffDef;
-        _cellText[i] = text;
-        _cellIcon[i] = icon;
-        _cellWidth[i] = width;
     }
 
     //protected override ThingDefColumnCell MakeCell(TRecord record)
@@ -177,5 +161,3 @@ public sealed class LabelColumn<TRecord> : Column<TRecord, LabelColumnValue> whe
     //    }
     //}
 }
-
-public readonly record struct LabelColumnValue(Verse.ThingDef ThingDef, Verse.ThingDef? StuffDef);

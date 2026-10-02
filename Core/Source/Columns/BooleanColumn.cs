@@ -5,7 +5,7 @@ using Verse;
 
 namespace Stats.Columns;
 
-public abstract class BooleanColumn<TRecord> : Column<TRecord, bool>
+public abstract class BooleanColumn<TRecord> : Column<TRecord>
 {
     private static readonly Texture2D _textureTrue = Verse.Widgets.CheckboxOnTex;
     private readonly List<bool> _cellValue;
@@ -28,17 +28,23 @@ public abstract class BooleanColumn<TRecord> : Column<TRecord, bool>
 
     public override ICollection<ColumnFilterOption> FilterOptions { get; }
 
-    protected override void AddValue(bool value)
+    protected abstract bool GetValueFromRecord(TRecord record);
+
+    public override void Add(TRecord record)
     {
+        bool value = GetValueFromRecord(record);
+
         _cellValue.Add(value);
     }
 
-    protected override void SetValue(int i, bool value)
+    public override void Refresh(int i, TRecord record)
     {
+        bool value = GetValueFromRecord(record);
+
         _cellValue[i] = value;
     }
 
-    protected override void RemoveValue(int index)
+    public override void Remove(int index)
     {
         _cellValue.ReplaceWithLast(index);
     }
@@ -52,7 +58,7 @@ public abstract class BooleanColumn<TRecord> : Column<TRecord, bool>
         }
     }
 
-    public override float GetMinWidth(List<int> recordIds)
+    public override float GetMaxCellWidth(List<int> recordIds)
     {
         return GetCellWidth(0);
     }

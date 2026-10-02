@@ -10,7 +10,7 @@ using Verse;
 
 namespace Stats.Columns.ThingDef;
 
-public sealed class TechLevelColumn<TRecord> : Column<TRecord, TechLevel> where TRecord : IThingDefTableRecord
+public sealed class TechLevelColumn<TRecord> : Column<TRecord> where TRecord : IThingDefTableRecord
 {
     private static readonly string[] _cellText;
     private static readonly float[] _cellWidth;
@@ -62,11 +62,6 @@ public sealed class TechLevelColumn<TRecord> : Column<TRecord, TechLevel> where 
 
     public override ICollection<ColumnFilterOption> FilterOptions { get; }
 
-    protected override TechLevel GetValueFromRecord(TRecord record)
-    {
-        return record.ThingDef.techLevel;
-    }
-
     public override void DrawCell(Rect rect, int i)
     {
         TechLevel techLevel = _cellValue[i];
@@ -82,17 +77,17 @@ public sealed class TechLevelColumn<TRecord> : Column<TRecord, TechLevel> where 
         return _cellWidth[(byte)techLevel];
     }
 
-    protected override void AddValue(TechLevel techLevel)
+    public override void Add(TRecord record)
     {
-        _cellValue.Add(techLevel);
+        _cellValue.Add(record.ThingDef.techLevel);
     }
 
-    protected override void SetValue(int i, TechLevel techLevel)
+    public override void Refresh(int i, TRecord record)
     {
-        _cellValue[i] = techLevel;
+        _cellValue[i] = record.ThingDef.techLevel;
     }
 
-    protected override void RemoveValue(int i)
+    public override void Remove(int i)
     {
         _cellValue.ReplaceWithLast(i);
     }

@@ -12,7 +12,7 @@ public sealed class TrainabilityColumn<TRecord> : DefColumn<TRecord> where TReco
 
     public override bool IsRefreshable => false;
 
-    protected override Verse.Def? GetValueFromRecord(TRecord record)
+    protected override Verse.Def? GetDef(TRecord record)
     {
         return record.ThingDef.race?.trainability;
     }

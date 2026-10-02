@@ -16,7 +16,7 @@ public sealed class FuelCapacityScaledColumn<TRecord> : ThingDefCountColumn<TRec
     // TODO: Realistically, we only need to refresh our cells once after difficulty settings had been changed.
     public override bool IsRefreshable => true;
 
-    protected override ThingDefCount? GetValueFromRecord(TRecord record)
+    protected override ThingDefCount? GetThingDefCount(TRecord record)
     {
         CompProperties_Refuelable? refuelableCompProps = record.ThingDef.GetCompProperties<CompProperties_Refuelable>();
 

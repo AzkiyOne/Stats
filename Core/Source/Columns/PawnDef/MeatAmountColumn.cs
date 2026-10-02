@@ -15,7 +15,7 @@ public sealed class MeatAmountColumn<TRecord> : ThingDefCountColumn<TRecord> whe
 
     public override bool IsRefreshable => false;
 
-    protected override ThingDefCount? GetValueFromRecord(TRecord record)
+    protected override ThingDefCount? GetThingDefCount(TRecord record)
     {
         Verse.ThingDef? meatDef = record.ThingDef.race?.meatDef;
 
