@@ -13,6 +13,10 @@
         <defName>Turret_ShootingAccuracy</defName>
         <title><Accuracy/><Shoot/></title>
         <stat>ShootingAccuracyTurret</stat>
+        <format>
+            <pattern>0.0</pattern>
+            <formatClass>Stats.NumberFormats.Percent</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 

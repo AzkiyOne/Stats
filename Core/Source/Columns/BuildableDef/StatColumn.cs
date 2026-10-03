@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using RimWorld;
 using Stats.Extensions;
+using Stats.NumberFormats;
 using Stats.TableRecords;
 using UnityEngine;
 using Verse;
@@ -12,29 +12,19 @@ namespace Stats.Columns.BuildableDef;
 public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDefTableRecord
 {
     private readonly StatDef _statDef;
-    private readonly int _digits;
-    private readonly string _formatString;
     private readonly List<decimal> _cellValue;
     private readonly List<string> _cellText;
     private readonly List<float> _cellWidth;
     private readonly List<Lazy<TipSignal>?> _cellTooltip;
+    private readonly NumberFormat _numberFormat;
 
     public StatColumn(StatColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
         string label = def.LabelCap;
         int capacity = records.Capacity;
-        int digits = def.digits;
-        string uom = def.uom;
         _statDef = def.stat;
-        _digits = digits;
-        if (digits == 0)
-        {
-            _formatString = $"0{uom}";
-        }
-        else
-        {
-            _formatString = $"0.{string.Join("", Enumerable.Repeat("0", digits))}{uom}";
-        }
+        // TODO: Support dynamic formats.
+        _numberFormat = def.NumberFormat;
         _cellValue = new List<decimal>(capacity);
         _cellText = new List<string>(capacity);
         _cellWidth = new List<float>(capacity);
@@ -78,8 +68,8 @@ public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDef
         {
             float statValue = _statDef.Worker.GetValue(statRequest);
 
-            value = statValue.ToDecimal(_digits);
-            text = value.ToString(_formatString);
+            value = _numberFormat.ToDecimal(statValue);
+            text = _numberFormat.FormatNumber(value);
             width = text.CalcSize(GUIStyles.TableCell.Number).x;
             tooltip = new Lazy<TipSignal>(() => _statDef.Worker.GetExplanationFull(statRequest, ToStringNumberSense.Absolute, statValue));
         }

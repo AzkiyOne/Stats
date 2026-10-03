@@ -6,6 +6,10 @@
         <defName>Apparel_InsulationCold</defName>
         <title><Temp_Cold/></title>
         <stat>Insulation_Cold</stat>
+        <format>
+            <pattern>0.0</pattern>
+            <formatClass>Stats.NumberFormats.TemperatureOffset</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -13,6 +17,10 @@
         <defName>Apparel_InsulationHeat</defName>
         <title><Temp_Hot/></title>
         <stat>Insulation_Heat</stat>
+        <format>
+            <pattern>0.0</pattern>
+            <formatClass>Stats.NumberFormats.TemperatureOffset</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -42,6 +50,9 @@
         <defName>Apparel_EquipDelay</defName>
         <title><Time/>Equip</title>
         <stat>EquipDelay</stat>
+        <format>
+            <pattern>0{LetterSecond}</pattern>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 

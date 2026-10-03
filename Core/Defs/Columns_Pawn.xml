@@ -20,6 +20,9 @@
         <defName>Pawn_ToxicResistance</defName>
         <title><Resistance/><Toxic/></title>
         <stat>ToxicResistance</stat>
+        <format>
+            <formatClass>Stats.NumberFormats.Percent</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -27,6 +30,9 @@
         <defName>Pawn_ToxicEnvironmentResistance</defName>
         <title><Resistance/><ToxicEnvironment/></title>
         <stat>ToxicEnvironmentResistance</stat>
+        <format>
+            <formatClass>Stats.NumberFormats.Percent</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -34,6 +40,9 @@
         <defName>Pawn_MaxNutrition</defName>
         <title><Nutrition/><Decrease/></title>
         <stat>MaxNutrition</stat>
+        <format>
+            <pattern>0.00</pattern>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -41,6 +50,9 @@
         <defName>Pawn_MoveSpeed</defName>
         <title><MoveSpeed/></title>
         <stat>MoveSpeed</stat>
+        <format>
+            <pattern>0c/{LetterSecond}</pattern>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
     
@@ -48,6 +60,9 @@
         <defName>Pawn_ComfyTemperatureMin</defName>
         <title><Temp_Cold/></title>
         <stat>ComfyTemperatureMin</stat>
+        <format>
+            <formatClass>Stats.NumberFormats.Temperature</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -55,6 +70,9 @@
         <defName>Pawn_ComfyTemperatureMax</defName>
         <title><Temp_Hot/></title>
         <stat>ComfyTemperatureMax</stat>
+        <format>
+            <formatClass>Stats.NumberFormats.Temperature</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -70,6 +88,10 @@
         <defName>Pawn_ShootingAccuracy</defName>
         <title><Accuracy/><Shoot/></title>
         <stat>ShootingAccuracyPawn</stat>
+        <format>
+            <pattern>0.0</pattern>
+            <formatClass>Stats.NumberFormats.Percent</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -77,6 +99,9 @@
         <defName>Pawn_AimingTime</defName>
         <title><Time/><DirectHit/></title>
         <stat>AimingDelayFactor</stat>
+        <format>
+            <formatClass>Stats.NumberFormats.Percent</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
     
@@ -84,12 +109,18 @@
         <defName>Pawn_MeleeDodgeChance</defName>
         <stat>MeleeDodgeChance</stat>
         <title>Dodge %</title>
+        <format>
+            <formatClass>Stats.NumberFormats.Percent</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Pawn_PsychicSensitivity</defName>
         <stat>PsychicSensitivity</stat>
+        <format>
+            <formatClass>Stats.NumberFormats.Percent</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 

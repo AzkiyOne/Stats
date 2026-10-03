@@ -126,6 +126,9 @@
         <description>Raw nutrition value of a plant itself, not its product.</description>
         <title><Nutrition/><PlantRaw/></title>
         <stat>Nutrition</stat>
+        <format>
+            <pattern>0.00</pattern>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 

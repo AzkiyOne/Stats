@@ -6,6 +6,9 @@
         <defName>Bed_RestEffectiveness</defName>
         <title>Rest *%</title>
         <stat>BedRestEffectiveness</stat>
+        <format>
+            <formatClass>Stats.NumberFormats.Percent</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 

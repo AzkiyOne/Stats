@@ -9,6 +9,10 @@ public static class Events
     internal static event Action? ResearchCompleted;
     public static event Action<Thing>? ThingSpawned;
     public static event Action<Thing>? ThingDespawned;
+    // TODO:
+    // - Implementation.
+    // - It would better to track individual values.
+    public static event Action? PrefsChanged;
 
     static Events()
     {

@@ -1,5 +1,5 @@
 ﻿using RimWorld;
-using Verse;
+using Stats.NumberFormats;
 
 namespace Stats;
 
@@ -7,12 +7,10 @@ public class StatColumnDef : ColumnDef
 {
 #pragma warning disable CS8618
     public StatDef stat;
+    public NumberFormatProps? format;
 #pragma warning restore CS8618
-    [DefaultValue(0)]
-    public int digits;
-    [MustTranslate]
-    [DefaultValue("")]
-    public string uom = "";
+
+    public NumberFormat NumberFormat => format?.NumberFormatInstance ?? new Standard();
 
     public override void ResolveReferences()
     {

@@ -109,6 +109,9 @@
         <defName>Animal_CaravanRidingSpeedFactor</defName>
         <title><Caravan/><MoveSpeed/></title>
         <stat>CaravanRidingSpeedFactor</stat>
+        <format>
+            <formatClass>Stats.NumberFormats.Percent</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -122,6 +125,9 @@
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Animal_Wildness</defName>
         <stat>Wildness</stat>
+        <format>
+            <formatClass>Stats.NumberFormats.Percent</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 

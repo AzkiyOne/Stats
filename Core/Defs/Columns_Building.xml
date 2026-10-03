@@ -18,6 +18,9 @@
         <defName>Building_JoyGainFactor</defName>
         <title><Recreation/>Power</title>
         <stat>JoyGainFactor</stat>
+        <format>
+            <formatClass>Stats.NumberFormats.Percent</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -32,6 +35,9 @@
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Building_Comfort</defName>
         <stat>Comfort</stat>
+        <format>
+            <pattern>0.00</pattern>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -39,6 +45,9 @@
         <defName>Building_ImmunityGainSpeedFactor</defName>
         <title>Immunity *%</title>
         <stat>ImmunityGainSpeedFactor</stat>
+        <format>
+            <formatClass>Stats.NumberFormats.Percent</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -46,6 +55,9 @@
         <defName>Building_MedicalTendQualityOffset</defName>
         <title>Tend +%</title>
         <stat>MedicalTendQualityOffset</stat>
+        <format>
+            <formatClass>Stats.NumberFormats.Percent</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -53,6 +65,9 @@
         <defName>Building_SurgerySuccessChanceFactor</defName>
         <title>Surgery *%</title>
         <stat>SurgerySuccessChanceFactor</stat>
+        <format>
+            <formatClass>Stats.NumberFormats.Percent</formatClass>
+        </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 
