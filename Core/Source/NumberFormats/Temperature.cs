@@ -29,7 +29,7 @@ public abstract class AbstractTemperature : NumberFormat, IDynamicNumberFormat
     }
 }
 
-public class TemperatureOffset : AbstractTemperature
+public sealed class TemperatureOffset : AbstractTemperature
 {
     private readonly float[] _valueOffsets;
 
@@ -54,7 +54,7 @@ public class TemperatureOffset : AbstractTemperature
     }
 }
 
-public class Temperature : AbstractTemperature
+public sealed class Temperature : AbstractTemperature
 {
     public Temperature(NumberFormatProps props) : this(props.pattern)
     {

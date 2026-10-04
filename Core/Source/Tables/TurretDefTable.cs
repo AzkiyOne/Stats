@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using RimWorld;
 using Stats.Extensions;
 using Stats.TableRecords;
 using Stats.Widgets;
@@ -9,38 +8,25 @@ namespace Stats.Tables;
 
 public sealed class TurretDefTable : Tab
 {
+    private static readonly List<ThingDefTableRecord> _records;
+    private static readonly List<ThingDef> _thingDefs;
+
+    static TurretDefTable()
+    {
+        ThingDefTableUtils.GetThingDefRecordsStuffed(
+            thingDef =>
+                thingDef is { building.IsTurret: true }
+                && thingDef.IsBuildingObtainableByPlayer(),
+            out List<ThingDefTableRecord> records,
+            out List<ThingDef> thingDefs);
+
+        _records = records;
+        _thingDefs = thingDefs;
+    }
+
     public TurretDefTable(TableDef def) : base(def)
     {
-        List<TurretDefTableRecord> records = new(250);
-
-        foreach (Verse.ThingDef thingDef in DefDatabase<Verse.ThingDef>.AllDefsListForReading)
-        {
-            BuildingProperties? buildingProperties = thingDef.building;
-            VerbProperties? primaryVerbProperties = buildingProperties?.turretGunDef?.Verbs.Primary();
-
-            if (primaryVerbProperties != null
-                && buildingProperties is { IsTurret: true, turretGunDef: Verse.ThingDef turretGunDef }
-                && thingDef.IsBuildingObtainableByPlayer())
-            {
-                HashSet<Verse.ThingDef>? stuffDefs = thingDef.GetAllowedStuffs();
-
-                if (stuffDefs?.Count > 0)
-                {
-                    foreach (Verse.ThingDef stuffDef in stuffDefs)
-                    {
-                        TurretDefTableRecord record = new(thingDef, buildingProperties, turretGunDef, primaryVerbProperties, stuffDef);
-                        records.Add(record);
-                    }
-                }
-                else
-                {
-                    TurretDefTableRecord record = new(thingDef, buildingProperties, turretGunDef, primaryVerbProperties);
-                    records.Add(record);
-                }
-            }
-        }
-
-        Widget = new Table<TurretDefTableRecord>(def, records);
+        Widget = new Table<ThingDefTableRecord>(def, _records, [_thingDefs]);
     }
 
     protected override TabBodyWidget Widget { get; }

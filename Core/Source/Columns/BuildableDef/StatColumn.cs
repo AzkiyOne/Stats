@@ -23,7 +23,6 @@ public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDef
         string label = def.LabelCap;
         int capacity = records.Capacity;
         _statDef = def.stat;
-        // TODO: Support dynamic formats.
         _numberFormat = def.NumberFormat;
         _cellValue = new List<decimal>(capacity);
         _cellText = new List<string>(capacity);
@@ -35,9 +34,19 @@ public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDef
         FilterOptions = [
             new NumberColumnFilterOption(label, i => _cellValue[i])
         ];
+
+        if (typeof(TRecord) is IThingTableRecord)
+        {
+            IsRefreshable = true;
+        }
+        // Elif because a refreshable column will get refreshed naturally anyway.
+        else if (_numberFormat is IDynamicNumberFormat dynamicNumberFormat)
+        {
+            dynamicNumberFormat.OnChange += RefreshOnce;
+        }
     }
 
-    public override bool IsRefreshable => typeof(TRecord) is IThingTableRecord;
+    public override bool IsRefreshable { get; }
 
     public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Right;
 
@@ -67,19 +76,22 @@ public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDef
         if (_statDef.Worker.ShouldShowFor(statRequest))
         {
             float statValue = _statDef.Worker.GetValue(statRequest);
-
             value = _numberFormat.ToDecimal(statValue);
-            text = _numberFormat.FormatNumber(value);
-            width = text.CalcSize(GUIStyles.TableCell.Number).x;
-            tooltip = new Lazy<TipSignal>(() => _statDef.Worker.GetExplanationFull(statRequest, ToStringNumberSense.Absolute, statValue));
+
+            if (value != 0m)
+            {
+                text = _numberFormat.FormatNumber(value);
+                width = text.CalcSize(GUIStyles.TableCell.Number).x;
+                tooltip = new Lazy<TipSignal>(() => _statDef.Worker.GetExplanationFull(statRequest, ToStringNumberSense.Absolute, statValue));
+
+                return;
+            }
         }
-        else
-        {
-            value = 0m;
-            text = "";
-            width = 0f;
-            tooltip = null;
-        }
+
+        value = 0m;
+        text = "";
+        width = 0f;
+        tooltip = null;
     }
 
     public override void Add(TRecord record)
@@ -108,5 +120,15 @@ public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDef
         _cellText.ReplaceWithLast(i);
         _cellWidth.ReplaceWithLast(i);
         _cellTooltip.ReplaceWithLast(i);
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+
+        if (_numberFormat is IDynamicNumberFormat dynamicNumberFormat)
+        {
+            dynamicNumberFormat.OnChange -= RefreshOnce;
+        }
     }
 }

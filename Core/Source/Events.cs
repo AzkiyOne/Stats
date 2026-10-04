@@ -9,9 +9,7 @@ public static class Events
     internal static event Action? ResearchCompleted;
     public static event Action<Thing>? ThingSpawned;
     public static event Action<Thing>? ThingDespawned;
-    // TODO:
-    // - Implementation.
-    // - It would better to track individual values.
+    // TODO: It would more efficient to track individual values.
     public static event Action? PrefsChanged;
 
     static Events()
@@ -21,12 +19,35 @@ public static class Events
 
     internal static void NotifyThingSpawned(Thing thing)
     {
-        ThingSpawned?.Invoke(thing);
+        try
+        {
+            ThingSpawned?.Invoke(thing);
+        }
+        catch
+        {
+        }
     }
 
     internal static void NotifyThingDespawned(Thing thing)
     {
-        ThingDespawned?.Invoke(thing);
+        try
+        {
+            ThingDespawned?.Invoke(thing);
+        }
+        catch
+        {
+        }
+    }
+
+    internal static void NotifyPrefsChanged()
+    {
+        try
+        {
+            PrefsChanged?.Invoke();
+        }
+        catch
+        {
+        }
     }
 
     private sealed class ResearchCompletedSignalReceiver : ISignalReceiver

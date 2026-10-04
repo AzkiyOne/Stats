@@ -119,12 +119,13 @@ public sealed partial class Table<TRecord> : TabBodyWidget
     public Table(TableDef def, List<TRecord> records, object[]? extraColumnCtorArgs = null)
     {
         // Columns
-        List<ColumnDef> columnDefs = def.columns;
-        List<ColumnWidget> columns = new(columnDefs.Count);
+        List<TableColumnListItem> columnList = def.columns;
+        List<ColumnWidget> columns = new(columnList.Count);
 
-        for (int i = 0; i < columnDefs.Count; i++)
+        for (int i = 0; i < columnList.Count; i++)
         {
-            ColumnDef columnDef = columnDefs[i];
+            TableColumnListItem columnListItem = columnList[i];
+            ColumnDef columnDef = columnListItem.columnDef;
 
             try
             {
@@ -133,6 +134,9 @@ public sealed partial class Table<TRecord> : TabBodyWidget
                 {
                     columnType = columnType.MakeGenericType(typeof(TRecord));
                 }
+                // TODO:
+                // Should we pass initial visibility to column class?
+                // Or maybe call Show/Hide (depends on what we choose as default state for columns).
                 object[] columnCtorArgs = extraColumnCtorArgs == null
                     ? [columnDef, records]
                     : [columnDef, records, .. extraColumnCtorArgs];
@@ -143,10 +147,11 @@ public sealed partial class Table<TRecord> : TabBodyWidget
                     column.Add(record);
                 }
 
-                ColumnWidget columnWidget = new(column);
+                ColumnWidget columnWidget = new(column, columnListItem.isPrimary);
 
                 columnWidget.OnPin += PinColumn;
                 columnWidget.OnUnpin += UnpinColumn;
+                columnWidget.OnRefreshOnce += RefreshColumnOnce;
 
                 columns.Add(columnWidget);
             }
@@ -236,13 +241,16 @@ public sealed partial class Table<TRecord> : TabBodyWidget
 
     public override void Dispose()
     {
-        // TODO?
+        foreach (ColumnWidget column in _columns)
+        {
+            column.Dispose();
+        }
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static void LogUnableToInitColumn(Exception e, ColumnDef columnDef, TableDef def)
     {
-        Log.Error($"Unable to initialize column\"{columnDef.defName}\" of table \"{def.defName}\": {e.Message}");
+        Log.Error($"Unable to initialize column \"{columnDef.defName}\" of table \"{def.defName}\": {e.Message}");
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

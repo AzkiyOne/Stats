@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using RimWorld;
 using Stats.Extensions;
 using Stats.TableRecords;
 using Stats.Widgets;
@@ -9,37 +8,23 @@ namespace Stats.Tables;
 
 public sealed class ChairDefTable : Tab
 {
+    private static readonly List<ThingDefTableRecord> _records;
+    private static readonly List<ThingDef> _thingDefs;
+
+    static ChairDefTable()
+    {
+        ThingDefTableUtils.GetThingDefRecordsStuffed(
+            thingDef => thingDef.building is { isSittable: true } && thingDef.IsBuildingObtainableByPlayer(),
+            out List<ThingDefTableRecord> records,
+            out List<ThingDef> thingDefs);
+
+        _records = records;
+        _thingDefs = thingDefs;
+    }
+
     public ChairDefTable(TableDef def) : base(def)
     {
-        List<BuildingDefTableRecord> records = new(250);
-
-        foreach (Verse.ThingDef thingDef in DefDatabase<Verse.ThingDef>.AllDefsListForReading)
-        {
-            BuildingProperties? buildingProperties = thingDef.building;
-
-            if (buildingProperties != null
-                && thingDef.IsBuildingObtainableByPlayer()
-                && buildingProperties.isSittable)
-            {
-                HashSet<Verse.ThingDef>? stuffDefs = thingDef.GetAllowedStuffs();
-
-                if (stuffDefs?.Count > 0)
-                {
-                    foreach (Verse.ThingDef stuffDef in stuffDefs)
-                    {
-                        BuildingDefTableRecord record = new(thingDef, buildingProperties, stuffDef);
-                        records.Add(record);
-                    }
-                }
-                else
-                {
-                    BuildingDefTableRecord record = new(thingDef, buildingProperties);
-                    records.Add(record);
-                }
-            }
-        }
-
-        Widget = new Table<BuildingDefTableRecord>(def, records);
+        Widget = new Table<ThingDefTableRecord>(def, _records, [_thingDefs]);
     }
 
     protected override TabBodyWidget Widget { get; }

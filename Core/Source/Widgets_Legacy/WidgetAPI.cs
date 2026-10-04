@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using Stats.Utils;
 using Stats.Widgets_Legacy.Extensions;
 using UnityEngine;
 using Verse;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -34,6 +35,8 @@ public abstract class Column<TRecord>
 
     public abstract ICollection<ColumnFilterOption> FilterOptions { get; }
 
+    internal event Action? OnRefreshOnce;
+
     public abstract void DrawCell(Rect rect, int i);
 
     public virtual float GetMaxCellWidth(List<int> recordIds)
@@ -54,6 +57,15 @@ public abstract class Column<TRecord>
     }
 
     public virtual void Hide()
+    {
+    }
+
+    protected void RefreshOnce()
+    {
+        OnRefreshOnce?.Invoke();
+    }
+
+    public virtual void Dispose()
     {
     }
 }

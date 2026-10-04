@@ -114,7 +114,7 @@
         <title><Shoot/><TimeInterval/></title>
         <stat>RangedWeapon_Cooldown</stat>
         <format>
-            <pattern>0.00{LetterSecond}</pattern>
+            <pattern>0.00 {LetterSecond}</pattern>
         </format>
         <columnClass>Stats.Columns.RangedWeaponDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>

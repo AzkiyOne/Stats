@@ -66,6 +66,14 @@ public sealed partial class Table<TRecord>
         }
     }
 
+    private void RefreshColumnOnce(ColumnWidget columnWidget)
+    {
+        if (_columnsToRefresh.Contains(columnWidget) == false)
+        {
+            _columnsToRefresh.Push(columnWidget);
+        }
+    }
+
     private sealed class ColumnWidget
     {
         private readonly Column<TRecord> _column;
@@ -76,11 +84,13 @@ public sealed partial class Table<TRecord>
         private readonly FloatMenu _menu;
         private bool _isResized;
         private bool _isManuallyResized;
+        private bool _isHidden;
 
-        public ColumnWidget(Column<TRecord> column)
+        public ColumnWidget(Column<TRecord> column, bool initialVisibility)
         {
             _column = column;
             _contentAlignment = _column.ContentAlignment;
+            _isHidden = !initialVisibility;
             ColumnDef columnDef = column.Def;
             _labelWidget = columnDef.LabelWidget;
             _headerCellWidth = _labelWidget.Size.x + GUIStyles.TableCell.PadHor;
@@ -96,6 +106,8 @@ public sealed partial class Table<TRecord>
                 new FloatMenuOption("Unpin", () => OnUnpin?.Invoke(this)),
                 new FloatMenuOption("Hide", () => IsHidden = true, TexButton.Suspend, Color.white)
             ]);
+
+            column.OnRefreshOnce += () => OnRefreshOnce?.Invoke(this);
         }
 
         public event Action<ColumnWidget>? OnPin;
@@ -106,18 +118,20 @@ public sealed partial class Table<TRecord>
 
         public event Action<ColumnWidget>? OnHide;
 
+        public event Action<ColumnWidget>? OnRefreshOnce;
+
         public float Width { get; private set; }
 
         public bool IsRefreshable => _column.IsRefreshable;
 
         public bool IsHidden
         {
-            get;
+            get => _isHidden;
             set
             {
-                if (field != value)
+                if (_isHidden != value)
                 {
-                    field = value;
+                    _isHidden = value;
 
                     try
                     {
@@ -134,13 +148,13 @@ public sealed partial class Table<TRecord>
                     }
                     catch (Exception e)
                     {
-                        field = !field;
+                        _isHidden = !_isHidden;
 
                         LogUnableToChangeVisibility(e);
                     }
                 }
             }
-        } = true;
+        }
 
         public ColumnDef Def => _column.Def;
 
@@ -391,6 +405,11 @@ public sealed partial class Table<TRecord>
 
                 _column.Refresh(i, record);
             }
+        }
+
+        public void Dispose()
+        {
+            _column.Dispose();
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]

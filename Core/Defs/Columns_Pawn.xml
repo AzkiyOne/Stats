@@ -51,7 +51,7 @@
         <title><MoveSpeed/></title>
         <stat>MoveSpeed</stat>
         <format>
-            <pattern>0c/{LetterSecond}</pattern>
+            <pattern>0 c/{LetterSecond}</pattern>
         </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>

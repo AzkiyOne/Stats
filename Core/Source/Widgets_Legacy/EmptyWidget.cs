@@ -1,5 +1,4 @@
-﻿using Stats.Utils;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Stats.Widgets_Legacy;
 

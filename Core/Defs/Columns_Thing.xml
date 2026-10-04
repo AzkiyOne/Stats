@@ -13,7 +13,6 @@
         <title>$$$</title>
         <stat>MarketValue</stat>
         <format>
-            <pattern>0.00</pattern>
             <formatClass>Stats.NumberFormats.Money</formatClass>
         </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
@@ -39,8 +38,8 @@
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Thing_Mass</defName>
         <stat>Mass</stat>
-        <format Class="Stats.NumberFormats.Inline">
-            <pattern>0.000{kg}</pattern>
+        <format>
+            <pattern>0.00 {kg}</pattern>
         </format>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>

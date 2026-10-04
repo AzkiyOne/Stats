@@ -24,6 +24,8 @@ public class StatColumnDef : ColumnDef
             description = stat.description;
         }
 
+        format?.ResolveReferences();
+
         base.ResolveReferences();
     }
 }

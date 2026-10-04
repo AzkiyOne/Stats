@@ -18,5 +18,9 @@ public static class HarmonyPatches
             AccessTools.Method(typeof(MapEvents), nameof(MapEvents.Notify_ThingDespawned)),
             postfix: new HarmonyMethod(typeof(Events), nameof(Events.NotifyThingDespawned))
         );
+        harmony.Patch(
+            AccessTools.Method(typeof(Prefs), nameof(Prefs.Save)),
+            postfix: new HarmonyMethod(typeof(Events), nameof(Events.NotifyPrefsChanged))
+        );
     }
 }

@@ -7,22 +7,23 @@ namespace Stats.Tables;
 
 public sealed class MechanoidDefTable : Tab
 {
+    private static readonly List<ThingDefTableRecord> _records;
+    private static readonly List<ThingDef> _thingDefs;
+
+    static MechanoidDefTable()
+    {
+        ThingDefTableUtils.GetThingDefRecords(
+            thingDef => thingDef is { race.IsMechanoid: true, IsCorpse: false },
+            out List<ThingDefTableRecord> records,
+            out List<ThingDef> thingDefs);
+
+        _records = records;
+        _thingDefs = thingDefs;
+    }
+
     public MechanoidDefTable(TableDef def) : base(def)
     {
-        List<PawnDefTableRecord> records = new(250);
-
-        foreach (Verse.ThingDef thingDef in DefDatabase<Verse.ThingDef>.AllDefsListForReading)
-        {
-            RaceProperties? raceProperties = thingDef.race;
-
-            if (raceProperties != null && raceProperties.IsMechanoid && thingDef.IsCorpse == false)
-            {
-                PawnDefTableRecord tableRecord = new(thingDef, raceProperties);
-                records.Add(tableRecord);
-            }
-        }
-
-        Widget = new Table<PawnDefTableRecord>(def, records);
+        Widget = new Table<ThingDefTableRecord>(def, _records, [_thingDefs]);
     }
 
     protected override TabBodyWidget Widget { get; }

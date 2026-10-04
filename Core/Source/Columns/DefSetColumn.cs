@@ -57,7 +57,7 @@ public abstract class DefSetColumn<TRecord> : Column<TRecord>
         if (defs != null)
         {
             // TODO: This may be too slow.
-            text = string.Join(" | ", defs.Select(def => def.LabelCap).OrderBy(text => text));
+            text = string.Join(" | ", defs.Select(def => def.LabelCap).OrderBy(text => text.ToString()));
             width = text.CalcSize(GUIStyles.TableCell.String).x;
         }
         else

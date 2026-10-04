@@ -7,22 +7,23 @@ namespace Stats.Tables;
 
 public sealed class AnimalDefTable : Tab
 {
+    private static readonly List<ThingDefTableRecord> _records;
+    private static readonly List<ThingDef> _thingDefs;
+
+    static AnimalDefTable()
+    {
+        ThingDefTableUtils.GetThingDefRecords(
+            thingDef => thingDef is { race.Animal: true, IsCorpse: false },
+            out List<ThingDefTableRecord> records,
+            out List<ThingDef> thingDefs);
+
+        _records = records;
+        _thingDefs = thingDefs;
+    }
+
     public AnimalDefTable(TableDef def) : base(def)
     {
-        List<PawnDefTableRecord> records = new(250);
-
-        foreach (Verse.ThingDef thingDef in DefDatabase<Verse.ThingDef>.AllDefsListForReading)
-        {
-            RaceProperties? raceProperties = thingDef.race;
-
-            if (raceProperties != null && raceProperties.Animal && thingDef.IsCorpse == false)
-            {
-                PawnDefTableRecord record = new(thingDef, raceProperties);
-                records.Add(record);
-            }
-        }
-
-        Widget = new Table<PawnDefTableRecord>(def, records);
+        Widget = new Table<ThingDefTableRecord>(def, _records, [_thingDefs]);
     }
 
     protected override TabBodyWidget Widget { get; }

@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using RimWorld;
-using Stats.Extensions;
 using Stats.TableRecords;
 using Stats.Widgets;
 using Verse;
@@ -11,35 +9,23 @@ namespace Stats.Tables;
 // VFE - Pirates.
 public sealed class ApparelDefTable : Tab
 {
+    private static readonly List<ThingDefTableRecord> _records;
+    private static readonly List<ThingDef> _thingDefs;
+
+    static ApparelDefTable()
+    {
+        ThingDefTableUtils.GetThingDefRecordsStuffed(
+            thingDef => thingDef.apparel != null,
+            out List<ThingDefTableRecord> records,
+            out List<ThingDef> thingDefs);
+
+        _records = records;
+        _thingDefs = thingDefs;
+    }
+
     public ApparelDefTable(TableDef def) : base(def)
     {
-        List<ApparelDefTableRecord> records = new(250);
-
-        foreach (Verse.ThingDef thingDef in DefDatabase<Verse.ThingDef>.AllDefsListForReading)
-        {
-            ApparelProperties? apparelProperties = thingDef.apparel;
-
-            if (apparelProperties != null)
-            {
-                HashSet<Verse.ThingDef>? stuffDefs = thingDef.GetAllowedStuffs();
-
-                if (stuffDefs?.Count > 0)
-                {
-                    foreach (Verse.ThingDef stuffDef in stuffDefs)
-                    {
-                        ApparelDefTableRecord record = new(thingDef, apparelProperties, stuffDef);
-                        records.Add(record);
-                    }
-                }
-                else
-                {
-                    ApparelDefTableRecord record = new(thingDef, apparelProperties);
-                    records.Add(record);
-                }
-            }
-        }
-
-        Widget = new Table<ApparelDefTableRecord>(def, records);
+        Widget = new Table<ThingDefTableRecord>(def, _records, [_thingDefs]);
     }
 
     protected override TabBodyWidget Widget { get; }
