@@ -54,7 +54,7 @@ public sealed class TechLevelColumn<TRecord> : Column<TRecord> where TRecord : I
         ];
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Left;
 

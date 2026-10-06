@@ -11,7 +11,7 @@ public sealed class WeaponsColumn<TRecord> : ThingDefSetColumn<TRecord> where TR
     {
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     protected override IReadOnlyCollection<Verse.ThingDef>? GetThingDefs(TRecord record)
     {

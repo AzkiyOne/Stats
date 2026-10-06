@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using RimWorld;
 using Verse;
 
 namespace Stats;
@@ -21,6 +22,10 @@ public static class HarmonyPatches
         harmony.Patch(
             AccessTools.Method(typeof(Prefs), nameof(Prefs.Save)),
             postfix: new HarmonyMethod(typeof(Events), nameof(Events.NotifyPrefsChanged))
+        );
+        harmony.Patch(
+            AccessTools.Method(typeof(Page_SelectStorytellerInGame), nameof(Page_SelectStorytellerInGame.PreClose)),
+            postfix: new HarmonyMethod(typeof(Events), nameof(Events.NotifyDifficultyChanged))
         );
     }
 }

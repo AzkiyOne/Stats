@@ -35,7 +35,7 @@ public sealed class SizeColumn<TRecord> : Column<TRecord> where TRecord : IThing
         ];
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Right;
 

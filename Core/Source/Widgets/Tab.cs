@@ -74,9 +74,9 @@ public abstract class Tab
 
     internal void DrawBody(Rect rect) => Widget.Draw(rect);
 
-    internal void Focus() => Widget.Focus();
+    internal void Resume() => Widget.Resume();
 
-    internal void Unfocus() => Widget.Unfocus();
+    internal void Suspend() => Widget.Suspend();
 
     internal void Dispose() => Widget.Dispose();
 }

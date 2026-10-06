@@ -6,11 +6,12 @@ namespace Stats;
 
 public static class Events
 {
-    internal static event Action? ResearchCompleted;
+    public static event Action? ResearchCompleted;
     public static event Action<Thing>? ThingSpawned;
     public static event Action<Thing>? ThingDespawned;
     // TODO: It would more efficient to track individual values.
     public static event Action? PrefsChanged;
+    public static event Action? DifficultyChanged;
 
     static Events()
     {
@@ -44,6 +45,17 @@ public static class Events
         try
         {
             PrefsChanged?.Invoke();
+        }
+        catch
+        {
+        }
+    }
+
+    internal static void NotifyDifficultyChanged()
+    {
+        try
+        {
+            DifficultyChanged?.Invoke();
         }
         catch
         {

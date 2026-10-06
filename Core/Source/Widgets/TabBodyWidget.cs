@@ -6,9 +6,9 @@ public abstract class TabBodyWidget
 {
     public abstract void Draw(Rect rect);
 
-    public abstract void Focus();
+    public abstract void Resume();
 
-    public abstract void Unfocus();
+    public abstract void Suspend();
 
     public abstract void Dispose();
 }

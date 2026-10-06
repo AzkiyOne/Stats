@@ -105,23 +105,12 @@ public sealed class NumberFilter : FilterWithInputField<decimal, decimal>
         return Operator.Eval(_getValue(i), Value);
     }
 
-    public override void Reset()
-    {
-        _operator = Operators.Default;
-        ClearInputField();
-    }
-
     protected override void ClearInputField()
     {
         _textFieldText = "";
         _inputIsValid = true;
         _value = 0m;
         Resize();
-        OnChange?.Invoke();
-    }
-
-    public override void NotifyChanged()
-    {
         OnChange?.Invoke();
     }
 

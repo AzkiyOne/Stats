@@ -71,14 +71,4 @@ public sealed class BooleanFilter : Filter
     {
         return _getValue(i) == Value;
     }
-
-    public override void Reset()
-    {
-        Value = null;
-    }
-
-    public override void NotifyChanged()
-    {
-        OnChange?.Invoke();
-    }
 }

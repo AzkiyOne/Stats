@@ -13,7 +13,7 @@ public sealed class ProductsColumn<TRecord> : ThingDefSetColumn<TRecord> where T
     {
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     protected override IReadOnlyCollection<Verse.ThingDef>? GetThingDefs(TRecord record)
     {

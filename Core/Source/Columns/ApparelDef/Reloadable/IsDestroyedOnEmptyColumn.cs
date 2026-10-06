@@ -10,7 +10,7 @@ public sealed class IsDestroyedOnEmptyColumn<TRecord> : BooleanColumn<TRecord> w
     {
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     protected override bool GetValueFromRecord(TRecord record)
     {

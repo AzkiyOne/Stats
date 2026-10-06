@@ -12,7 +12,7 @@ public sealed class FuelCapacityColumn<TRecord> : ThingDefCountColumn<TRecord> w
     {
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     protected override ThingDefCount? GetThingDefCount(TRecord record)
     {

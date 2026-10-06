@@ -22,56 +22,17 @@ namespace Stats.Widgets;
 // Because abstractions are not free.
 public sealed partial class Table<TRecord> : TabBodyWidget
 {
-    private static readonly TipSignal _manual =
-        "- Hold (LMB) and move mouse cursor to scroll horizontally.\n" +
-        "- Hold [Ctrl] and click on a column's name to pin/unpin it.\n" +
-        "- Hold [Ctrl] and click on a row to pin/unpin it.\n" +
-        "  - You can pin multiple rows.\n" +
-        "  - Pinned rows are unaffected by filters.\n" +
-        "- Pull top part of the window to change height.\n" +
-        "- Double click to reset window height.";
     // Filtering
-    //public override TableFilterMode FilterMode
-    //{
-    //    get => field;
-    //    set
-    //    {
-    //        if (value == field) return;
-
-    //        field = value;
-    //        MatchRowCells = value switch
-    //        {
-    //            TableFilterMode.AND => MatchRowCells_AND,
-    //            TableFilterMode.OR => MatchRowCells_OR,
-    //            _ => throw new NotSupportedException("Unsupported table filtering mode.")
-    //        };
-
-    //        OnFilterModeChange?.Invoke(value);
-    //        DoFilter = true;
-    //    }
-    //} = TableFilterMode.AND;
-    //public override event Action<TableFilterMode>? OnFilterModeChange;
-    //private readonly List<Filter> Filters;
-    //private readonly HashSet<Filter> ActiveFilters;
-    //private RowCellsMatcher MatchRowCells = MatchRowCells_AND;
-    //private static readonly RowCellsMatcher MatchRowCells_AND =
-    //(cells, filters) =>
-    //{
-    //    return filters.All(filter => filter.Widget.Eval(cells[filter.Column]));
-    //};
-    //private static readonly RowCellsMatcher MatchRowCells_OR =
-    //(cells, filters) =>
-    //{
-    //    return filters.Any(filter => filter.Widget.Eval(cells[filter.Column]));
-    //};
+    private readonly FiltersTab _filtersTab;
+    private bool _isFiltersTabOpen;
+    private bool _doFilter;
 
     // Sorting
     private ColumnWidget? _sortColumn;
     private int _sortDirection = SortDirectionAscending;
     private const int SortDirectionAscending = 1;
     private const int SortDirectionDescending = -1;
-
-    // Filters tab
+    private bool _doSort;
 
     // Rows
     private readonly List<TRecord> _records;
@@ -109,7 +70,6 @@ public sealed partial class Table<TRecord> : TabBodyWidget
 
     // Misc
     private readonly DragManager<ColumnWidget> _dragManager;
-    private int _framesSinceLastFilterAndSort = 0;
     private readonly TableDef _def;
 
     public Table(TableDef def, int capacity, object[]? extraColumnCtorArgs = null) : this(def, new List<TRecord>(capacity), extraColumnCtorArgs)
@@ -168,6 +128,14 @@ public sealed partial class Table<TRecord> : TabBodyWidget
         dragManager.OnDragAfter += (ColumnWidget draggedColumn, ColumnWidget column) =>
             _beforeDraw ??= () => HandleColumnDrag(draggedColumn, column, false);
 
+        // Toolbar
+        Toolbar toolbar = new(columns);
+        toolbar.OnFiltersButtonClick += () => _isFiltersTabOpen = !_isFiltersTabOpen;
+
+        // Filters tab
+        FiltersTab filtersTab = new(columns.SelectMany(column => column.FilterOptions));
+        filtersTab.OnChange += () => _doFilter = true;
+
         // Finalize
         _records = records;
         _rows = [.. Enumerable.Range(0, records.Count)];
@@ -178,17 +146,18 @@ public sealed partial class Table<TRecord> : TabBodyWidget
             _leftColumnsCount = 1;
             _sortColumn = columns[0];
         }
-        _toolbar = new Toolbar(columns);
+        _toolbar = toolbar;
         _dragManager = dragManager;
         _def = def;
+        _filtersTab = filtersTab;
     }
 
-    public override void Focus()
+    public override void Resume()
     {
         // TODO?
     }
 
-    public override void Unfocus()
+    public override void Suspend()
     {
         _rightPartIsPanned = false;
         _dragManager.EndDrag();

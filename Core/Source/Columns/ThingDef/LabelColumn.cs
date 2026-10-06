@@ -54,7 +54,7 @@ public sealed class LabelColumn<TRecord> : Column<TRecord> where TRecord : IThin
         ];
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Left;
 

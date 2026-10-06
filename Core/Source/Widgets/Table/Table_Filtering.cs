@@ -1,75 +1,193 @@
-﻿namespace Stats.Widgets;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Stats.Columns;
+using Stats.Extensions;
+using Stats.Widgets.Filters;
+using UnityEngine;
+using Verse;
+
+namespace Stats.Widgets;
 
 public sealed partial class Table<TRecord>
 {
-    private void ToggleFiltersTab()
+    private void ApplyFilters()
     {
+        List<Filter> filters = _filtersTab.ActiveFilters;
+        int filtersCount = filters.Count;
+
+        if (filtersCount > 0)
+        {
+            // TODO: Pinned rows should not be filtered.
+            _rows.Clear();
+
+            bool mode = _filtersTab.Mode;
+
+            for (int i = 0; i < _records.Count; i++)
+            {
+                bool recordFitsQuery = !mode;
+
+                for (int j = 0; j < filtersCount; j++)
+                {
+                    Filter filter = filters[j];
+
+                    if (filter.Eval(i) == mode)
+                    {
+                        recordFitsQuery = mode;
+
+                        break;
+                    }
+                }
+
+                if (recordFitsQuery)
+                {
+                    _rows.Add(i);
+                }
+            }
+        }
+        else if (_rows.Count != _records.Count)
+        {
+            _rows.Clear();
+
+            for (int i = 0; i < _records.Count; i++)
+            {
+                _rows.Add(i);
+            }
+        }
     }
-    //private void HandleFilterChange(Filter filter)
-    //{
-    //    if (filter.IsActive)
-    //    {
-    //        ActiveFilters.Add(filter);
-    //    }
-    //    else
-    //    {
-    //        ActiveFilters.Remove(filter);
-    //    }
 
-    //    DoFilter = true;
-    //}
-    //private void ApplyFilters()
-    //{
-    //    foreach (var row in _unpinnedRows)
-    //    {
-    //        var rowIsValid = true;
+    private sealed class FiltersTab
+    {
+        private readonly FloatMenu _filtersMenu;
+        private readonly List<FilterListItem> _filters;
 
-    //        if (ActiveFilters.Count > 0)
-    //        {
-    //            try
-    //            {
-    //                rowIsValid = MatchRowCells(row.Cells, ActiveFilters);
-    //            }
-    //            catch (Exception e)
-    //            {
-    //                Log.Error(e.Message);
-    //            }
-    //        }
+        public FiltersTab(IEnumerable<ColumnFilterOption> filterOptions)
+        {
+            List<FloatMenuOption> menuOptions = new(20);
+            List<FilterListItem> filters = new(10);
 
-    //        row.IsVisible = rowIsValid;
-    //    }
+            foreach (ColumnFilterOption filterOption in filterOptions)
+            {
+                string label = filterOption.Name;
 
-    //    DoFilter = false;
-    //    DoResize = true;
-    //}
-    //public override void ResetFilters()
-    //{
-    //    if (ActiveFilters.Count == 0)
-    //        return;
+                FloatMenuOption menuOption = new(
+                    label,
+                    () => AddFilter(filterOption));
 
-    //    foreach (var filter in Filters)
-    //    {
-    //        if (filter.IsActive)
-    //        {
-    //            filter.Reset();
-    //        }
-    //    }
-    //}
-    //public override void ToggleFilterMode()
-    //{
-    //    FilterMode = FilterMode switch
-    //    {
-    //        TableFilterMode.AND => TableFilterMode.OR,
-    //        TableFilterMode.OR => TableFilterMode.AND,
-    //        _ => throw new NotSupportedException("Unsupported table filtering mode."),
-    //    };
-    //}
+                menuOptions.Add(menuOption);
+            }
 
-    //private readonly record struct Filter(Column Column, FilterWidget Widget)
-    //{
-    //    public bool IsActive => Widget.IsActive;
-    //    public void Reset() => Widget.Reset();
-    //}
+            _filtersMenu = new FloatMenu(menuOptions);
+            _filters = filters;
+            ActiveFilters = new List<Filter>(10);
+        }
 
-    //private delegate bool RowCellsMatcher(Dictionary<Column, Cell> cells, HashSet<Filter> filters);
+        public float Width { get; private set; }
+
+        public List<Filter> ActiveFilters { get; }
+
+        // AND - false
+        // OR - true
+        public bool Mode { get; private set; }
+
+        public event Action? OnChange;
+
+        private void AddFilter(ColumnFilterOption filterOption)
+        {
+            string label = filterOption.Name;
+            Filter filter = filterOption.GetFilter();
+
+            filter.OnChange += () =>
+            {
+                if (filter.IsActive)
+                {
+                    if (ActiveFilters.Contains(filter) == false)
+                    {
+                        ActiveFilters.Add(filter);
+                    }
+
+                }
+                else
+                {
+                    ActiveFilters.Remove(filter);
+                }
+
+                OnChange?.Invoke();
+            };
+
+            _filters.Add(new FilterListItem(label, filter));
+        }
+
+        public void Draw(Rect rect)
+        {
+            EventType eventType = Event.current.type;
+
+            rect = rect.CutTop(out Rect addButtonRect, 30f);
+
+            bool addButtonWasClicked = addButtonRect.DrawButtonSubtle("+ Add Filter");
+
+            if (addButtonWasClicked)
+            {
+                _filtersMenu.Open();
+            }
+
+            foreach (FilterListItem filter in _filters)
+            {
+                Vector2 filterSize = filter.Size;
+                rect = rect.CutTop(out Rect filterRect, filterSize.y);
+
+                filter.Draw(filterRect);
+            }
+
+            if (eventType == EventType.Layout)
+            {
+                float width = 300f;
+
+                if (_filters.Count > 0)
+                {
+                    width = Mathf.Max(width, _filters.Select(filter => filter.Size.x).Max());
+                }
+
+                Width = width;
+            }
+        }
+
+        private sealed class FilterListItem
+        {
+            private static readonly GUIStyle _labelStyle = new(GUIStyles.Text.FontMedium);
+
+            private readonly string _label;
+            private readonly Vector2 _labelSize;
+            private readonly Filter _filter;
+
+            public FilterListItem(string label, Filter filter)
+            {
+                _label = label;
+                _labelSize = label.CalcSize(_labelStyle);
+                _filter = filter;
+            }
+
+            public Vector2 Size { get; private set; }
+
+            public void Draw(Rect rect)
+            {
+                EventType eventType = Event.current.type;
+
+                rect.CutLeft(out Rect labelRect, _labelSize)
+                    .TakeRest(out Rect filterRect);
+
+                _label.Draw(labelRect, _labelStyle);
+                _filter.Draw(filterRect, Vector2.zero);
+
+                if (eventType == EventType.Layout)
+                {
+                    Vector2 size;
+                    size.x = _labelSize.x + _filter.GetSize().x;
+                    size.y = Mathf.Max(_labelSize.y, _filter.GetSize().y);
+
+                    Size = size;
+                }
+            }
+        }
+    }
 }

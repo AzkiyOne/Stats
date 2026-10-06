@@ -19,15 +19,16 @@ public sealed partial class Table<TRecord>
 
         // Layout
         rect.CutTop(out Rect toolbarRect, GUIStyles.TableToolbar.Height)
+            .CutLeft(out Rect filtersTabRect, _isFiltersTabOpen ? _filtersTab.Width : 0f)
             .TakeRest(out Rect tableRect);
 
         // Toolbar
         _toolbar.Draw(toolbarRect);
 
-        //if (showSettingsMenu)
-        //{
-        //    DrawColumnsTab(ref rect);
-        //}
+        if (_isFiltersTabOpen)
+        {
+            _filtersTab.Draw(filtersTabRect);
+        }
 
         Rect viewportRect = tableRect;
         Rect contentRect = new(Vector2.zero, _contentSize);
@@ -60,11 +61,27 @@ public sealed partial class Table<TRecord>
 
         if (eventType == EventType.Layout)
         {
-            _framesSinceLastFilterAndSort++;
+            if (_doFilter)
+            {
+                // It is important to filter rows as early as possible because
+                // they'll be then used by columns to calculate their width.
+                ApplyFilters();
 
-            if (_columnsToRefresh.Count > 0)
+                _doFilter = false;
+                _doSort = true;
+            }
+            else if (_doSort)
+            {
+                // TODO
+
+                _doSort = false;
+            }
+            else if (_columnsToRefresh.Count > 0)
             {
                 ColumnWidget column = _columnsToRefresh.Pop();
+                // TODO: Implementation
+                //bool columnWasAltered = false;
+                bool columnWasAltered = true;
 
                 try
                 {
@@ -74,28 +91,22 @@ public sealed partial class Table<TRecord>
                 {
                     LogUnableToRefreshColumn(e, column);
                 }
-            }
-            // Filtering and sorting of rows is performed only after every column has been refreshed, but:
-            // - No often than every 60 frames.
-            // - Regardless of how many refreshable columns there are.
-            else if (_framesSinceLastFilterAndSort >= 60)
-            {
-                // Filter
-                // It is important to filter rows as early as possible because
-                // they'll be then used by columns to calculate their width.
 
-                // Sort
-
-                // Reset
-                foreach (ColumnWidget column in _columns)
+                if (columnWasAltered)
                 {
-                    if (column.IsRefreshable)
-                    {
-                        _columnsToRefresh.Push(column);
-                    }
+                    _doFilter = true;
                 }
 
-                _framesSinceLastFilterAndSort = 0;
+                if (_columnsToRefresh.Count == 0)
+                {
+                    foreach (ColumnWidget column2 in _columns)
+                    {
+                        if (column2.AutoRefresh)
+                        {
+                            _columnsToRefresh.Push(column2);
+                        }
+                    }
+                }
             }
         }
 

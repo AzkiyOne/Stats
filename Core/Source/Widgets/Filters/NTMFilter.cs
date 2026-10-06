@@ -128,12 +128,6 @@ public abstract class NTMFilter<TValue, TOption> : Filter
         return Operator.Eval(_getValue(i), _selectedOptions);
     }
 
-    public sealed override void Reset()
-    {
-        _operator = _defaultOperator;
-        Clear();
-    }
-
     private void Clear()
     {
         _selectedOptions.Clear();
@@ -160,11 +154,6 @@ public abstract class NTMFilter<TValue, TOption> : Filter
 
         _info = null;
         Resize();
-        OnChange?.Invoke();
-    }
-
-    public override void NotifyChanged()
-    {
         OnChange?.Invoke();
     }
 

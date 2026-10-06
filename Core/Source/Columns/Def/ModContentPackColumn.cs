@@ -35,7 +35,7 @@ public sealed class ModContentPackColumn<TRecord> : Column<TRecord> where TRecor
         ];
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Left;
 

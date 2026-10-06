@@ -10,7 +10,7 @@ public sealed class MinGrowingSkillToSowColumn<TRecord> : NumberColumn<TRecord> 
     {
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     protected override decimal GetValueFromRecord(TRecord record)
     {

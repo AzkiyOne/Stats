@@ -13,7 +13,7 @@ public sealed class LeatherAmountColumn<TRecord> : ThingDefCountColumn<TRecord> 
     {
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     protected override ThingDefCount? GetThingDefCount(TRecord record)
     {

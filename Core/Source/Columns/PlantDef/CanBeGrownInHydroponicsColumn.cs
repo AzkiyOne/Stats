@@ -9,7 +9,7 @@ public sealed class CanBeGrownInHydroponicsColumn<TRecord> : BooleanColumn<TReco
     {
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     protected override bool GetValueFromRecord(TRecord record)
     {

@@ -11,7 +11,7 @@ public sealed class ProjectileArmorPenetrationColumn<TRecord> : NumberColumn<TRe
     {
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     protected override decimal GetValueFromRecord(TRecord record)
     {

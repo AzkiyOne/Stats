@@ -10,7 +10,7 @@ public sealed class RecreationTypeColumn<TRecord> : DefColumn<TRecord> where TRe
     {
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     protected override Verse.Def? GetDef(TRecord record)
     {

@@ -12,7 +12,7 @@ public sealed class WoolAmountColumn<TRecord> : ThingDefCountColumn<TRecord> whe
     {
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     protected override ThingDefCount? GetThingDefCount(TRecord record)
     {

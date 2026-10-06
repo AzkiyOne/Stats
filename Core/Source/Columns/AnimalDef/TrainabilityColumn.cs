@@ -10,7 +10,7 @@ public sealed class TrainabilityColumn<TRecord> : DefColumn<TRecord> where TReco
     {
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     protected override Verse.Def? GetDef(TRecord record)
     {

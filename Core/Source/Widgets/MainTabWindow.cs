@@ -208,10 +208,10 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
 
     private void SelectTab(Tab tab)
     {
-        _activeTab?.Unfocus();
+        _activeTab?.Suspend();
         _activeTab = tab;
 
-        tab.Focus();
+        tab.Resume();
     }
 
     private void ResetSize()
@@ -226,13 +226,13 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
         _yMax = UI.screenHeight - MainButtonDef.ButtonHeight - GUIStyles.TableToolbar.Height;
 
         base.PostOpen();
-        _activeTab?.Focus();
+        _activeTab?.Resume();
     }
 
     public override void PostClose()
     {
         _isResized = false;
-        _activeTab?.Unfocus();
+        _activeTab?.Suspend();
 
         base.PostClose();
     }

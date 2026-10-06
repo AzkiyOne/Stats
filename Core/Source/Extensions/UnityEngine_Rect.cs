@@ -26,6 +26,16 @@ public static class UnityEngine_Rect
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static Rect CutLeft(this Rect rect, out Rect result, Vector2 size)
+    {
+        float amount = size.x;
+        result = rect with { width = amount, height = size.y };
+
+        rect.xMin += amount;
+        return rect;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static Rect CutRight(this Rect rect, out Rect result, float amount)
     {
         result = rect with { xMin = rect.xMax - amount };

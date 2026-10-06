@@ -70,6 +70,7 @@ public sealed partial class Table<TRecord>
     {
         if (_columnsToRefresh.Contains(columnWidget) == false)
         {
+            // TODO: If a column spams RefreshOnce, it may prevent other columns from refreshing.
             _columnsToRefresh.Push(columnWidget);
         }
     }
@@ -122,7 +123,7 @@ public sealed partial class Table<TRecord>
 
         public float Width { get; private set; }
 
-        public bool IsRefreshable => _column.IsRefreshable;
+        public bool AutoRefresh => _column.AutoRefresh;
 
         public bool IsHidden
         {
@@ -157,6 +158,8 @@ public sealed partial class Table<TRecord>
         }
 
         public ColumnDef Def => _column.Def;
+
+        public ICollection<ColumnFilterOption> FilterOptions => _column.FilterOptions;
 
         public void Draw(Rect rect, List<int> rows, Span<int> topRows, Span<int> visibleBottomRows, float bottomRowsY, DragManager<ColumnWidget> dragManager)
         {

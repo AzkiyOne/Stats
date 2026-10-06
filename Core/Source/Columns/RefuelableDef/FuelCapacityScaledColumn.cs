@@ -11,10 +11,10 @@ public sealed class FuelCapacityScaledColumn<TRecord> : ThingDefCountColumn<TRec
 {
     public FuelCapacityScaledColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetFuelDefs(thingDefs))
     {
+        Events.DifficultyChanged += RefreshOnce;
     }
 
-    // TODO: Realistically, we only need to refresh our cells once after difficulty settings had been changed.
-    public override bool IsRefreshable => true;
+    public override bool AutoRefresh => false;
 
     protected override ThingDefCount? GetThingDefCount(TRecord record)
     {
@@ -33,6 +33,13 @@ public sealed class FuelCapacityScaledColumn<TRecord> : ThingDefCountColumn<TRec
         }
 
         return null;
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+
+        Events.DifficultyChanged -= RefreshOnce;
     }
 
     private static IEnumerable<Verse.ThingDef?> GetFuelDefs(IEnumerable<Verse.ThingDef> thingDefs)

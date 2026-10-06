@@ -9,7 +9,7 @@ public sealed class IsBlightableColumn<TRecord> : BooleanColumn<TRecord> where T
     {
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     protected override bool GetValueFromRecord(TRecord record)
     {

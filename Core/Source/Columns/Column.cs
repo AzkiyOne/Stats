@@ -27,7 +27,7 @@ public abstract class Column<TRecord>
 
     protected List<TRecord> Records { get; }
 
-    public abstract bool IsRefreshable { get; }
+    public abstract bool AutoRefresh { get; }
 
     public abstract ColumnContentAlignment ContentAlignment { get; }
 

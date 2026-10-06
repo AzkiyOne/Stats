@@ -12,7 +12,7 @@ public sealed class CaravanCarryingCapacityColumn<TRecord> : NumberColumn<TRecor
     {
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     protected override decimal GetValueFromRecord(TRecord record)
     {

@@ -9,7 +9,7 @@ public sealed class FitsSmallAnimalsColumn<TRecord> : BooleanColumn<TRecord> whe
     {
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     protected override bool GetValueFromRecord(TRecord record)
     {

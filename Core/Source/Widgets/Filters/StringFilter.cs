@@ -62,21 +62,10 @@ public sealed class StringFilter : FilterWithInputField<string, string>
         return Operator.Eval(_getValue(i), Value);
     }
 
-    public override void Reset()
-    {
-        _operator = Operators.Default;
-        ClearInputField();
-    }
-
     protected override void ClearInputField()
     {
         _value = "";
         Resize();
-        OnChange?.Invoke();
-    }
-
-    public override void NotifyChanged()
-    {
         OnChange?.Invoke();
     }
 

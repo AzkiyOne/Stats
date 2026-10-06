@@ -37,7 +37,7 @@ public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDef
 
         if (typeof(TRecord) is IThingTableRecord)
         {
-            IsRefreshable = true;
+            AutoRefresh = true;
         }
         // Elif because a refreshable column will get refreshed naturally anyway.
         else if (_numberFormat is IDynamicNumberFormat dynamicNumberFormat)
@@ -46,7 +46,7 @@ public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDef
         }
     }
 
-    public override bool IsRefreshable { get; }
+    public override bool AutoRefresh { get; }
 
     public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Right;
 

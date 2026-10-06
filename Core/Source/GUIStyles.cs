@@ -5,7 +5,7 @@ namespace Stats;
 
 public static class GUIStyles
 {
-    private static readonly GUIStyle _baseStyle = new(Verse.Text.fontStyles[1])
+    private static readonly GUIStyle _baseStyle = new(Text.FontMedium)
     {
         wordWrap = false
     };
@@ -36,6 +36,8 @@ public static class GUIStyles
         public static Color ColorHighlight { get; } = new(1f, 0.98f, 0.62f);
 
         public static Color ColorSecondary { get; } = Color.grey;
+
+        public static GUIStyle FontMedium => Verse.Text.fontStyles[1];
     }
 
     internal static class Table

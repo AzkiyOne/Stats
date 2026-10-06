@@ -96,7 +96,7 @@ public abstract class ThingDefCountColumn<TRecord> : Column<TRecord>
             cellDrawData = new CellDrawData(cellText, cellIcon);
             float cellTextWidth = cellText.CalcSize(GUIStyles.TableCell.NumberNoPad).x;
             float cellIconWidth = cellIcon.Size.x;
-            cellWidth = cellTextWidth + GUIStyles.TableCell.ContentSpacing + cellIconWidth;
+            cellWidth = cellTextWidth + GUIStyles.TableCell.ContentSpacing + cellIconWidth + GUIStyles.TableCell.PadHor;
         }
         else
         {

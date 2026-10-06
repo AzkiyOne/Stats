@@ -11,7 +11,7 @@ public sealed class PowerOutputPerCellColumn<TRecord> : NumberColumn<TRecord> wh
     {
     }
 
-    public override bool IsRefreshable => false;
+    public override bool AutoRefresh => false;
 
     protected override decimal GetValueFromRecord(TRecord record)
     {

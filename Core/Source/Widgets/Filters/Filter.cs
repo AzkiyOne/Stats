@@ -8,11 +8,7 @@ public abstract class Filter : Widgets_Legacy.Widget
 
     public abstract event Action? OnChange;
 
-    public abstract bool Eval(int row);
-
-    public abstract void Reset();
-
-    public abstract void NotifyChanged();
+    public abstract bool Eval(int i);
 
     protected abstract class RelOperator<TLhs, TRhs>
     {

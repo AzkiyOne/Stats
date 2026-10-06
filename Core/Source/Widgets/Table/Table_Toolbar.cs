@@ -13,6 +13,15 @@ public sealed partial class Table<TRecord>
 {
     private sealed class Toolbar
     {
+        private static readonly TipSignal _manual =
+        "- Hold (LMB) and move mouse cursor to scroll horizontally.\n" +
+        "- Hold [Ctrl] and click on a column's name to pin/unpin it.\n" +
+        "- Hold [Ctrl] and click on a row to pin/unpin it.\n" +
+        "  - You can pin multiple rows.\n" +
+        "  - Pinned rows are unaffected by filters.\n" +
+        "- Pull top part of the window to change height.\n" +
+        "- Double click to reset window height.";
+
         private readonly Button _filtersButton;
         private readonly Button _columnsMenuButton;
         private readonly Button _columnPresetsButton;
