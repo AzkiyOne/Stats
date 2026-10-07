@@ -49,7 +49,8 @@ public sealed partial class Table<TRecord> : TabBodyWidget
     private int RightColumnsCount => _columns.Count - _leftColumnsCount;
     private ReadOnlyListSegment<ColumnWidget> LeftColumns => new(_columns, 0, _leftColumnsCount);
     private ReadOnlyListSegment<ColumnWidget> RightColumns => new(_columns, _leftColumnsCount, RightColumnsCount);
-    private readonly Stack<ColumnWidget> _columnsToRefresh;
+    private readonly Queue<ColumnWidget> _columnsToRefresh;
+    private readonly HashSet<ColumnWidget> _columnsToQueueOnNextCycle;
 
     // Layout
     private float _topRowsHeight;
@@ -140,7 +141,8 @@ public sealed partial class Table<TRecord> : TabBodyWidget
         _records = records;
         _rows = [.. Enumerable.Range(0, records.Count)];
         _columns = columns;
-        _columnsToRefresh = new Stack<ColumnWidget>(columns.Count);
+        _columnsToRefresh = new Queue<ColumnWidget>(columns.Count);
+        _columnsToQueueOnNextCycle = new();
         if (columns.Count > 0)
         {
             _leftColumnsCount = 1;

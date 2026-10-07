@@ -105,7 +105,6 @@ public sealed partial class Table<TRecord>
                     {
                         ActiveFilters.Add(filter);
                     }
-
                 }
                 else
                 {

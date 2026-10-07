@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Stats.Extensions;
 using Stats.GUIScopes;
 using UnityEngine;
@@ -61,53 +62,10 @@ public sealed partial class Table<TRecord>
 
         if (eventType == EventType.Layout)
         {
-            if (_doFilter)
-            {
-                // It is important to filter rows as early as possible because
-                // they'll be then used by columns to calculate their width.
-                ApplyFilters();
-
-                _doFilter = false;
-                _doSort = true;
-            }
-            else if (_doSort)
-            {
-                // TODO
-
-                _doSort = false;
-            }
-            else if (_columnsToRefresh.Count > 0)
-            {
-                ColumnWidget column = _columnsToRefresh.Pop();
-                // TODO: Implementation
-                //bool columnWasAltered = false;
-                bool columnWasAltered = true;
-
-                try
-                {
-                    column.RefreshCells(_records);
-                }
-                catch (Exception e)
-                {
-                    LogUnableToRefreshColumn(e, column);
-                }
-
-                if (columnWasAltered)
-                {
-                    _doFilter = true;
-                }
-
-                if (_columnsToRefresh.Count == 0)
-                {
-                    foreach (ColumnWidget column2 in _columns)
-                    {
-                        if (column2.AutoRefresh)
-                        {
-                            _columnsToRefresh.Push(column2);
-                        }
-                    }
-                }
-            }
+            // It is important to run tasks as early as possible,
+            // so filtering can be done before _rows will be read by other code.
+            // For example, by columns, to calculate their width.
+            DoTasks();
         }
 
         // O(1) scroll content culling.
@@ -339,5 +297,51 @@ public sealed partial class Table<TRecord>
         // This button is here to capture control from whatever
         // eats the events above horizontal scroll code.
         rect.DrawButtonEmpty();
+    }
+
+    private void DoTasks()
+    {
+        // How it works:
+        //
+        // The table is constantly running 3 tasks:
+        // - Filtering
+        // - Sorting
+        // - Column refreshing
+        //
+        // Only one task is executed per frame.
+        // Filtering and sorting take priority.
+        // 
+        // Example.
+        //
+        // All columns are stale.
+        // N - frame number.
+        //
+        // 0: ColumnsToRefresh = [A, B, C]
+        // 1: Refresh column A
+        // 2: Apply filters
+        // 3: Sort
+        // 4: Refresh column B
+        // 5: Apply filters
+        // 6: Filters were changed by the player
+        // 7: Apply filters
+        // 8: Sort
+        // 9: Refresh column C. ColumnsToRefresh = [A, B, C]
+        if (_doFilter)
+        {
+            ApplyFilters();
+
+            _doFilter = false;
+            _doSort = true;
+        }
+        else if (_doSort)
+        {
+            // TODO
+
+            _doSort = false;
+        }
+        else if (_columnsToRefresh.TryDequeue(out ColumnWidget column))
+        {
+            RefreshQueuedColum(column);
+        }
     }
 }

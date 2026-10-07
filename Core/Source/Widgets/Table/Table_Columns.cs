@@ -68,11 +68,58 @@ public sealed partial class Table<TRecord>
 
     private void RefreshColumnOnce(ColumnWidget columnWidget)
     {
-        if (_columnsToRefresh.Contains(columnWidget) == false)
+        // Manually refreshed columns are queued only after we finish the current queue.
+        // Until that, we'll put them into a separate collection where they will wait to be queued.
+        // This is done in order to prevent them from locking the queue by spamming RefreshOnce.
+        _columnsToQueueOnNextCycle.Add(columnWidget);
+    }
+
+    private void RefreshQueuedColum(ColumnWidget column)
+    {
+        // TODO: Implementation
+        //bool columnWasAltered = false;
+        bool columnWasAltered = true;
+
+        try
         {
-            // TODO: If a column spams RefreshOnce, it may prevent other columns from refreshing.
-            _columnsToRefresh.Push(columnWidget);
+            column.RefreshCells(_records);
         }
+        catch (Exception e)
+        {
+            LogUnableToRefreshColumn(e, column);
+        }
+
+        if (columnWasAltered)
+        {
+            _doFilter = true;
+        }
+
+        if (_columnsToRefresh.Count == 0)
+        {
+            ResetAutoRefreshableColumnQueue();
+        }
+    }
+
+    private void ResetAutoRefreshableColumnQueue()
+    {
+        foreach (ColumnWidget column2 in _columns)
+        {
+            if (column2.AutoRefresh)
+            {
+                _columnsToRefresh.Enqueue(column2);
+            }
+        }
+
+        foreach (ColumnWidget column3 in _columnsToQueueOnNextCycle)
+        {
+            // Normally, auto refreshable columns do not manually refresh themselves, but who knows.
+            if (_columnsToRefresh.Contains(column3) == false)
+            {
+                _columnsToRefresh.Enqueue(column3);
+            }
+        }
+
+        _columnsToQueueOnNextCycle.Clear();
     }
 
     private sealed class ColumnWidget
