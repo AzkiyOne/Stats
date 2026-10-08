@@ -251,26 +251,6 @@ public sealed partial class Table<TRecord>
         }
     }
 
-    //private void DrawColumnsTab(ref Rect rect)
-    //{
-    //    var columnsTabWidgetSize = ColumnsTabWidget.GetSize(rect.size);
-    //    var columnsTabRect = rect.CutByX(columnsTabWidgetSize.x + GenUI.ScrollBarWidth);
-    //    var columnsTabRectMax = new Rect(Vector2.zero, columnsTabWidgetSize);
-    //    // Adds empty space for more convenient vertical scrolling.
-    //    columnsTabRectMax.height += columnsTabRect.height;
-
-    //    Verse.Widgets.BeginScrollView(columnsTabRect, ref ColumnsTabScrollPosition, columnsTabRectMax, true);
-    //    ColumnsTabWidget.DrawIn(columnsTabRectMax);
-    //    Verse.Widgets.EndScrollView();
-    //    Widgets.Draw.VerticalLine(
-    //        columnsTabRect.xMax,
-    //        rect.y,
-    //        rect.height,
-    //        MainTabWindowWidget.BorderLineColor
-    //    );
-    //    rect.xMin += 1f;
-    //}
-
     private void DoHorScrollControl(Rect rect)
     {
         Event @event = Event.current;

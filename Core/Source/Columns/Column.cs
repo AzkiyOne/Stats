@@ -50,6 +50,8 @@ public abstract class Column<TRecord>
 
     public abstract void Refresh(int i, TRecord record);
 
+    public abstract void Swap(int i1, int i2);
+
     public abstract void Remove(int i);
 
     public virtual void Show()

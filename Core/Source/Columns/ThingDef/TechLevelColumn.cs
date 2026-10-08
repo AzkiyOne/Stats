@@ -87,6 +87,11 @@ public sealed class TechLevelColumn<TRecord> : Column<TRecord> where TRecord : I
         _cellValue[i] = record.ThingDef.techLevel;
     }
 
+    public override void Swap(int i1, int i2)
+    {
+        _cellValue.Swap(i1, i2);
+    }
+
     public override void Remove(int i)
     {
         _cellValue.ReplaceWithLast(i);

@@ -114,6 +114,14 @@ public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDef
         _cellTooltip[i] = tooltip;
     }
 
+    public override void Swap(int i1, int i2)
+    {
+        _cellValue.Swap(i1, i2);
+        _cellText.Swap(i1, i2);
+        _cellWidth.Swap(i1, i2);
+        _cellTooltip.Swap(i1, i2);
+    }
+
     public override void Remove(int i)
     {
         _cellValue.ReplaceWithLast(i);

@@ -85,6 +85,13 @@ public abstract class DefSetColumn<TRecord> : Column<TRecord>
         _cellWidth[i] = width;
     }
 
+    public override void Swap(int i1, int i2)
+    {
+        _cellValue.Swap(i1, i2);
+        _cellText.Swap(i1, i2);
+        _cellWidth.Swap(i1, i2);
+    }
+
     public override void Remove(int i)
     {
         _cellValue.ReplaceWithLast(i);

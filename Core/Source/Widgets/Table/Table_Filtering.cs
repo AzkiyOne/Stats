@@ -18,20 +18,19 @@ public sealed partial class Table<TRecord>
 
         if (filtersCount > 0)
         {
-            // TODO: Pinned rows should not be filtered.
-            _rows.Clear();
+            ClearBottomRows();
 
             bool mode = _filtersTab.Mode;
 
-            for (int i = 0; i < _records.Count; i++)
+            for (int r = _topRowsCount; r < _records.Count; r++)
             {
                 bool recordFitsQuery = !mode;
 
-                for (int j = 0; j < filtersCount; j++)
+                for (int f = 0; f < filtersCount; f++)
                 {
-                    Filter filter = filters[j];
+                    Filter filter = filters[f];
 
-                    if (filter.Eval(i) == mode)
+                    if (filter.Eval(r) == mode)
                     {
                         recordFitsQuery = mode;
 
@@ -41,15 +40,15 @@ public sealed partial class Table<TRecord>
 
                 if (recordFitsQuery)
                 {
-                    _rows.Add(i);
+                    _rows.Add(r);
                 }
             }
         }
         else if (_rows.Count != _records.Count)
         {
-            _rows.Clear();
+            ClearBottomRows();
 
-            for (int i = 0; i < _records.Count; i++)
+            for (int i = _topRowsCount; i < _records.Count; i++)
             {
                 _rows.Add(i);
             }

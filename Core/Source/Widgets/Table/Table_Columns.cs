@@ -96,26 +96,26 @@ public sealed partial class Table<TRecord>
 
         if (_columnsToRefresh.Count == 0)
         {
-            ResetAutoRefreshableColumnQueue();
+            ResetAutoRefreshableColumnsQueue();
         }
     }
 
-    private void ResetAutoRefreshableColumnQueue()
+    private void ResetAutoRefreshableColumnsQueue()
     {
-        foreach (ColumnWidget column2 in _columns)
+        foreach (ColumnWidget column in _columns)
         {
-            if (column2.AutoRefresh)
+            if (column.AutoRefresh)
             {
-                _columnsToRefresh.Enqueue(column2);
+                _columnsToRefresh.Enqueue(column);
             }
         }
 
-        foreach (ColumnWidget column3 in _columnsToQueueOnNextCycle)
+        foreach (ColumnWidget column in _columnsToQueueOnNextCycle)
         {
             // Normally, auto refreshable columns do not manually refresh themselves, but who knows.
-            if (_columnsToRefresh.Contains(column3) == false)
+            if (_columnsToRefresh.Contains(column) == false)
             {
-                _columnsToRefresh.Enqueue(column3);
+                _columnsToRefresh.Enqueue(column);
             }
         }
 
@@ -440,6 +440,11 @@ public sealed partial class Table<TRecord>
         public void AddRecord(TRecord record)
         {
             _column.Add(record);
+        }
+
+        public void Swap(int i1, int i2)
+        {
+            _column.Swap(i1, i2);
         }
 
         public void RemoveRecord(int i)

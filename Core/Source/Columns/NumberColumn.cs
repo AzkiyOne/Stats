@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Stats.Extensions;
@@ -94,10 +95,17 @@ public abstract class NumberColumn<TRecord> : Column<TRecord>
         _cellWidth?[i] = GetCellWidth(CellText[i]);
     }
 
-    public override void Remove(int index)
+    public override void Swap(int i1, int i2)
     {
-        _cellValue.ReplaceWithLast(index);
-        _cellText?.ReplaceWithLast(index);
-        _cellWidth?.ReplaceWithLast(index);
+        _cellValue.Swap(i1, i2);
+        _cellText?.Swap(i1, i2);
+        _cellWidth?.Swap(i1, i2);
+    }
+
+    public override void Remove(int i)
+    {
+        _cellValue.ReplaceWithLast(i);
+        _cellText?.ReplaceWithLast(i);
+        _cellWidth?.ReplaceWithLast(i);
     }
 }

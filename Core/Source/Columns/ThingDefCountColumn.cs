@@ -142,6 +142,15 @@ public abstract class ThingDefCountColumn<TRecord> : Column<TRecord>
         _cellWidth[i] = cellWidth;
     }
 
+    public override void Swap(int i1, int i2)
+    {
+        _cellCount.Swap(i1, i2);
+        _cellThingDef.Swap(i1, i2);
+        _cellThingDefLabel.Swap(i1, i2);
+        _cellDrawData.Swap(i1, i2);
+        _cellWidth.Swap(i1, i2);
+    }
+
     public override void Remove(int i)
     {
         _cellCount.ReplaceWithLast(i);
