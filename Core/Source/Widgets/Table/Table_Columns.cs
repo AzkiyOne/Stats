@@ -429,7 +429,7 @@ public sealed partial class Table<TRecord>
             rect.DrawButtonEmpty();
         }
 
-        public void Unfocus()
+        public void Suspend()
         {
             if (_isResized)
             {
@@ -437,7 +437,7 @@ public sealed partial class Table<TRecord>
             }
         }
 
-        public void AddRecord(TRecord record)
+        public void Add(TRecord record)
         {
             _column.Add(record);
         }
@@ -447,9 +447,9 @@ public sealed partial class Table<TRecord>
             _column.Swap(i1, i2);
         }
 
-        public void RemoveRecord(int i)
+        public void Replace(int i1, int i2)
         {
-            _column.Remove(i);
+            _column.Replace(i1, i2);
         }
 
         public void RefreshCells(List<TRecord> records)

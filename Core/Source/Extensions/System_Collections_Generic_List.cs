@@ -6,12 +6,11 @@ namespace Stats.Extensions;
 
 public static class System_Collections_Generic_List
 {
-    public static void ReplaceWithLast<T>(this List<T> list, int index)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Replace<T>(this List<T> list, int i1, int i2)
     {
-        int lastItemlIndex = list.Count - 1;
-
-        list[index] = list[lastItemlIndex];
-        list.RemoveAt(lastItemlIndex);
+        list[i1] = list[i2];
+        list.RemoveAt(i2);
     }
 
     internal static void CopyTo<T>(this List<T> list, Span<T> span, int start)

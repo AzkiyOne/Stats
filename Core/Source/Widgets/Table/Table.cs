@@ -77,6 +77,9 @@ public sealed partial class Table<TRecord> : TabBodyWidget
     {
     }
 
+    // TODO!!!:
+    // As of right now, pinning/unpinning a row changes the order of records.
+    // So, if we accept a List, we have to either copy it, or figure out something else.
     public Table(TableDef def, List<TRecord> records, object[]? extraColumnCtorArgs = null)
     {
         // Columns
@@ -168,11 +171,11 @@ public sealed partial class Table<TRecord> : TabBodyWidget
         {
             ColumnWidget column = _columns[i];
 
-            column.Unfocus();
+            column.Suspend();
         }
     }
 
-    public void AddRecord(TRecord record)
+    public void Add(TRecord record)
     {
         _records.Add(record);
         //_rows.Add(_records.Count - 1);
@@ -181,7 +184,7 @@ public sealed partial class Table<TRecord> : TabBodyWidget
         {
             try
             {
-                column.AddRecord(record);
+                column.Add(record);
             }
             catch (Exception e)
             {
@@ -190,18 +193,19 @@ public sealed partial class Table<TRecord> : TabBodyWidget
         }
     }
 
-    public void RemoveRecord(TRecord record)
+    public void Remove(TRecord record)
     {
-        int i = _records.IndexOf(record);
+        int recordIndex = _records.IndexOf(record);
+        int lastRecordIndex = _records.Count - 1;
 
-        _records.ReplaceWithLast(i);
+        _records.Replace(recordIndex, lastRecordIndex);
         // _rows.Remove?
 
         foreach (ColumnWidget column in _columns)
         {
             try
             {
-                column.RemoveRecord(i);
+                column.Replace(recordIndex, lastRecordIndex);
             }
             catch (Exception e)
             {

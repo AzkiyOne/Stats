@@ -49,9 +49,9 @@ public abstract class BooleanColumn<TRecord> : Column<TRecord>
         _cellValue.Swap(i1, i2);
     }
 
-    public override void Remove(int index)
+    public override void Replace(int i1, int i2)
     {
-        _cellValue.ReplaceWithLast(index);
+        _cellValue.Replace(i1, i2);
     }
 
     public override void DrawCell(Rect rect, int i)

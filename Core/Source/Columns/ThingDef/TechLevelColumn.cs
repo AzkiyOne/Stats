@@ -92,8 +92,8 @@ public sealed class TechLevelColumn<TRecord> : Column<TRecord> where TRecord : I
         _cellValue.Swap(i1, i2);
     }
 
-    public override void Remove(int i)
+    public override void Replace(int i1, int i2)
     {
-        _cellValue.ReplaceWithLast(i);
+        _cellValue.Replace(i1, i2);
     }
 }

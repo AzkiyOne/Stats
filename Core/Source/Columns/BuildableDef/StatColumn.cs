@@ -122,12 +122,12 @@ public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDef
         _cellTooltip.Swap(i1, i2);
     }
 
-    public override void Remove(int i)
+    public override void Replace(int i1, int i2)
     {
-        _cellValue.ReplaceWithLast(i);
-        _cellText.ReplaceWithLast(i);
-        _cellWidth.ReplaceWithLast(i);
-        _cellTooltip.ReplaceWithLast(i);
+        _cellValue.Replace(i1, i2);
+        _cellText.Replace(i1, i2);
+        _cellWidth.Replace(i1, i2);
+        _cellTooltip.Replace(i1, i2);
     }
 
     public override void Dispose()
