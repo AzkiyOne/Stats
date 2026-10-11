@@ -6,7 +6,7 @@ using Verse;
 
 namespace Stats.Widgets;
 
-public abstract class Tab
+internal sealed class Tab
 {
     internal event Action<Tab>? OnTitleClick;
     internal event Action<Tab>? OnClose;
@@ -16,17 +16,23 @@ public abstract class Tab
     private readonly Color _iconColor;
     private readonly float _iconScale;
     private readonly FloatMenu _menu;
+    private readonly IDrawable _widget;
 
-    protected Tab(TabDef def)
+    public Tab(TabDef def) : this(def.Worker.Widget, def.LabelCap, def.description, def.Icon, def.iconColor, def.iconScale)
     {
-        _tooltip = def.LabelCap;
-        if (def.description?.Length > 0)
+    }
+
+    public Tab(IDrawable widget, string label, string? description, Texture2D icon, Color iconColor, float iconScale)
+    {
+        _widget = widget;
+        _tooltip = label;
+        if (description?.Length > 0)
         {
-            _tooltip += $"\n\n{def.description}";
+            _tooltip += $"\n\n{description}";
         }
-        _icon = def.Icon;
-        _iconColor = def.iconColor;
-        _iconScale = def.iconScale;
+        _icon = icon;
+        _iconColor = iconColor;
+        _iconScale = iconScale;
         List<FloatMenuOption> menuOptions = [
             new FloatMenuOption("Close", () => OnClose?.Invoke(this))
         ];
@@ -70,13 +76,11 @@ public abstract class Tab
         rect.DrawButtonGhostly();
     }
 
-    protected abstract TabBodyWidget Widget { get; }
+    internal void DrawBody(Rect rect) => _widget.Draw(rect);
 
-    internal void DrawBody(Rect rect) => Widget.Draw(rect);
+    internal void Resume() => (_widget as ISuspendable)?.Resume();
 
-    internal void Resume() => Widget.Resume();
+    internal void Suspend() => (_widget as ISuspendable)?.Suspend();
 
-    internal void Suspend() => Widget.Suspend();
-
-    internal void Dispose() => Widget.Dispose();
+    internal void Dispose() => (_widget as IDisposable)?.Dispose();
 }

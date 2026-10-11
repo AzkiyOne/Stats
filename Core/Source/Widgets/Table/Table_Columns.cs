@@ -11,7 +11,7 @@ using static Stats.GUIStyles.Table;
 
 namespace Stats.Widgets;
 
-public sealed partial class Table<TRecord>
+public sealed partial class Table
 {
     private void PinColumn(ColumnWidget column)
     {
@@ -82,7 +82,7 @@ public sealed partial class Table<TRecord>
 
         try
         {
-            column.RefreshCells(_records);
+            column.RefreshCells();
         }
         catch (Exception e)
         {
@@ -124,25 +124,31 @@ public sealed partial class Table<TRecord>
 
     private sealed class ColumnWidget
     {
-        private readonly Column<TRecord> _column;
+        private readonly Column _body;
         private readonly ColumnContentAlignment _contentAlignment;
+        private readonly string _label;
+        private readonly Widget? _labelShort;
         private readonly Widget _labelWidget;
+        private readonly string _description;
         private readonly float _headerCellWidth;
         private readonly TipSignal _tooltip;
         private readonly FloatMenu _menu;
         private bool _isResized;
         private bool _isManuallyResized;
         private bool _isHidden;
+        private float _width;
 
-        public ColumnWidget(Column<TRecord> column, bool initialVisibility)
+        public ColumnWidget(Column column, bool initialVisibility)
         {
-            _column = column;
-            _contentAlignment = _column.ContentAlignment;
+            _body = column;
+            _contentAlignment = _body.ContentAlignment;
             _isHidden = !initialVisibility;
-            ColumnDef columnDef = column.Def;
-            _labelWidget = columnDef.LabelWidget;
+            _label = column.Label;
+            _labelShort = column.LabelShort;
+            _labelWidget = column.LabelShort ?? new Label(column.Label);
+            _description = column.Description;
             _headerCellWidth = _labelWidget.Size.x + GUIStyles.TableCell.PadHor;
-            _tooltip = $"<i>{columnDef.LabelCap}</i>\n\n{columnDef.description}";
+            _tooltip = $"<i>{column.Label}</i>\n\n{column.Description}";
             _menu = new FloatMenu([
                 //new FloatMenuOption("Sort Asc", () => {
                 //    // TODO
@@ -155,7 +161,7 @@ public sealed partial class Table<TRecord>
                 new FloatMenuOption("Hide", () => IsHidden = true, TexButton.Suspend, Color.white)
             ]);
 
-            column.OnRefreshOnce += () => OnRefreshOnce?.Invoke(this);
+            column.OnRefreshOnce += HandleColumnRefreshOnce;
         }
 
         public event Action<ColumnWidget>? OnPin;
@@ -168,9 +174,15 @@ public sealed partial class Table<TRecord>
 
         public event Action<ColumnWidget>? OnRefreshOnce;
 
-        public float Width { get; private set; }
+        public string Label => _label;
 
-        public bool AutoRefresh => _column.AutoRefresh;
+        public Widget? LabelShort => _labelShort;
+
+        public string Description => _description;
+
+        public float Width => _width;
+
+        public bool AutoRefresh => _body.AutoRefresh;
 
         public bool IsHidden
         {
@@ -181,32 +193,19 @@ public sealed partial class Table<TRecord>
                 {
                     _isHidden = value;
 
-                    try
+                    if (value == true)
                     {
-                        if (value == true)
-                        {
-                            _column.Hide();
-                            OnHide?.Invoke(this);
-                        }
-                        else
-                        {
-                            _column.Show();
-                            OnShow?.Invoke(this);
-                        }
+                        OnHide?.Invoke(this);
                     }
-                    catch (Exception e)
+                    else
                     {
-                        _isHidden = !_isHidden;
-
-                        LogUnableToChangeVisibility(e);
+                        OnShow?.Invoke(this);
                     }
                 }
             }
         }
 
-        public ColumnDef Def => _column.Def;
-
-        public ICollection<ColumnFilterOption> FilterOptions => _column.FilterOptions;
+        public ICollection<ColumnFilterOption> FilterOptions => _body.FilterOptions;
 
         public void Draw(Rect rect, List<int> rows, Span<int> topRows, Span<int> visibleBottomRows, float bottomRowsY, DragManager<ColumnWidget> dragManager)
         {
@@ -216,7 +215,7 @@ public sealed partial class Table<TRecord>
                 .CutTop(out Rect topRowsRect, topRowsHeight)
                 .TakeRest(out Rect bottomRowsRect);
 
-            DrawHeaderCell(headerCellRect, dragManager);
+            DrawHeader(headerCellRect, dragManager);
 
             // Do we actually need to draw cells on Layout event?
             // Normally we would, so they can refresh themselves.
@@ -225,7 +224,7 @@ public sealed partial class Table<TRecord>
             {
                 using (new GUIClipScope(topRowsRect))
                 {
-                    DrawCells(topRowsRect with { x = 0f, y = 0f }, topRows);
+                    DrawBody(topRowsRect with { x = 0f, y = 0f }, topRows);
                 }
             }
 
@@ -233,28 +232,28 @@ public sealed partial class Table<TRecord>
             {
                 using (new GUIClipScope(bottomRowsRect, new Vector2(0f, bottomRowsY)))
                 {
-                    DrawCells(bottomRowsRect with { x = 0f, y = 0f }, visibleBottomRows);
+                    DrawBody(bottomRowsRect with { x = 0f, y = 0f }, visibleBottomRows);
                 }
             }
 
-            if (Event.current.type == EventType.Layout && _isManuallyResized == false)
+            if (_isManuallyResized == false && Event.current.type == EventType.Layout)
             {
                 float maxBodyCellWidth = 0f;
 
                 try
                 {
-                    maxBodyCellWidth = _column.GetMaxCellWidth(rows);
+                    maxBodyCellWidth = _body.GetMaxCellWidth(rows);
                 }
                 catch (Exception e)
                 {
-                    LogUnableToUpdateWidth(e);
+                    HandleLayoutRefreshException(e);
                 }
 
-                Width = Mathf.Max(_headerCellWidth, maxBodyCellWidth);
+                _width = Mathf.Max(_headerCellWidth, maxBodyCellWidth);
             }
         }
 
-        private void DrawCells(Rect rect, Span<int> rows)
+        private void DrawBody(Rect rect, Span<int> rows)
         {
             Rect cellRect = rect with { height = RowHeight };
             int rowsCount = rows.Length;
@@ -263,18 +262,18 @@ public sealed partial class Table<TRecord>
             {
                 try
                 {
-                    _column.DrawCell(cellRect, rows[i]);
+                    _body.DrawCell(cellRect, rows[i]);
                 }
                 catch (Exception e)
                 {
-                    DrawFaultyCell(cellRect, e);
+                    DrawFaultyBodyCell(cellRect, e);
                 }
 
                 cellRect.y = cellRect.yMax;
             }
         }
 
-        private void DrawHeaderCell(Rect rect, DragManager<ColumnWidget> dragManager)
+        private void DrawHeader(Rect rect, DragManager<ColumnWidget> dragManager)
         {
             Event @event = Event.current;
             ColumnContentAlignment contentAlignment = _contentAlignment;
@@ -408,7 +407,7 @@ public sealed partial class Table<TRecord>
             {
                 if (OriginalEventUtility.EventType == EventType.MouseDrag)
                 {
-                    Width = Mathf.Clamp(Width + @event.delta.x, HeadersRowHeight, float.MaxValue);
+                    _width = Mathf.Clamp(_width + @event.delta.x, HeadersRowHeight, float.MaxValue);
                     @event.Use();
                 }
                 // TODO: This will not work if the column will stop being rendered as the result of resizing.
@@ -437,50 +436,31 @@ public sealed partial class Table<TRecord>
             }
         }
 
-        public void Add(TRecord record)
+        private void HandleColumnRefreshOnce()
         {
-            _column.Add(record);
+            OnRefreshOnce?.Invoke(this);
         }
 
-        public void Swap(int i1, int i2)
+        public void RefreshCells()
         {
-            _column.Swap(i1, i2);
-        }
-
-        public void Replace(int i1, int i2)
-        {
-            _column.Replace(i1, i2);
-        }
-
-        public void RefreshCells(List<TRecord> records)
-        {
-            for (int i = 0; i < records.Count; i++)
-            {
-                TRecord record = records[i];
-
-                _column.Refresh(i, record);
-            }
+            _body.RefreshCells();
         }
 
         public void Dispose()
         {
-            _column.Dispose();
+            _body.OnRefreshOnce -= HandleColumnRefreshOnce;
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private void LogUnableToChangeVisibility(Exception e)
+        private void HandleLayoutRefreshException(Exception e)
         {
-            Log.Error($"Unable to change visibility of \"{_column.Def.defName}\" column: {e.Message}");
+            Log.Error($"Unable to update width of \"{_label}\" column. Switching to manual mode to prevent further errors: {e.Message}");
+
+            _isManuallyResized = true;
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private void LogUnableToUpdateWidth(Exception e)
-        {
-            Log.Error($"Unable to update width of \"{_column.Def.defName}\" column: {e.Message}");
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private void DrawFaultyCell(Rect rect, Exception e)
+        private void DrawFaultyBodyCell(Rect rect, Exception e)
         {
             rect.Fill(Color.red);
 

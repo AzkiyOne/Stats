@@ -1,6 +1,6 @@
 ﻿namespace Stats.Widgets;
 
-public sealed partial class Table<TRecord>
+public sealed partial class Table
 {
     // Note: Use row's index for stable sort (when two rows have the same cell values)?
 

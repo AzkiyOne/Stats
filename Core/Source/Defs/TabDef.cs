@@ -1,5 +1,4 @@
 ﻿using System;
-using Stats.Widgets;
 using UnityEngine;
 using Verse;
 
@@ -14,11 +13,7 @@ public class TabDef : Def
     public Type widgetClass;
 #pragma warning restore CS8618
 
-    [Obsolete]
-    public Tab MakeWidget()
-    {
-        return (Tab)Activator.CreateInstance(widgetClass, this);
-    }
+    public TabWorker Worker => field ??= (TabWorker)Activator.CreateInstance(widgetClass, this);
 
     public Texture2D Icon { get; private set; } = BaseContent.BadTex;
 

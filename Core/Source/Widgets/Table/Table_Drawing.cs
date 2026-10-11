@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Stats.Extensions;
 using Stats.GUIScopes;
 using UnityEngine;
@@ -8,9 +7,9 @@ using static Stats.GUIStyles.Table;
 
 namespace Stats.Widgets;
 
-public sealed partial class Table<TRecord>
+public sealed partial class Table
 {
-    public override void Draw(Rect rect)
+    public void Draw(Rect rect)
     {
         if (_beforeDraw != null)
         {

@@ -9,7 +9,7 @@ using Verse;
 
 namespace Stats.Widgets;
 
-public sealed partial class Table<TRecord>
+public sealed partial class Table
 {
     private void ApplyFilters()
     {

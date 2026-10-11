@@ -3,24 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Stats.Columns;
-using Stats.Extensions;
 using UnityEngine;
 using Verse;
 
 namespace Stats.Widgets;
 
-// There are two sides to this class:
-// - Externally it is a list of TRecord.
-// - Internally it is a SOA, where components are:
-//   - Columns.
-//   - List<TRecord>. So column[i] contains data related to records[i].
-//
-// Rows list acts as a mask and contains indexes of records, that have passed through
-// current set of filters, in order defined by current sort settings.
-//
-// Lack of abstraction/leaking abstractions is (almost) intentional here.
-// Because abstractions are not free.
-public sealed partial class Table<TRecord> : TabBodyWidget
+// Look at this class as a DB table view, where filters are query and the source DB table is implemented outside.
+public sealed partial class Table : IDrawable, ISuspendable, IDisposable
 {
     // Filtering
     private readonly FiltersTab _filtersTab;
@@ -35,7 +24,6 @@ public sealed partial class Table<TRecord> : TabBodyWidget
     private bool _doSort;
 
     // Rows
-    private readonly List<TRecord> _records;
     // Why is this called "rows"?
     // Think of it as a list of "Row" objects with a single field - "tableRecordId" ("Id" being an "InDex").
     // Storing just id's as ints is a little bit more efficient.
@@ -71,58 +59,23 @@ public sealed partial class Table<TRecord> : TabBodyWidget
 
     // Misc
     private readonly DragManager<ColumnWidget> _dragManager;
-    private readonly TableDef _def;
 
-    public Table(TableDef def, int capacity, object[]? extraColumnCtorArgs = null) : this(def, new List<TRecord>(capacity), extraColumnCtorArgs)
-    {
-    }
-
-    // TODO!!!:
-    // As of right now, pinning/unpinning a row changes the order of records.
-    // So, if we accept a List, we have to either copy it, or figure out something else.
-    public Table(TableDef def, List<TRecord> records, object[]? extraColumnCtorArgs = null)
+    public Table(IReadOnlyCollection<Column> columns, int recordsCount)
     {
         // Columns
-        List<TableColumnListItem> columnList = def.columns;
-        List<ColumnWidget> columns = new(columnList.Count);
+        List<ColumnWidget> columnWidgets = new(columns.Count);
 
-        for (int i = 0; i < columnList.Count; i++)
+        foreach (Column column in columns)
         {
-            TableColumnListItem columnListItem = columnList[i];
-            ColumnDef columnDef = columnListItem.columnDef;
+            // Default visibility is set to "true" until i figure out a way to pass it down to
+            // ColumnWidget from outside or be willing to expose the class to Table users.
+            ColumnWidget columnWidget = new(column, true);
 
-            try
-            {
-                Type columnType = columnDef.columnClass;
-                if (columnType.IsGenericTypeDefinition)
-                {
-                    columnType = columnType.MakeGenericType(typeof(TRecord));
-                }
-                // TODO:
-                // Should we pass initial visibility to column class?
-                // Or maybe call Show/Hide (depends on what we choose as default state for columns).
-                object[] columnCtorArgs = extraColumnCtorArgs == null
-                    ? [columnDef, records]
-                    : [columnDef, records, .. extraColumnCtorArgs];
-                Column<TRecord> column = (Column<TRecord>)Activator.CreateInstance(columnType, columnCtorArgs);
+            columnWidget.OnPin += PinColumn;
+            columnWidget.OnUnpin += UnpinColumn;
+            columnWidget.OnRefreshOnce += RefreshColumnOnce;
 
-                foreach (TRecord record in records)
-                {
-                    column.Add(record);
-                }
-
-                ColumnWidget columnWidget = new(column, columnListItem.isPrimary);
-
-                columnWidget.OnPin += PinColumn;
-                columnWidget.OnUnpin += UnpinColumn;
-                columnWidget.OnRefreshOnce += RefreshColumnOnce;
-
-                columns.Add(columnWidget);
-            }
-            catch (Exception error)
-            {
-                LogUnableToInitColumn(error, columnDef, def);
-            }
+            columnWidgets.Add(columnWidget);
         }
 
         // Misc
@@ -133,7 +86,7 @@ public sealed partial class Table<TRecord> : TabBodyWidget
             _beforeDraw ??= () => HandleColumnDrag(draggedColumn, column, false);
 
         // Toolbar
-        Toolbar toolbar = new(columns);
+        Toolbar toolbar = new(columnWidgets);
         toolbar.OnFiltersButtonClick += () => _isFiltersTabOpen = !_isFiltersTabOpen;
 
         // Filters tab
@@ -141,28 +94,25 @@ public sealed partial class Table<TRecord> : TabBodyWidget
         filtersTab.OnChange += () => _doFilter = true;
 
         // Finalize
-        _records = records;
-        _rows = [.. Enumerable.Range(0, records.Count)];
-        _columns = columns;
+        _rows = [.. Enumerable.Range(0, recordsCount)];
+        _columns = columnWidgets;
         _columnsToRefresh = new Queue<ColumnWidget>(columns.Count);
         _columnsToQueueOnNextCycle = new();
         if (columns.Count > 0)
         {
             _leftColumnsCount = 1;
-            _sortColumn = columns[0];
+            //_sortColumn = columns[0];
         }
         _toolbar = toolbar;
         _dragManager = dragManager;
-        _def = def;
         _filtersTab = filtersTab;
     }
 
-    public override void Resume()
+    public void Resume()
     {
-        // TODO?
     }
 
-    public override void Suspend()
+    public void Suspend()
     {
         _rightPartIsPanned = false;
         _dragManager.EndDrag();
@@ -175,46 +125,7 @@ public sealed partial class Table<TRecord> : TabBodyWidget
         }
     }
 
-    public void Add(TRecord record)
-    {
-        _records.Add(record);
-        //_rows.Add(_records.Count - 1);
-
-        foreach (ColumnWidget column in _columns)
-        {
-            try
-            {
-                column.Add(record);
-            }
-            catch (Exception e)
-            {
-                LogUnableToAddRecordToColumn(e, record, column);
-            }
-        }
-    }
-
-    public void Remove(TRecord record)
-    {
-        int recordIndex = _records.IndexOf(record);
-        int lastRecordIndex = _records.Count - 1;
-
-        _records.Replace(recordIndex, lastRecordIndex);
-        // _rows.Remove?
-
-        foreach (ColumnWidget column in _columns)
-        {
-            try
-            {
-                column.Replace(recordIndex, lastRecordIndex);
-            }
-            catch (Exception e)
-            {
-                LogUnableToRemoveRecordFromColumn(e, record, column);
-            }
-        }
-    }
-
-    public override void Dispose()
+    public void Dispose()
     {
         foreach (ColumnWidget column in _columns)
         {
@@ -222,27 +133,27 @@ public sealed partial class Table<TRecord> : TabBodyWidget
         }
     }
 
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    private static void LogUnableToInitColumn(Exception e, ColumnDef columnDef, TableDef def)
-    {
-        Log.Error($"Unable to initialize column \"{columnDef.defName}\" of table \"{def.defName}\": {e.Message}");
-    }
+    //[MethodImpl(MethodImplOptions.NoInlining)]
+    //private static void LogUnableToInitColumn(Exception e, ColumnDef columnDef, TableDef def)
+    //{
+    //    Log.Error($"Unable to initialize column \"{columnDef.defName}\" of table \"{def.defName}\": {e.Message}");
+    //}
 
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    private void LogUnableToAddRecordToColumn(Exception e, TRecord record, ColumnWidget column)
-    {
-        Log.Error($"Unable to add record \"{record}\" to \"{column.Def.defName}\" column of table \"{_def.defName}\": {e.Message}");
-    }
+    //[MethodImpl(MethodImplOptions.NoInlining)]
+    //private void LogUnableToAddRecordToColumn(Exception e, TRecord record, ColumnWidget column)
+    //{
+    //    Log.Error($"Unable to add record \"{record}\" to \"{column.Def.defName}\" column of table \"{_def.defName}\": {e.Message}");
+    //}
 
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    private void LogUnableToRemoveRecordFromColumn(Exception e, TRecord record, ColumnWidget column)
-    {
-        Log.Error($"Unable to remove record \"{record}\" from \"{column.Def.defName}\" column of table \"{_def.defName}\": {e.Message}");
-    }
+    //[MethodImpl(MethodImplOptions.NoInlining)]
+    //private void LogUnableToRemoveRecordFromColumn(Exception e, TRecord record, ColumnWidget column)
+    //{
+    //    Log.Error($"Unable to remove record \"{record}\" from \"{column.Def.defName}\" column of table \"{_def.defName}\": {e.Message}");
+    //}
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void LogUnableToRefreshColumn(Exception e, ColumnWidget column)
     {
-        Log.Error($"Unable to refresh \"{column.Def.defName}\" column of \"{_def.defName}\" table: {e.Message}");
+        Log.Error($"Unable to refresh \"{column.Label}\" column: {e.Message}");
     }
 }

@@ -121,7 +121,7 @@ public abstract class ThingDefSetColumn<TRecord> : Column<TRecord>
         _cellWidth.Add(width);
     }
 
-    public override void Refresh(int i, TRecord record)
+    public override void RefreshCell(int i, TRecord record)
     {
         GetCellValues(
             record,
@@ -134,14 +134,6 @@ public abstract class ThingDefSetColumn<TRecord> : Column<TRecord>
         _cellThingDefsCount[i] = thingDefsCount;
         _cellIcons[i] = icons;
         _cellWidth[i] = width;
-    }
-
-    public override void Swap(int i1, int i2)
-    {
-        _cellValue.Swap(i1, i2);
-        _cellThingDefsCount.Swap(i1, i2);
-        _cellIcons.Swap(i1, i2);
-        _cellWidth.Swap(i1, i2);
     }
 
     public override void Replace(int i1, int i2)

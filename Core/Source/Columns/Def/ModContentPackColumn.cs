@@ -80,15 +80,8 @@ public sealed class ModContentPackColumn<TRecord> : Column<TRecord> where TRecor
         _cellWidth.Add(width);
     }
 
-    public override void Refresh(int i, TRecord record)
+    public override void RefreshCell(int i, TRecord record)
     {
-    }
-
-    public override void Swap(int i1, int i2)
-    {
-        _cellValue.Swap(i1, i2);
-        _cellText.Swap(i1, i2);
-        _cellWidth.Swap(i1, i2);
     }
 
     public override void Replace(int i1, int i2)

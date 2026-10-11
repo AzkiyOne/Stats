@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using Stats.Tables;
+using Verse;
 
 namespace Stats.Compat.Anomaly;
 

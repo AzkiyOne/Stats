@@ -6,7 +6,7 @@
         <defName>Plant_MinGrowingSkillToSow</defName>
         <labelKey>MinGrowingSkillToSow</labelKey>
         <descriptionKey>Stat_Thing_Plant_MinGrowingSkillToSow_Desc</descriptionKey>
-        <title>LVL<PlantGrow/></title>
+        <labelShort>LVL<PlantGrow/></labelShort>
         <columnClass>Stats.Columns.PlantDef.MinGrowingSkillToSowColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -14,7 +14,7 @@
         <defName>Plant_GrowingTimeActual</defName>
         <label>actual growing time</label>
         <description>Estimated actual plant growing time.</description>
-        <title><Time/><PlantGrow/></title>
+        <labelShort><Time/><PlantGrow/></labelShort>
         <columnClass>Stats.Columns.PlantDef.GrowingTimeActualColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -22,7 +22,7 @@
         <defName>Plant_FertilityRequirement</defName>
         <labelKey>FertilityRequirement</labelKey>
         <descriptionKey>Stat_Thing_Plant_FertilityRequirement_Desc</descriptionKey>
-        <title>Fert. req.</title>
+        <labelShort>Fert. req.</labelShort>
         <columnClass>Stats.Columns.PlantDef.FertilityRequirementColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -30,7 +30,7 @@
         <defName>Plant_FertilitySensitivity</defName>
         <labelKey>FertilitySensitivity</labelKey>
         <descriptionKey>Stat_Thing_Plant_FertilitySensitivity_Desc</descriptionKey>
-        <title>Fert. sens.</title>
+        <labelShort>Fert. sens.</labelShort>
         <columnClass>Stats.Columns.PlantDef.FertilitySensitivityColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -38,7 +38,7 @@
         <defName>Plant_LightRequirement</defName>
         <labelKey>LightRequirement</labelKey>
         <descriptionKey>Stat_Thing_Plant_LightRequirement_Desc</descriptionKey>
-        <title><Light/>Req.</title>
+        <labelShort><Light/>Req.</labelShort>
         <columnClass>Stats.Columns.PlantDef.LightRequirementColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -46,7 +46,7 @@
         <defName>Plant_LifeSpan</defName>
         <labelKey>LifeSpan</labelKey>
         <descriptionKey>Stat_Thing_Plant_LifeSpan_Desc</descriptionKey>
-        <title><Time/>Life</title>
+        <labelShort><Time/>Life</labelShort>
         <columnClass>Stats.Columns.PlantDef.LifeSpanColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -54,77 +54,77 @@
         <defName>Plant_HarvestYield</defName>
         <labelKey>HarvestYield</labelKey>
         <descriptionKey>Stat_Thing_Plant_HarvestYield_Desc</descriptionKey>
-        <title><PlantHarvest/><PlantHarvestProduct/></title>
+        <labelShort><PlantHarvest/><PlantHarvestProduct/></labelShort>
         <columnClass>Stats.Columns.PlantDef.HarvestYieldColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Plant_ProductPerDay</defName>
         <label>product per day</label>
-        <title><PlantHarvest/><PlantHarvestProduct/><Per/>D</title>
+        <labelShort><PlantHarvest/><PlantHarvestProduct/><Per/>D</labelShort>
         <columnClass>Stats.Columns.PlantDef.ProductPerDayColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Plant_IsSowable</defName>
         <label>Can be cultivated</label>
-        <title><PlantCanBeCultivated/></title>
+        <labelShort><PlantCanBeCultivated/></labelShort>
         <columnClass>Stats.Columns.PlantDef.IsSowableColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Plant_CanBeGrownInHydroponics</defName>
         <label>Can be grown in hydroponics</label>
-        <title><Hydroponics/></title>
+        <labelShort><Hydroponics/></labelShort>
         <columnClass>Stats.Columns.PlantDef.CanBeGrownInHydroponicsColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Plant_IsBlightable</defName>
         <label>Can be infected with blight</label>
-        <title><Blight/></title>
+        <labelShort><Blight/></labelShort>
         <columnClass>Stats.Columns.PlantDef.IsBlightableColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Plant_IsTree</defName>
         <label>Is considered a tree</label>
-        <title><Tree/></title>
+        <labelShort><Tree/></labelShort>
         <columnClass>Stats.Columns.PlantDef.IsTreeColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Plant_CanBePlantedUnderRoof</defName>
         <label>Can be planted under roof</label>
-        <title><UnderRoof/></title>
+        <labelShort><UnderRoof/></labelShort>
         <columnClass>Stats.Columns.PlantDef.CanBePlantedUnderRoofColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Plant_IsDestroyedOnHarvest</defName>
         <label>Is plant destroyed on harvest</label>
-        <title><PlantHarvestDestructive/></title>
+        <labelShort><PlantHarvestDestructive/></labelShort>
         <columnClass>Stats.Columns.PlantDef.IsDestroyedOnHarvestColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Plant_NutritionPerHarvest</defName>
         <label>Nutrition per harvest</label>
-        <title><PlantHarvest/><Nutrition/></title>
+        <labelShort><PlantHarvest/><Nutrition/></labelShort>
         <columnClass>Stats.Columns.PlantDef.NutritionPerHarvestColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Plant_NutritionPerHarvestPerDay</defName>
         <label>Nutrition per harvest per day</label>
-        <title><PlantHarvest/><Nutrition/><Per/>D</title>
+        <labelShort><PlantHarvest/><Nutrition/><Per/>D</labelShort>
         <columnClass>Stats.Columns.PlantDef.NutritionPerHarvestPerDayColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Plant_RawNutrition</defName>
         <description>Raw nutrition value of a plant itself, not its product.</description>
-        <title><Nutrition/><PlantRaw/></title>
+        <labelShort><Nutrition/><PlantRaw/></labelShort>
         <stat>Nutrition</stat>
         <format>
             <pattern>0.00</pattern>
@@ -135,7 +135,7 @@
     <Stats.ColumnDef>
         <defName>Plant_RawNutritionPerDay</defName>
         <label>Raw nutrition per day</label>
-        <title><Nutrition/><PlantRaw/><Per/>D</title>
+        <labelShort><Nutrition/><PlantRaw/><Per/>D</labelShort>
         <columnClass>Stats.Columns.PlantDef.RawNutritionPerDayColumn`1</columnClass>
     </Stats.ColumnDef>
 

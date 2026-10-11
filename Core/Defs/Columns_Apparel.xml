@@ -4,7 +4,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Apparel_InsulationCold</defName>
-        <title><Temp_Cold/></title>
+        <labelShort><Temp_Cold/></labelShort>
         <stat>Insulation_Cold</stat>
         <format>
             <pattern>0.0</pattern>
@@ -15,7 +15,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Apparel_InsulationHeat</defName>
-        <title><Temp_Hot/></title>
+        <labelShort><Temp_Hot/></labelShort>
         <stat>Insulation_Heat</stat>
         <format>
             <pattern>0.0</pattern>
@@ -42,13 +42,13 @@
         <defName>Apparel_CountsAsClothingForNudity</defName>
         <labelKey>Stat_Thing_Apparel_CountsAsClothingNudity_Name</labelKey>
         <descriptionKey>Stat_Thing_Apparel_CountsAsClothingNudity_Desc</descriptionKey>
-        <title><NudistPawn/></title>
+        <labelShort><NudistPawn/></labelShort>
         <columnClass>Stats.Columns.ApparelDef.CountsAsClothingForNudityColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Apparel_EquipDelay</defName>
-        <title><Time/>Equip</title>
+        <labelShort><Time/>Equip</labelShort>
         <stat>EquipDelay</stat>
         <format>
             <pattern>0 {LetterSecond}</pattern>

@@ -103,17 +103,8 @@ public sealed class LabelColumn<TRecord> : Column<TRecord> where TRecord : IThin
         _cellWidth.Add(width);
     }
 
-    public override void Refresh(int i, TRecord record)
+    public override void RefreshCell(int i, TRecord record)
     {
-    }
-
-    public override void Swap(int i1, int i2)
-    {
-        _cellThingDef.Swap(i1, i2);
-        _cellStuffDef.Swap(i1, i2);
-        _cellText.Swap(i1, i2);
-        _cellIcon.Swap(i1, i2);
-        _cellWidth.Swap(i1, i2);
     }
 
     public override void Replace(int i1, int i2)

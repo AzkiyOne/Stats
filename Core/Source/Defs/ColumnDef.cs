@@ -12,14 +12,10 @@ public class ColumnDef : Def
 {
     public string? labelKey;
     public string? descriptionKey;
-    // TODO: Rename to "label something"
-    public ColumnLabelXmlNode? title;
+    public ColumnLabelXmlNode? labelShort;
 #pragma warning disable CS8618
     public Type columnClass;
 #pragma warning restore CS8618
-    public List<string> tags = [];
-
-    internal Widget LabelWidget => title?.ToWidget() ?? new Label(LabelCap);
 
     public override void ResolveReferences()
     {
@@ -111,4 +107,6 @@ public sealed class ColumnLabelXmlNode
             return new InlineIcon(Def.Texture, Def.color, Def.scale);
         }
     }
+
+    public static implicit operator Widget?(ColumnLabelXmlNode? labelXmlNode) => labelXmlNode?.ToWidget();
 }

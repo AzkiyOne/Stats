@@ -69,12 +69,6 @@ public abstract class NumberColumn<TRecord> : Column<TRecord>
         return text.CalcSize(GUIStyles.TableCell.Number).x;
     }
 
-    public override void Hide()
-    {
-        _cellText = null;
-        _cellWidth = null;
-    }
-
     protected abstract decimal GetValueFromRecord(TRecord record);
 
     public override void Add(TRecord record)
@@ -86,20 +80,13 @@ public abstract class NumberColumn<TRecord> : Column<TRecord>
         _cellWidth?.Add(GetCellWidth(CellText[^1]));
     }
 
-    public override void Refresh(int i, TRecord record)
+    public override void RefreshCell(int i, TRecord record)
     {
         decimal value = GetValueFromRecord(record);
 
         _cellValue[i] = value;
         _cellText?[i] = FormatValue(value);
         _cellWidth?[i] = GetCellWidth(CellText[i]);
-    }
-
-    public override void Swap(int i1, int i2)
-    {
-        _cellValue.Swap(i1, i2);
-        _cellText?.Swap(i1, i2);
-        _cellWidth?.Swap(i1, i2);
     }
 
     public override void Replace(int i1, int i2)

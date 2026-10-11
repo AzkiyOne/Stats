@@ -76,20 +76,13 @@ public abstract class DefSetColumn<TRecord> : Column<TRecord>
         _cellWidth.Add(width);
     }
 
-    public override void Refresh(int i, TRecord record)
+    public override void RefreshCell(int i, TRecord record)
     {
         GetCellValues(record, out IReadOnlyCollection<Verse.Def>? defs, out string text, out float width);
 
         _cellValue[i] = defs ?? _emptyDefHashSet;
         _cellText[i] = text;
         _cellWidth[i] = width;
-    }
-
-    public override void Swap(int i1, int i2)
-    {
-        _cellValue.Swap(i1, i2);
-        _cellText.Swap(i1, i2);
-        _cellWidth.Swap(i1, i2);
     }
 
     public override void Replace(int i1, int i2)

@@ -3,7 +3,7 @@ using Stats.Extensions;
 
 namespace Stats.Widgets;
 
-public sealed partial class Table<TRecord>
+public sealed partial class Table
 {
     private void SwapRecords(int i1, int i2)
     {

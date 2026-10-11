@@ -10,7 +10,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Thing_MarketValue</defName>
-        <title>$$$</title>
+        <labelShort>$$$</labelShort>
         <stat>MarketValue</stat>
         <format>
             <formatClass>Stats.NumberFormats.Money</formatClass>
@@ -20,14 +20,14 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Thing_MaxHitPoints</defName>
-        <title>HP</title>
+        <labelShort>HP</labelShort>
         <stat>MaxHitPoints</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Thing_Flammability</defName>
-        <title><Damage_Heat/></title>
+        <labelShort><Damage_Heat/></labelShort>
         <stat>Flammability</stat>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>
@@ -59,7 +59,7 @@
     <!-- <Stats.ColumnDef>
         <defName>Thing_EquippedStatOffsets</defName>
         <label>Offsets when equipped</label>
-        <title>Offsets</title>
+        <labelShort>Offsets</labelShort>
         <columnClass>Stats.Columns.ThingDef.EquippedStatOffsetsColumn`1</columnClass>
     </Stats.ColumnDef> -->
 
@@ -77,7 +77,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Thing_ArmorRatingSharp</defName>
-        <title><Armor/><Damage_Sharp/></title>
+        <labelShort><Armor/><Damage_Sharp/></labelShort>
         <stat>ArmorRating_Sharp</stat>
         <format>
             <pattern>0.0</pattern>
@@ -88,7 +88,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Thing_ArmorRatingBlunt</defName>
-        <title><Armor/><Damage_Blunt/></title>
+        <labelShort><Armor/><Damage_Blunt/></labelShort>
         <stat>ArmorRating_Blunt</stat>
         <format>
             <pattern>0.0</pattern>
@@ -99,7 +99,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Thing_ArmorRatingHeat</defName>
-        <title><Armor/><Damage_Heat/></title>
+        <labelShort><Armor/><Damage_Heat/></labelShort>
         <stat>ArmorRating_Heat</stat>
         <format>
             <pattern>0.0</pattern>
@@ -110,7 +110,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Thing_EnergyShieldCapacity</defName>
-        <title>Shield %</title>
+        <labelShort>Shield %</labelShort>
         <stat>EnergyShieldEnergyMax</stat>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>
@@ -120,7 +120,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Thing_EnergyShieldRechargeRate</defName>
-        <title>Shield %/s</title>
+        <labelShort>Shield %/s</labelShort>
         <stat>EnergyShieldRechargeRate</stat>
         <format>
             <pattern>0\%/{LetterSecond}</pattern>

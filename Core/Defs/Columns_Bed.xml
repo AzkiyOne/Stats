@@ -4,7 +4,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Bed_RestEffectiveness</defName>
-        <title>Rest *%</title>
+        <labelShort>Rest *%</labelShort>
         <stat>BedRestEffectiveness</stat>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>
@@ -15,14 +15,14 @@
     <Stats.ColumnDef>
         <defName>Bed_FitsSmallAnimals</defName>
         <label>for small animals</label>
-        <title><Animal_Small/></title>
+        <labelShort><Animal_Small/></labelShort>
         <columnClass>Stats.Columns.BedDef.FitsSmallAnimalsColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Bed_FitsLargeAnimals</defName>
         <label>for large animals</label>
-        <title><Animal_Large/></title>
+        <labelShort><Animal_Large/></labelShort>
         <columnClass>Stats.Columns.BedDef.FitsLargeAnimalsColumn`1</columnClass>
     </Stats.ColumnDef>
 

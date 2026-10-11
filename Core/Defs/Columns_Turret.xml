@@ -5,13 +5,13 @@
     <Stats.ColumnDef>
         <defName>Turret_IsManned</defName>
         <label>is manned</label>
-        <title><IsTurretManned/></title>
+        <labelShort><IsTurretManned/></labelShort>
         <columnClass>Stats.Columns.ThingDef.HasInteractionCellColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Turret_ShootingAccuracy</defName>
-        <title><Accuracy/><Shoot/></title>
+        <labelShort><Accuracy/><Shoot/></labelShort>
         <stat>ShootingAccuracyTurret</stat>
         <format>
             <pattern>0.0</pattern>
@@ -23,14 +23,14 @@
     <Stats.ColumnDef>
         <defName>Turret_RearmCost</defName>
         <label>rearm cost</label>
-        <title><Reload/><Resources/></title>
+        <labelShort><Reload/><Resources/></labelShort>
         <columnClass>Stats.Columns.RefuelableDef.FuelCapacityScaledColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Turret_BurstsPerRearm</defName>
         <label>bursts per rearm</label>
-        <title><Reload/><Shoot/></title>
+        <labelShort><Reload/><Shoot/></labelShort>
         <columnClass>Stats.Columns.TurretDef.BurstsPerRearmColumn`1</columnClass>
     </Stats.ColumnDef>
 

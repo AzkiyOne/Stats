@@ -16,7 +16,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Building_JoyGainFactor</defName>
-        <title><Recreation/>Power</title>
+        <labelShort><Recreation/>Power</labelShort>
         <stat>JoyGainFactor</stat>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>
@@ -28,7 +28,7 @@
         <defName>Building_RecreationType</defName>
         <labelKey>StatsReport_JoyKind</labelKey>
         <descriptionKey>Stat_RecreationType_Desc</descriptionKey>
-        <title><Recreation/>Type</title>
+        <labelShort><Recreation/>Type</labelShort>
         <columnClass>Stats.Columns.BuildingDef.RecreationTypeColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -43,7 +43,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Building_ImmunityGainSpeedFactor</defName>
-        <title>Immunity *%</title>
+        <labelShort>Immunity *%</labelShort>
         <stat>ImmunityGainSpeedFactor</stat>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>
@@ -53,7 +53,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Building_MedicalTendQualityOffset</defName>
-        <title>Tend +%</title>
+        <labelShort>Tend +%</labelShort>
         <stat>MedicalTendQualityOffset</stat>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>
@@ -63,7 +63,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Building_SurgerySuccessChanceFactor</defName>
-        <title>Surgery *%</title>
+        <labelShort>Surgery *%</labelShort>
         <stat>SurgerySuccessChanceFactor</stat>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>
@@ -74,14 +74,14 @@
     <Stats.ColumnDef>
         <defName>Building_PowerOutput</defName>
         <label>power output</label>
-        <title><Electricity/></title>
+        <labelShort><Electricity/></labelShort>
         <columnClass>Stats.Columns.PowerTraderDef.PowerOutputColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Building_PowerOutputPerCell</defName>
         <label>power per cell</label>
-        <title><Electricity/><Per/>Cell</title>
+        <labelShort><Electricity/><Per/>Cell</labelShort>
         <columnClass>Stats.Columns.PowerTraderDef.PowerOutputPerCellColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -89,21 +89,21 @@
         <defName>Building_PowerOutputPerFuel</defName>
         <label>power per fuel</label>
         <description>Measured in watts/unit.</description>
-        <title><Electricity/><Per/><Fuel/></title>
+        <labelShort><Electricity/><Per/><Fuel/></labelShort>
         <columnClass>Stats.Columns.PowerTraderDef.PowerOutputPerFuelColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Building_PowerConsumption</defName>
         <label>power consumption</label>
-        <title><Electricity/><Decrease/></title>
+        <labelShort><Electricity/><Decrease/></labelShort>
         <columnClass>Stats.Columns.PowerTraderDef.PowerConsumptionColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Building_FuelCapacity</defName>
         <label>fuel capacity</label>
-        <title><Fuel/></title>
+        <labelShort><Fuel/></labelShort>
         <columnClass>Stats.Columns.RefuelableDef.FuelCapacityColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -111,21 +111,21 @@
         <defName>Building_FuelConsumptionRate</defName>
         <label>fuel consumption rate</label>
         <description>Measured in amount/day.</description>
-        <title><Fuel/><Decrease/><Per/>D</title>
+        <labelShort><Fuel/><Decrease/><Per/>D</labelShort>
         <columnClass>Stats.Columns.RefuelableDef.FuelConsumptionRateColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Building_DaysPerRefuel</defName>
         <label>days per refuel</label>
-        <title>Days<Per/><Reload/></title>
+        <labelShort>Days<Per/><Reload/></labelShort>
         <columnClass>Stats.Columns.RefuelableDef.DaysPerRefuelColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Building_IsReinstallable</defName>
         <label>is reinstallable</label>
-        <title><IsBuildingReinstallable/></title>
+        <labelShort><IsBuildingReinstallable/></labelShort>
         <columnClass>Stats.Columns.ThingDef.IsMinifiableColumn`1</columnClass>
     </Stats.ColumnDef>
 

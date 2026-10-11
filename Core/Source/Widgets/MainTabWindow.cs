@@ -172,7 +172,7 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
 
     private void OpenTab(TabDef tabDef)
     {
-        Tab tab = tabDef.MakeWidget();
+        Tab tab = new(tabDef);
 
         _tabs.Insert(0, tab);
         SelectTab(tab);

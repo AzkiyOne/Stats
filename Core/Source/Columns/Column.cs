@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Stats.Widgets;
 using UnityEngine;
 
 namespace Stats.Columns;
@@ -12,28 +13,37 @@ public enum ColumnContentAlignment
     Middle,
 }
 
-public abstract class Column<TRecord>
+// Interface used by table widget.
+public abstract class Column
 {
-    // Records are passed here, NOT to fill a column with
-    // values at the construction time (which will lead to calling abstract/virtual methods in constructor),
-    // but so a column can implement lazy initialization.
-    protected Column(ColumnDef def, List<TRecord> records)
+    private readonly string _label;
+    private readonly Widget? _labelShort;
+    private readonly string _description;
+
+    protected Column(ColumnDef def) : this(def.LabelCap, def.labelShort, def.description)
     {
-        Def = def;
-        Records = records;
     }
 
-    public ColumnDef Def { get; }
+    protected Column(string label, Widget? labelShort, string description)
+    {
+        _label = label;
+        _labelShort = labelShort;
+        _description = description;
+    }
 
-    protected List<TRecord> Records { get; }
+    public string Label => _label;
 
-    public abstract bool AutoRefresh { get; }
+    public Widget? LabelShort => _labelShort;
+
+    public string Description => _description;
 
     public abstract ColumnContentAlignment ContentAlignment { get; }
 
     public abstract ICollection<ColumnSortOption> SortOptions { get; }
 
     public abstract ICollection<ColumnFilterOption> FilterOptions { get; }
+
+    public abstract bool AutoRefresh { get; }
 
     internal event Action? OnRefreshOnce;
 
@@ -46,21 +56,7 @@ public abstract class Column<TRecord>
 
     protected abstract float GetCellWidth(int i);
 
-    public abstract void Add(TRecord record);
-
-    public abstract void Refresh(int i, TRecord record);
-
-    public abstract void Swap(int i1, int i2);
-
-    public abstract void Replace(int i1, int i2);
-
-    public virtual void Show()
-    {
-    }
-
-    public virtual void Hide()
-    {
-    }
+    public abstract void RefreshCells();
 
     protected void RefreshOnce()
     {
@@ -70,4 +66,36 @@ public abstract class Column<TRecord>
     public virtual void Dispose()
     {
     }
+}
+
+public abstract class Column<TRecord> : Column
+{
+    private readonly List<TRecord> _records;
+
+    protected Column(ColumnDef def, List<TRecord> records) : this(def.LabelCap, def.labelShort, def.description, records)
+    {
+    }
+
+    protected Column(string label, Widget? labelShort, string description, List<TRecord> records) : base(label, labelShort, description)
+    {
+        _records = records;
+    }
+
+    public abstract void Add(TRecord record);
+
+    public abstract void Replace(int i1, int i2);
+
+    public override void RefreshCells()
+    {
+        List<TRecord> records = _records;
+
+        for (int i = 0; i < records.Count; i++)
+        {
+            TRecord record = records[i];
+
+            RefreshCell(i, record);
+        }
+    }
+
+    public abstract void RefreshCell(int i, TRecord record);
 }

@@ -4,7 +4,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef" MayRequireAnyOf="Ludeon.RimWorld.Biotech,Ludeon.RimWorld.Anomaly">
         <defName>Mech_EMPResistance</defName>
-        <title><Resistance/><Electricity/></title>
+        <labelShort><Resistance/><Electricity/></labelShort>
         <stat>EMPResistance</stat>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>

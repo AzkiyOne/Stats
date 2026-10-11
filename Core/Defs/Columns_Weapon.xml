@@ -4,7 +4,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Weapon_MeleeDPS</defName>
-        <title>DPS</title>
+        <labelShort>DPS</labelShort>
         <stat>MeleeWeapon_AverageDPS</stat>
         <format>
             <pattern>0.00</pattern>
@@ -14,7 +14,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Weapon_MeleeArmorPenetration</defName>
-        <title>AP</title>
+        <labelShort>AP</labelShort>
         <stat>MeleeWeapon_AverageArmorPenetration</stat>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>
@@ -26,7 +26,7 @@
         <defName>Weapon_ProjectileDamage</defName>
         <labelKey>Damage</labelKey>
         <descriptionKey>Stat_Thing_Damage_Desc</descriptionKey>
-        <title><Projectile/><RangedWeaponDamage/></title>
+        <labelShort><Projectile/><RangedWeaponDamage/></labelShort>
         <columnClass>Stats.Columns.RangedWeaponDef.ProjectileDamageColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -34,14 +34,14 @@
         <defName>Weapon_ProjectileStoppingPower</defName>
         <labelKey>StoppingPower</labelKey>
         <descriptionKey>StoppingPowerExplanation</descriptionKey>
-        <title><Projectile/><StoppingPower/></title>
+        <labelShort><Projectile/><StoppingPower/></labelShort>
         <columnClass>Stats.Columns.RangedWeaponDef.ProjectileStoppingPowerColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Weapon_ProjectileArmorPenetration</defName>
         <labelKey>ArmorPenetration</labelKey>
-        <title><Projectile/>AP</title>
+        <labelShort><Projectile/>AP</labelShort>
         <descriptionKey>ArmorPenetrationExplanation</descriptionKey>
         <columnClass>Stats.Columns.RangedWeaponDef.ProjectileArmorPenetrationColumn`1</columnClass>
     </Stats.ColumnDef>
@@ -50,7 +50,7 @@
         <defName>Weapon_RPM</defName>
         <labelKey>BurstShotFireRate</labelKey>
         <descriptionKey>Stat_Thing_Weapon_BurstShotFireRate_Desc</descriptionKey>
-        <title>RPM</title>
+        <labelShort>RPM</labelShort>
         <columnClass>Stats.Columns.RangedWeaponDef.RPMColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -58,7 +58,7 @@
         <defName>Weapon_BurstShotCount</defName>
         <labelKey>BurstShotCount</labelKey>
         <descriptionKey>Stat_Thing_Weapon_BurstShotCount_Desc</descriptionKey>
-        <title><Shoot/><Projectile/></title>
+        <labelShort><Shoot/><Projectile/></labelShort>
         <columnClass>Stats.Columns.RangedWeaponDef.BurstShotCountColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -71,7 +71,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Weapon_RangedAccuracyTouch</defName>
-        <title><Accuracy/>3</title>
+        <labelShort><Accuracy/>3</labelShort>
         <stat>AccuracyTouch</stat>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>
@@ -81,7 +81,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Weapon_RangedAccuracyShort</defName>
-        <title><Accuracy/>12</title>
+        <labelShort><Accuracy/>12</labelShort>
         <stat>AccuracyShort</stat>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>
@@ -91,7 +91,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Weapon_RangedAccuracyMedium</defName>
-        <title><Accuracy/>25</title>
+        <labelShort><Accuracy/>25</labelShort>
         <stat>AccuracyMedium</stat>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>
@@ -101,7 +101,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Weapon_RangedAccuracyLong</defName>
-        <title><Accuracy/>40</title>
+        <labelShort><Accuracy/>40</labelShort>
         <stat>AccuracyLong</stat>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>
@@ -111,7 +111,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Weapon_RangedCooldown</defName>
-        <title><Shoot/><TimeInterval/></title>
+        <labelShort><Shoot/><TimeInterval/></labelShort>
         <stat>RangedWeapon_Cooldown</stat>
         <format>
             <pattern>0.00 {LetterSecond}</pattern>
@@ -123,7 +123,7 @@
         <defName>Weapon_RangedAimingTime</defName>
         <labelKey>RangedWarmupTime</labelKey>
         <descriptionKey>Stat_Thing_Weapon_RangedWarmupTime_Desc</descriptionKey>
-        <title><Time/><DirectHit/></title>
+        <labelShort><Time/><DirectHit/></labelShort>
         <columnClass>Stats.Columns.RangedWeaponDef.AimingTimeColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -131,7 +131,7 @@
         <defName>Weapon_ProjectileBuildingDamageFactorPassable</defName>
         <labelKey>BuildingDamageFactorPassable</labelKey>
         <descriptionKey>BuildingDamageFactorPassableExplanation</descriptionKey>
-        <title><Projectile/><RangedWeaponDamage/><BuildingPassable/></title>
+        <labelShort><Projectile/><RangedWeaponDamage/><BuildingPassable/></labelShort>
         <columnClass>Stats.Columns.RangedWeaponDef.ProjectileBDFPassableColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -139,7 +139,7 @@
         <defName>Weapon_ProjectileBuildingDamageFactorImpassable</defName>
         <labelKey>BuildingDamageFactorImpassable</labelKey>
         <descriptionKey>BuildingDamageFactorImpassableExplanation</descriptionKey>
-        <title><Projectile/><RangedWeaponDamage/><BuildingImpassable/></title>
+        <labelShort><Projectile/><RangedWeaponDamage/><BuildingImpassable/></labelShort>
         <columnClass>Stats.Columns.RangedWeaponDef.ProjectileBDFImpassableColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -147,14 +147,14 @@
         <defName>Weapon_RangedDirectHitChance</defName>
         <labelKey>DirectHitChance</labelKey>
         <descriptionKey>Stat_Thing_Weapon_DirectHitChance_Desc</descriptionKey>
-        <title>%<DirectHit/></title>
+        <labelShort>%<DirectHit/></labelShort>
         <columnClass>Stats.Columns.RangedWeaponDef.DirectHitChanceColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Weapon_RangedMissRadius</defName>
         <labelKey>MissRadius</labelKey>
-        <title>MR</title>
+        <labelShort>MR</labelShort>
         <descriptionKey>Stat_Thing_Weapon_MissRadius_Desc</descriptionKey>
         <columnClass>Stats.Columns.RangedWeaponDef.MissRadiusColumn`1</columnClass>
     </Stats.ColumnDef>

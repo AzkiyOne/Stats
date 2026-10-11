@@ -4,21 +4,21 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Pawn_MeatAmount</defName>
-        <title><Slaughter/><Meat/></title>
+        <labelShort><Slaughter/><Meat/></labelShort>
         <stat>MeatAmount</stat>
         <columnClass>Stats.Columns.PawnDef.MeatAmountColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Pawn_LeatherAmount</defName>
-        <title><Slaughter/><Leather/></title>
+        <labelShort><Slaughter/><Leather/></labelShort>
         <stat>LeatherAmount</stat>
         <columnClass>Stats.Columns.PawnDef.LeatherAmountColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Pawn_ToxicResistance</defName>
-        <title><Resistance/><Toxic/></title>
+        <labelShort><Resistance/><Toxic/></labelShort>
         <stat>ToxicResistance</stat>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>
@@ -28,7 +28,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Pawn_ToxicEnvironmentResistance</defName>
-        <title><Resistance/><ToxicEnvironment/></title>
+        <labelShort><Resistance/><ToxicEnvironment/></labelShort>
         <stat>ToxicEnvironmentResistance</stat>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>
@@ -38,7 +38,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Pawn_MaxNutrition</defName>
-        <title><Nutrition/><Decrease/></title>
+        <labelShort><Nutrition/><Decrease/></labelShort>
         <stat>MaxNutrition</stat>
         <format>
             <pattern>0.00</pattern>
@@ -48,7 +48,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Pawn_MoveSpeed</defName>
-        <title><MoveSpeed/></title>
+        <labelShort><MoveSpeed/></labelShort>
         <stat>MoveSpeed</stat>
         <format>
             <pattern>0 c/{LetterSecond}</pattern>
@@ -58,7 +58,7 @@
     
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Pawn_ComfyTemperatureMin</defName>
-        <title><Temp_Cold/></title>
+        <labelShort><Temp_Cold/></labelShort>
         <stat>ComfyTemperatureMin</stat>
         <format>
             <formatClass>Stats.NumberFormats.Temperature</formatClass>
@@ -68,7 +68,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Pawn_ComfyTemperatureMax</defName>
-        <title><Temp_Hot/></title>
+        <labelShort><Temp_Hot/></labelShort>
         <stat>ComfyTemperatureMax</stat>
         <format>
             <formatClass>Stats.NumberFormats.Temperature</formatClass>
@@ -80,13 +80,13 @@
         <defName>Pawn_LifeExpectancy</defName>
         <labelKey>StatsReport_LifeExpectancy</labelKey>
         <descriptionKey>Stat_Race_LifeExpectancy_Desc</descriptionKey>
-        <title><Time/>Life</title>
+        <labelShort><Time/>Life</labelShort>
         <columnClass>Stats.Columns.PawnDef.LifeExpectancyColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Pawn_ShootingAccuracy</defName>
-        <title><Accuracy/><Shoot/></title>
+        <labelShort><Accuracy/><Shoot/></labelShort>
         <stat>ShootingAccuracyPawn</stat>
         <format>
             <pattern>0.0</pattern>
@@ -97,7 +97,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Pawn_AimingTime</defName>
-        <title><Time/><DirectHit/></title>
+        <labelShort><Time/><DirectHit/></labelShort>
         <stat>AimingDelayFactor</stat>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>
@@ -108,7 +108,7 @@
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Pawn_MeleeDodgeChance</defName>
         <stat>MeleeDodgeChance</stat>
-        <title>Dodge %</title>
+        <labelShort>Dodge %</labelShort>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>
         </format>
@@ -127,7 +127,7 @@
     <Stats.ColumnDef>
         <defName>Pawn_CaravanCarryingCapacity</defName>
         <label>caravan carrying capacity</label>
-        <title><Caravan/>kg</title>
+        <labelShort><Caravan/>kg</labelShort>
         <columnClass>Stats.Columns.PawnDef.CaravanCarryingCapacityColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -135,7 +135,7 @@
         <defName>Pawn_Weapons</defName>
         <label>Weapons</label>
         <description>Possible weapons that this creature can spawn with.</description>
-        <title><RangedWeapon/></title>
+        <labelShort><RangedWeapon/></labelShort>
         <columnClass>Stats.Columns.PawnDef.WeaponsColumn`1</columnClass>
     </Stats.ColumnDef>
 

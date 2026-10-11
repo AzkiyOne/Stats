@@ -9,7 +9,7 @@ using Style = Stats.GUIStyles.TableToolbar;
 
 namespace Stats.Widgets;
 
-public sealed partial class Table<TRecord>
+public sealed partial class Table
 {
     private sealed class Toolbar
     {
@@ -131,13 +131,9 @@ public sealed partial class Table<TRecord>
 
         private sealed class ColumnsFloatMenuOption : FloatMenuOption
         {
-            public ColumnsFloatMenuOption(ColumnWidget column)
-                : base(column.Def.LabelCap, null, Verse.Widgets.CheckboxOnTex, Color.white)
+            public ColumnsFloatMenuOption(ColumnWidget column) : base(column.Label, null, Verse.Widgets.CheckboxOnTex, Color.white)
             {
-                ColumnDef columnDef = column.Def;
-                Widget columnLabelWidget = columnDef.LabelWidget;
-
-                tooltip = columnDef.description;
+                tooltip = column.Description;
                 action = () =>
                 {
                     column.IsHidden = !column.IsHidden;
@@ -148,16 +144,18 @@ public sealed partial class Table<TRecord>
                     Unselect(column);
                 }
 
-                if (columnDef.title != null)
+                Widget? columnLabelShort = column.LabelShort;
+
+                if (columnLabelShort != null)
                 {
                     extraPartOnGUI = rect =>
                     {
-                        rect = rect.ContractedBy(0f, (rect.height - columnLabelWidget.Size.y) / 2f);
-                        columnLabelWidget.Draw(rect);
+                        rect = rect.ContractedBy(0f, (rect.height - columnLabelShort.Size.y) / 2f);
+                        columnLabelShort.Draw(rect);
 
                         return false;
                     };
-                    extraPartWidth = columnLabelWidget.Size.x + GUIStyles.Global.PadSm;
+                    extraPartWidth = columnLabelShort.Size.x + GUIStyles.Global.PadSm;
                     extraPartRightJustified = true;
                 }
 

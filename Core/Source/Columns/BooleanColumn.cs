@@ -37,16 +37,11 @@ public abstract class BooleanColumn<TRecord> : Column<TRecord>
         _cellValue.Add(value);
     }
 
-    public override void Refresh(int i, TRecord record)
+    public override void RefreshCell(int i, TRecord record)
     {
         bool value = GetValueFromRecord(record);
 
         _cellValue[i] = value;
-    }
-
-    public override void Swap(int i1, int i2)
-    {
-        _cellValue.Swap(i1, i2);
     }
 
     public override void Replace(int i1, int i2)

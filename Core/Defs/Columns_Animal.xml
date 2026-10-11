@@ -5,14 +5,14 @@
     <Stats.ColumnDef>
         <defName>Animal_MeatNutritionPerDay</defName>
         <label>Meat nutrition per day during growth</label>
-        <title><Nutrition/><Meat/><Per/>D</title>
+        <labelShort><Nutrition/><Meat/><Per/>D</labelShort>
         <columnClass>Stats.Columns.AnimalDef.MeatNutritionPerDayColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Animal_LeatherPerDay</defName>
         <label>Leather per day</label>
-        <title><Leather/><Per/>D</title>
+        <labelShort><Leather/><Per/>D</labelShort>
         <columnClass>Stats.Columns.AnimalDef.LeatherPerDayColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -20,7 +20,7 @@
         <defName>Animal_MilkAmount</defName>
         <labelKey>Stat_Animal_MilkAmount</labelKey>
         <descriptionKey>Stat_Animal_MilkAmountDesc</descriptionKey>
-        <title><CollectAnimalProducts/><Milk/></title>
+        <labelShort><CollectAnimalProducts/><Milk/></labelShort>
         <columnClass>Stats.Columns.MilkableDef.MilkAmountColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -28,49 +28,49 @@
         <defName>Animal_MilkingInterval</defName>
         <labelKey>Stat_Animal_MilkGrowthTime</labelKey>
         <descriptionKey>Stat_Animal_MilkGrowthTimeDesc</descriptionKey>
-        <title><TimeInterval/><Milk/></title>
+        <labelShort><TimeInterval/><Milk/></labelShort>
         <columnClass>Stats.Columns.MilkableDef.MilkingIntervalColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Animal_MilkPerDay</defName>
         <label>Milk per day</label>
-        <title><Milk/><Per/>D</title>
+        <labelShort><Milk/><Per/>D</labelShort>
         <columnClass>Stats.Columns.MilkableDef.MilkPerDayColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Animal_MilkNutritionPerDay</defName>
         <label>Milk nutrition per day</label>
-        <title><Nutrition/><Milk/><Per/>D</title>
+        <labelShort><Nutrition/><Milk/><Per/>D</labelShort>
         <columnClass>Stats.Columns.MilkableDef.MilkNutritionPerDayColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Animal_EggsAmount</defName>
         <label>Average eggs amount</label>
-        <title><CollectAnimalProducts/><Egg/></title>
+        <labelShort><CollectAnimalProducts/><Egg/></labelShort>
         <columnClass>Stats.Columns.EggLayerDef.EggsAmountColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Animal_EggLayingInterval</defName>
         <label>Egg laying interval</label>
-        <title><TimeInterval/><Egg/></title>
+        <labelShort><TimeInterval/><Egg/></labelShort>
         <columnClass>Stats.Columns.EggLayerDef.EggLayingIntervalColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Animal_EggsPerDay</defName>
         <label>Eggs per day</label>
-        <title><Egg/><Per/>D</title>
+        <labelShort><Egg/><Per/>D</labelShort>
         <columnClass>Stats.Columns.EggLayerDef.EggsPerDayColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Animal_EggsNutritionPerDay</defName>
         <label>Eggs nutrition per day</label>
-        <title><Nutrition/><Egg/><Per/>D</title>
+        <labelShort><Nutrition/><Egg/><Per/>D</labelShort>
         <columnClass>Stats.Columns.EggLayerDef.EggsNutritionPerDayColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -78,7 +78,7 @@
         <defName>Animal_WoolAmount</defName>
         <labelKey>Stat_Animal_WoolAmount</labelKey>
         <descriptionKey>Stat_Animal_WoolAmountDesc</descriptionKey>
-        <title><CollectAnimalProducts/><Wool/></title>
+        <labelShort><CollectAnimalProducts/><Wool/></labelShort>
         <columnClass>Stats.Columns.ShearableDef.WoolAmountColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -86,14 +86,14 @@
         <defName>Animal_WoolShearingInterval</defName>
         <labelKey>Stat_Animal_WoolGrowthTime</labelKey>
         <descriptionKey>Stat_Animal_WoolGrowthTimeDesc</descriptionKey>
-        <title><TimeInterval/><Wool/></title>
+        <labelShort><TimeInterval/><Wool/></labelShort>
         <columnClass>Stats.Columns.ShearableDef.ShearingIntervalColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Animal_WoolPerDay</defName>
         <label>Wool per day</label>
-        <title><Wool/><Per/>D</title>
+        <labelShort><Wool/><Per/>D</labelShort>
         <columnClass>Stats.Columns.ShearableDef.WoolPerDayColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -101,13 +101,13 @@
         <defName>Animal_IsPackAnimal</defName>
         <labelKey>PackAnimal</labelKey>
         <descriptionKey>PackAnimalExplanation</descriptionKey>
-        <title><Caravan/></title>
+        <labelShort><Caravan/></labelShort>
         <columnClass>Stats.Columns.AnimalDef.IsPackAnimalColumn`1</columnClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Animal_CaravanRidingSpeedFactor</defName>
-        <title><Caravan/><MoveSpeed/></title>
+        <labelShort><Caravan/><MoveSpeed/></labelShort>
         <stat>CaravanRidingSpeedFactor</stat>
         <format>
             <formatClass>Stats.NumberFormats.Percent</formatClass>
@@ -117,7 +117,7 @@
 
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Animal_MinimumHandlingSkill</defName>
-        <title>LVL<AnimalHandling/></title>
+        <labelShort>LVL<AnimalHandling/></labelShort>
         <stat>MinimumHandlingSkill</stat>
         <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
     </Stats.ColumnDef>
@@ -135,7 +135,7 @@
         <defName>Animal_IsBlockedByFences</defName>
         <labelKey>StatsReport_BlockedByFences</labelKey>
         <descriptionKey>Stat_Race_BlockedByFences_Desc</descriptionKey>
-        <title><Fence/></title>
+        <labelShort><Fence/></labelShort>
         <columnClass>Stats.Columns.AnimalDef.IsBlockedByFencesColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -143,7 +143,7 @@
         <defName>Animal_NuzzleInterval</defName>
         <labelKey>NuzzleInterval</labelKey>
         <descriptionKey>NuzzleIntervalExplanation</descriptionKey>
-        <title><TimeInterval/><Nuzzle/></title>
+        <labelShort><TimeInterval/><Nuzzle/></labelShort>
         <columnClass>Stats.Columns.AnimalDef.NuzzleIntervalColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -158,7 +158,7 @@
         <defName>Animal_GestationTime</defName>
         <labelKey>Stat_Animal_GestationTime</labelKey>
         <descriptionKey>Stat_Animal_GestationTimeDesc</descriptionKey>
-        <title><Time/>Gestation</title>
+        <labelShort><Time/>Gestation</labelShort>
         <columnClass>Stats.Columns.AnimalDef.GestationTimeColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -166,7 +166,7 @@
         <defName>Animal_GrowthTime</defName>
         <labelKey>Stat_Animal_GrowthTime</labelKey>
         <descriptionKey>Stat_Animal_GrowthTimeDesc</descriptionKey>
-        <title><Time/>Growth</title>
+        <labelShort><Time/>Growth</labelShort>
         <columnClass>Stats.Columns.AnimalDef.GrowthTimeColumn`1</columnClass>
     </Stats.ColumnDef>
 
@@ -179,7 +179,7 @@
     <Stats.ColumnDef>
         <defName>Animal_ProductsNutritionPerDay</defName>
         <label>products nutrition per day</label>
-        <title><Nutrition/>(<Milk/>+<Egg/>)<Per/>D</title>
+        <labelShort><Nutrition/>(<Milk/>+<Egg/>)<Per/>D</labelShort>
         <columnClass>Stats.Columns.AnimalDef.ProductsNutritionPerDayColumn`1</columnClass>
     </Stats.ColumnDef>
 

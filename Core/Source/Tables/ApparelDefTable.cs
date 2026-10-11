@@ -1,32 +1,17 @@
-﻿using System.Collections.Generic;
-using Stats.TableRecords;
-using Stats.Widgets;
-using Verse;
+﻿using Verse;
 
 namespace Stats.Tables;
 
 // We do not check for "destroyOnDrop" for better compatibility with mods like
 // VFE - Pirates.
-public sealed class ApparelDefTable : Tab
+public sealed class ApparelDefTable : ThingDefTableWorker
 {
-    private static readonly List<ThingDefTableRecord> _records;
-    private static readonly List<ThingDef> _thingDefs;
-
-    static ApparelDefTable()
-    {
-        ThingDefTableUtils.GetThingDefRecordsStuffed(
-            thingDef => thingDef.apparel != null,
-            out List<ThingDefTableRecord> records,
-            out List<ThingDef> thingDefs);
-
-        _records = records;
-        _thingDefs = thingDefs;
-    }
-
     public ApparelDefTable(TableDef def) : base(def)
     {
-        Widget = new Table<ThingDefTableRecord>(def, _records, [_thingDefs]);
     }
 
-    protected override TabBodyWidget Widget { get; }
+    protected override bool IsValidThingDef(ThingDef thingDef)
+    {
+        return thingDef.apparel != null;
+    }
 }
