@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Stats.Columns;
 using Stats.Extensions;
 using Stats.Widgets.Filters;
@@ -18,41 +19,72 @@ public sealed partial class Table
 
         if (filtersCount > 0)
         {
-            ClearBottomRows();
+            _bottomRows.Clear();
 
             bool mode = _filtersTab.Mode;
+            Span<int> topRows = stackalloc int[_topRows.Count];
+            _topRows.CopyTo(topRows);
 
-            for (int r = _topRowsCount; r < _records.Count; r++)
+            for (int r = 0; r < _recordsCount; r++)
             {
-                bool recordFitsQuery = !mode;
-
-                for (int f = 0; f < filtersCount; f++)
+                if (topRows.IndexOf(r) < 0)
                 {
-                    Filter filter = filters[f];
+                    bool recordFitsQuery = FilterRecord(r, filters, mode);
 
-                    if (filter.Eval(r) == mode)
+                    if (recordFitsQuery)
                     {
-                        recordFitsQuery = mode;
-
-                        break;
+                        _bottomRows.Add(r);
                     }
                 }
+            }
+        }
+        else if (RowsCount != _recordsCount)
+        {
+            _bottomRows.Clear();
 
-                if (recordFitsQuery)
+            Span<int> topRows = stackalloc int[_topRows.Count];
+            _topRows.CopyTo(topRows);
+
+            for (int i = 0; i < _recordsCount; i++)
+            {
+                if (topRows.IndexOf(i) < 0)
                 {
-                    _rows.Add(r);
+                    _bottomRows.Add(i);
                 }
             }
         }
-        else if (_rows.Count != _records.Count)
-        {
-            ClearBottomRows();
+    }
 
-            for (int i = _topRowsCount; i < _records.Count; i++)
+    private bool FilterRecord(int r)
+    {
+        List<Filter> filters = _filtersTab.ActiveFilters;
+
+        if (filters.Count > 0)
+        {
+            return FilterRecord(r, filters, _filtersTab.Mode);
+        }
+
+        return true;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private bool FilterRecord(int r, List<Filter> filters, bool mode)
+    {
+        bool recordFitsQuery = !mode;
+
+        for (int f = 0; f < filters.Count; f++)
+        {
+            Filter filter = filters[f];
+
+            if (filter.Eval(r) == mode)
             {
-                _rows.Add(i);
+                recordFitsQuery = mode;
+
+                break;
             }
         }
+
+        return recordFitsQuery;
     }
 
     private sealed class FiltersTab

@@ -161,6 +161,8 @@ public sealed partial class Table
                 new FloatMenuOption("Hide", () => IsHidden = true, TexButton.Suspend, Color.white)
             ]);
 
+            // TODO: The issue with this approach is that if a column is cached
+            // each table where it is used will schedule it for refreshing.
             column.OnRefreshOnce += HandleColumnRefreshOnce;
         }
 
@@ -207,7 +209,7 @@ public sealed partial class Table
 
         public ICollection<ColumnFilterOption> FilterOptions => _body.FilterOptions;
 
-        public void Draw(Rect rect, List<int> rows, Span<int> topRows, Span<int> visibleBottomRows, float bottomRowsY, DragManager<ColumnWidget> dragManager)
+        public void Draw(Rect rect, GUIListSegment<int> topRows, GUIListSegment<int> bottomRows, DragManager<ColumnWidget> dragManager)
         {
             float topRowsHeight = topRows.Length * RowHeight;
 
@@ -228,11 +230,11 @@ public sealed partial class Table
                 }
             }
 
-            if (visibleBottomRows.Length > 0)
+            if (bottomRows.Length > 0)
             {
-                using (new GUIClipScope(bottomRowsRect, new Vector2(0f, bottomRowsY)))
+                using (new GUIClipScope(bottomRowsRect, new Vector2(0f, bottomRows.AxisStart)))
                 {
-                    DrawBody(bottomRowsRect with { x = 0f, y = 0f }, visibleBottomRows);
+                    DrawBody(bottomRowsRect with { x = 0f, y = 0f }, bottomRows);
                 }
             }
 
@@ -242,7 +244,7 @@ public sealed partial class Table
 
                 try
                 {
-                    maxBodyCellWidth = _body.GetMaxCellWidth(rows);
+                    maxBodyCellWidth = Mathf.Max(_body.GetMaxCellWidth(topRows.List), _body.GetMaxCellWidth(bottomRows.List));
                 }
                 catch (Exception e)
                 {
@@ -253,16 +255,15 @@ public sealed partial class Table
             }
         }
 
-        private void DrawBody(Rect rect, Span<int> rows)
+        private void DrawBody(Rect rect, GUIListSegment<int> rows)
         {
             Rect cellRect = rect with { height = RowHeight };
-            int rowsCount = rows.Length;
 
-            for (int i = 0; i < rowsCount; i++)
+            for (int i = rows.Start; i < rows.End; i++)
             {
                 try
                 {
-                    _body.DrawCell(cellRect, rows[i]);
+                    _body.DrawCell(cellRect, rows.List[i]);
                 }
                 catch (Exception e)
                 {

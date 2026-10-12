@@ -13,7 +13,9 @@ public class TableDef : TabDef
 
 public class TableColumnListItem
 {
+#pragma warning disable CS8618
     public ColumnDef columnDef;
+#pragma warning restore CS8618
     public bool isPrimary;
 
     public void LoadDataFromXmlCustom(XmlNode xmlRoot)

@@ -10,10 +10,13 @@ public class TabDef : Def
     public Color iconColor = Color.white;
     public float iconScale = 1f;
 #pragma warning disable CS8618
-    public Type widgetClass;
+    public Type workerClass;
 #pragma warning restore CS8618
 
-    public TabWorker Worker => field ??= (TabWorker)Activator.CreateInstance(widgetClass, this);
+    // TODO: We need this instance to exist only if someone uses it.
+    // Note: Weak reference will not do it, because a worker may subscribe to some
+    // global event and that delegate will hold a strong reference to it indefinitely.
+    public TabWorker Worker => field ??= (TabWorker)Activator.CreateInstance(workerClass, this);
 
     public Texture2D Icon { get; private set; } = BaseContent.BadTex;
 

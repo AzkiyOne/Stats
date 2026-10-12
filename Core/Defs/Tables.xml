@@ -7,7 +7,7 @@
         <label>Weapons / Ranged</label>
         <iconPath>Things/Item/Equipment/WeaponRanged/Revolver</iconPath>
         <iconScale>1.5</iconScale>
-        <widgetClass>Stats.Tables.RangedWeaponDefTable</widgetClass>
+        <workerClass>Stats.Tables.RangedWeaponDefTable</workerClass>
         <columns>
             <li IsPrimary="true">Thing_Label</li>
             <li IsPrimary="true" MayRequire="CETeam.CombatExtended">Weapon_Caliber</li>
@@ -54,7 +54,7 @@
         <label>Weapons / Melee</label>
         <iconPath>Things/Item/Equipment/WeaponMelee/Club</iconPath>
         <iconColor>(105,95,97)</iconColor>
-        <widgetClass>Stats.Tables.MeleeWeaponDefTable</widgetClass>
+        <workerClass>Stats.Tables.MeleeWeaponDefTable</workerClass>
         <columns>
             <li IsPrimary="true">Thing_Label</li>
             <li IsPrimary="true" MayRequire="CETeam.CombatExtended">Weapon_MeleeDamageMin</li>
@@ -82,7 +82,7 @@
         <label>Apparel</label>
         <iconPath>Things/Pawn/Humanlike/Apparel/Duster/Duster</iconPath>
         <iconColor>(112,82,65)</iconColor>
-        <widgetClass>Stats.Tables.ApparelDefTable</widgetClass>
+        <workerClass>Stats.Tables.ApparelDefTable</workerClass>
         <columns>
             <li IsPrimary="true">Thing_Label</li>
             <li IsPrimary="true">Thing_ArmorRatingSharp</li>
@@ -116,7 +116,7 @@
         <defName>PowerGenerators</defName>
         <label>Buildings / Power / Generators</label>
         <iconPath>Things/Building/Power/ChemfuelPoweredGenerator</iconPath>
-        <widgetClass>Stats.Tables.PowerGeneratorDefTable</widgetClass>
+        <workerClass>Stats.Tables.PowerGeneratorDefTable</workerClass>
         <columns>
             <li IsPrimary="true">Thing_Label</li>
             <li IsPrimary="true">Building_PowerOutput</li>
@@ -143,7 +143,7 @@
         <label>Buildings / Recreation</label>
         <iconPath>Things/Building/Joy/BilliardsTable_east</iconPath>
         <iconColor>(133,97,67)</iconColor>
-        <widgetClass>Stats.Tables.RecreationalBuildingDefTable</widgetClass>
+        <workerClass>Stats.Tables.RecreationalBuildingDefTable</workerClass>
         <columns>
             <li IsPrimary="true">Thing_Label</li>
             <li IsPrimary="true">Building_JoyGainFactor</li>
@@ -167,7 +167,7 @@
         <label>Buildings / Furniture / Beds</label>
         <iconPath>Things/Building/Furniture/Bed/Bed_south</iconPath>
         <iconColor>(133,97,67)</iconColor>
-        <widgetClass>Stats.Tables.BedDefTable</widgetClass>
+        <workerClass>Stats.Tables.BedDefTable</workerClass>
         <columns>
             <li IsPrimary="true">Thing_Label</li>
             <li IsPrimary="true">Building_Comfort</li>
@@ -196,7 +196,7 @@
         <label>Buildings / Furniture / Chairs</label>
         <iconPath>Things/Building/Furniture/DiningChair_south</iconPath>
         <iconColor>(133,97,67)</iconColor>
-        <widgetClass>Stats.Tables.ChairDefTable</widgetClass>
+        <workerClass>Stats.Tables.ChairDefTable</workerClass>
         <columns>
             <li IsPrimary="true">Thing_Label</li>
             <li IsPrimary="true">Building_Comfort</li>
@@ -219,7 +219,7 @@
         <label>Buildings / Art</label>
         <iconPath>StatsMod/UI/Icons/Art</iconPath>
         <iconColor>(132,135,132)</iconColor>
-        <widgetClass>Stats.Tables.ArtBuildingDefTable</widgetClass>
+        <workerClass>Stats.Tables.ArtBuildingDefTable</workerClass>
         <columns>
             <li IsPrimary="true">Thing_Label</li>
             <li IsPrimary="true">Thing_Beauty</li>
@@ -240,7 +240,7 @@
         <defName>Plants</defName>
         <label>Plants</label>
         <iconPath>Things/Plant/CottonPlant/CottonPlantA</iconPath>
-        <widgetClass>Stats.Tables.PlantDefTable</widgetClass>
+        <workerClass>Stats.Tables.PlantDefTable</workerClass>
         <columns>
             <li IsPrimary="true">Thing_Label</li>
             <li IsPrimary="true">Plant_MinGrowingSkillToSow</li>
@@ -273,7 +273,7 @@
         <label>Creatures / Animals</label>
         <iconPath>Things/Pawn/Animal/Thrumbo/Thrumbo_east</iconPath>
         <iconScale>1.2</iconScale>
-        <widgetClass>Stats.Tables.AnimalDefTable</widgetClass>
+        <workerClass>Stats.Tables.AnimalDefTable</workerClass>
         <columns>
             <li IsPrimary="true">Thing_Label</li>
             <!-- <li IsPrimary="true">Animal_Biomes</li> -->
@@ -331,7 +331,7 @@
         <defName>Mechanoids</defName>
         <label>Creatures / Mechanoids</label>
         <iconPath>Things/Pawn/Mechanoid/Centipede_east</iconPath>
-        <widgetClass>Stats.Tables.MechanoidDefTable</widgetClass>
+        <workerClass>Stats.Tables.MechanoidDefTable</workerClass>
         <columns>
             <li IsPrimary="true">Thing_Label</li>
             <!-- General -->
@@ -373,7 +373,7 @@
         <defName>Turrets</defName>
         <label>Buildings / Turrets</label>
         <iconPath>Things/Building/Security/TurretMini_MenuIcon</iconPath>
-        <widgetClass>Stats.Tables.TurretDefTable</widgetClass>
+        <workerClass>Stats.Tables.TurretDefTable</workerClass>
         <columns>
             <li IsPrimary="true">Thing_Label</li>
             <li IsPrimary="true" MayRequire="CETeam.CombatExtended">Weapon_Caliber</li>

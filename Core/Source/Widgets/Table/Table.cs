@@ -27,9 +27,10 @@ public sealed partial class Table : IDrawable, ISuspendable, IDisposable
     // Why is this called "rows"?
     // Think of it as a list of "Row" objects with a single field - "tableRecordId" ("Id" being an "InDex").
     // Storing just id's as ints is a little bit more efficient.
-    private readonly List<int> _rows;
-    private int _topRowsCount;
-    private int BottomRowsCount => _rows.Count - _topRowsCount;
+    private readonly List<int> _topRows;
+    private readonly List<int> _bottomRows;
+    private int RowsCount => _topRows.Count + _bottomRows.Count;
+    private int _recordsCount;
 
     // Columns
     private readonly List<ColumnWidget> _columns;
@@ -51,7 +52,7 @@ public sealed partial class Table : IDrawable, ISuspendable, IDisposable
     // A way to defer any code that would otherwise modify
     // the collection that is currently being iterated over.
     // Primarily GUI event handlers.
-    private Action? _beforeDraw;
+    private Action? _postDraw;
     private bool _rightPartIsPanned;
 
     // Toolbar
@@ -81,9 +82,9 @@ public sealed partial class Table : IDrawable, ISuspendable, IDisposable
         // Misc
         HorDragManager<ColumnWidget> dragManager = new();
         dragManager.OnDragBefore += (ColumnWidget draggedColumn, ColumnWidget column) =>
-            _beforeDraw ??= () => HandleColumnDrag(draggedColumn, column, true);
+            _postDraw ??= () => HandleColumnDrag(draggedColumn, column, true);
         dragManager.OnDragAfter += (ColumnWidget draggedColumn, ColumnWidget column) =>
-            _beforeDraw ??= () => HandleColumnDrag(draggedColumn, column, false);
+            _postDraw ??= () => HandleColumnDrag(draggedColumn, column, false);
 
         // Toolbar
         Toolbar toolbar = new(columnWidgets);
@@ -94,10 +95,12 @@ public sealed partial class Table : IDrawable, ISuspendable, IDisposable
         filtersTab.OnChange += () => _doFilter = true;
 
         // Finalize
-        _rows = [.. Enumerable.Range(0, recordsCount)];
+        _recordsCount = recordsCount;
+        _topRows = new List<int>(10);
+        _bottomRows = [.. Enumerable.Range(0, recordsCount)];
         _columns = columnWidgets;
         _columnsToRefresh = new Queue<ColumnWidget>(columns.Count);
-        _columnsToQueueOnNextCycle = new();
+        _columnsToQueueOnNextCycle = new HashSet<ColumnWidget>();
         if (columns.Count > 0)
         {
             _leftColumnsCount = 1;
@@ -106,6 +109,21 @@ public sealed partial class Table : IDrawable, ISuspendable, IDisposable
         _toolbar = toolbar;
         _dragManager = dragManager;
         _filtersTab = filtersTab;
+    }
+
+    public void Add()
+    {
+        // TODO
+    }
+
+    // Although we'll probably need only one index,
+    // we define this method instead of simple Remove(int i)
+    // to remember that removed record is swapped with
+    // the last one and then it gets removed instead
+    // (because it is faster that way).
+    public void Replace(int i1, int i2)
+    {
+        // TODO
     }
 
     public void Resume()
@@ -132,24 +150,6 @@ public sealed partial class Table : IDrawable, ISuspendable, IDisposable
             column.Dispose();
         }
     }
-
-    //[MethodImpl(MethodImplOptions.NoInlining)]
-    //private static void LogUnableToInitColumn(Exception e, ColumnDef columnDef, TableDef def)
-    //{
-    //    Log.Error($"Unable to initialize column \"{columnDef.defName}\" of table \"{def.defName}\": {e.Message}");
-    //}
-
-    //[MethodImpl(MethodImplOptions.NoInlining)]
-    //private void LogUnableToAddRecordToColumn(Exception e, TRecord record, ColumnWidget column)
-    //{
-    //    Log.Error($"Unable to add record \"{record}\" to \"{column.Def.defName}\" column of table \"{_def.defName}\": {e.Message}");
-    //}
-
-    //[MethodImpl(MethodImplOptions.NoInlining)]
-    //private void LogUnableToRemoveRecordFromColumn(Exception e, TRecord record, ColumnWidget column)
-    //{
-    //    Log.Error($"Unable to remove record \"{record}\" from \"{column.Def.defName}\" column of table \"{_def.defName}\": {e.Message}");
-    //}
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void LogUnableToRefreshColumn(Exception e, ColumnWidget column)

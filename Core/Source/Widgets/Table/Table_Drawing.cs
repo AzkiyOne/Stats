@@ -11,10 +11,14 @@ public sealed partial class Table
 {
     public void Draw(Rect rect)
     {
-        if (_beforeDraw != null)
+        EventType eventType = Event.current.type;
+
+        if (eventType == EventType.Layout)
         {
-            _beforeDraw.Invoke();
-            _beforeDraw = null;
+            // It is important to run tasks as early as possible,
+            // so filtering can be done before _rows will be read by other code.
+            // For example, by columns, to calculate their width.
+            DoTasks();
         }
 
         // Layout
@@ -52,20 +56,18 @@ public sealed partial class Table
         using (new GUIScrollScope(tableRect, ref _scrollPosition, contentRect)) { }
 
         DrawVisibleContent(viewportRect);
+
+        if (_postDraw != null)
+        {
+            _postDraw.Invoke();
+            _postDraw = null;
+        }
     }
 
     // TODO: We don't need 2 Draw() methods
     private void DrawVisibleContent(Rect rect)
     {
         EventType eventType = Event.current.type;
-
-        if (eventType == EventType.Layout)
-        {
-            // It is important to run tasks as early as possible,
-            // so filtering can be done before _rows will be read by other code.
-            // For example, by columns, to calculate their width.
-            DoTasks();
-        }
 
         // O(1) scroll content culling.
         // Since all rows have constant height, we can calculate:
@@ -74,26 +76,17 @@ public sealed partial class Table
         Vector2 scrollPosition = _scrollPosition;
         float firstVisibleBottomRowY = -scrollPosition.y % RowHeight;
         int scrolledBottomRowsCount = Mathf.FloorToInt(scrollPosition.y / RowHeight);
-        int bottomRowsLeftToScroll = BottomRowsCount - scrolledBottomRowsCount;
+        int bottomRowsLeftToScroll = _bottomRows.Count - scrolledBottomRowsCount;
         float bottomRowsRectHeight = rect.height - HeadersRowHeight - _topRowsHeight;
         int bottomRowsRectRowCapacity = Mathf.CeilToInt(bottomRowsRectHeight / RowHeight);
         int visibleBottomRowsCount = Math.Min(bottomRowsLeftToScroll, bottomRowsRectRowCapacity);
-        // There was a bug where this value was evaluating to negative int which caused CTD when
-        // int[] was being allocated on a stack below.
-        // Although i couldn't reproduce it in recent testing, i'll leave this check just in case.
-        // The math for this value is not very precise (lots of divisions, rounding and float values are involved).
         if (visibleBottomRowsCount < 0)
         {
             visibleBottomRowsCount = 0;
         }
-        int topRowsCount = _topRowsCount;
 
-        int visibleBottomRowsStart = topRowsCount + scrolledBottomRowsCount;
-        Span<int> visibleBottomRows = stackalloc int[visibleBottomRowsCount];
-        _rows.CopyTo(visibleBottomRows, visibleBottomRowsStart);
-
-        Span<int> topRows = stackalloc int[topRowsCount];
-        _rows.CopyTo(topRows);
+        GUIListSegment<int> topRows = new(_topRows);
+        GUIListSegment<int> visibleBottomRows = new(_bottomRows, scrolledBottomRowsCount, visibleBottomRowsCount, firstVisibleBottomRowY);
 
         // Layout
         rect.CutLeft(out Rect leftColumnsRect, _leftColumnsWidth)
@@ -102,12 +95,12 @@ public sealed partial class Table
             .TakeRest(out Rect mouseDragScrollAreaRect);
 
         // Rows
-        DrawRows(rect, visibleBottomRowsStart, visibleBottomRowsCount, firstVisibleBottomRowY);
+        DrawRows(rect, visibleBottomRows);
 
         // Pinned columns
         if (_leftColumnsCount > 0)
         {
-            DrawColumns(leftColumnsRect, Vector2.zero, LeftColumns, topRows, visibleBottomRows, firstVisibleBottomRowY);
+            DrawColumns(leftColumnsRect, Vector2.zero, LeftColumns, topRows, visibleBottomRows);
             // Separator line
             if (eventType == EventType.Repaint)
             {
@@ -120,7 +113,7 @@ public sealed partial class Table
         {
             using (new GUIClipScope(rightColumnsRect, new Vector2(-scrollPosition.x, 0f)))
             {
-                DrawColumns(rightColumnsRect with { x = 0f, y = 0f }, scrollPosition, RightColumns, topRows, visibleBottomRows, firstVisibleBottomRowY);
+                DrawColumns(rightColumnsRect with { x = 0f, y = 0f }, scrollPosition, RightColumns, topRows, visibleBottomRows);
             }
         }
 
@@ -132,7 +125,7 @@ public sealed partial class Table
         }
     }
 
-    private void DrawColumns(Rect rect, Vector2 scrollPosition, ReadOnlyListSegment<ColumnWidget> columns, Span<int> topRows, Span<int> bottomRows, float bottomRowsY)
+    private void DrawColumns(Rect rect, Vector2 scrollPosition, ReadOnlyListSegment<ColumnWidget> columns, GUIListSegment<int> topRows, GUIListSegment<int> bottomRows)
     {
         EventType eventType = Event.current.type;
         float scrollX = scrollPosition.x;
@@ -152,7 +145,7 @@ public sealed partial class Table
 
                 if (columnRectXmax > xMin || eventType == EventType.Layout)
                 {
-                    column.Draw(columnRect, _rows, topRows, bottomRows, bottomRowsY, _dragManager);
+                    column.Draw(columnRect, topRows, bottomRows, _dragManager);
                 }
 
                 if (columnRectXmax > xMax && eventType != EventType.Layout)
@@ -165,7 +158,7 @@ public sealed partial class Table
         }
     }
 
-    private void DrawRows(Rect rect, int bottomRowsStart, int bottomRowsCount, float bottomRowsY)
+    private void DrawRows(Rect rect, GUIListSegment<int> visibleBottomRows)
     {
         bool isRepaint = Event.current.type == EventType.Repaint;
 
@@ -182,7 +175,8 @@ public sealed partial class Table
         }
 
         // Pinned rows
-        int topRowsCount = _topRowsCount;
+        int topRowsCount = _topRows.Count;
+
         if (topRowsCount > 0)
         {
             if (isRepaint)
@@ -192,9 +186,11 @@ public sealed partial class Table
 
             // Rows
             Rect rowRect = topRowsRect with { height = RowHeight };
+
             for (int i = 0; i < topRowsCount; i++)
             {
-                DrawRow(rowRect, i);
+                DrawRow(rowRect, i, true);
+
                 rowRect.y = rowRect.yMax;
             }
         }
@@ -203,16 +199,15 @@ public sealed partial class Table
         // 
         // This part uses manual clipping.
         // Why? Because i can.
-        if (bottomRowsCount > 0)
+        if (visibleBottomRows.Length > 0)
         {
             float rectYmax = rect.yMax;
-            float firstRowHeight = RowHeight + bottomRowsY;
-            int bottomRowsEnd = bottomRowsCount + bottomRowsStart;// Exclusive
+            float firstRowHeight = RowHeight + visibleBottomRows.AxisStart;
             Rect rowRect = bottomRowsRect with { height = firstRowHeight };
 
-            for (int i = bottomRowsStart; i < bottomRowsEnd; i++)
+            for (int i = visibleBottomRows.Start; i < visibleBottomRows.End; i++)
             {
-                DrawRow(rowRect, i);
+                DrawRow(rowRect, i, false);
 
                 rowRect.y = rowRect.yMax;
                 rowRect.height = RowHeight;
@@ -225,7 +220,7 @@ public sealed partial class Table
         }
     }
 
-    private void DrawRow(Rect rect, int index)
+    private void DrawRow(Rect rect, int index, bool isPinned)
     {
         bool mouseIsOverRect = Mouse.IsOver(rect);
         Event @event = Event.current;
@@ -244,7 +239,7 @@ public sealed partial class Table
 
         if (mouseIsOverRect && @event is { type: EventType.MouseUp, button: 0, modifiers: EventModifiers.Control })
         {
-            ToggleRowPin(index);
+            _postDraw = () => ToggleRowPin(index, isPinned);
             GUIUtils.ReleaseMouseControl();
             //@event.Use();
         }

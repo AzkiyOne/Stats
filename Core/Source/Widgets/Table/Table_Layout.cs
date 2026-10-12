@@ -32,8 +32,8 @@ public sealed partial class Table
         }
 
         float contentWidth = leftColumnsWidth + rightColumnsWidth;
-        float topRowsHeight = _topRowsCount * RowHeight;
-        float bottomRowsHeight = BottomRowsCount * RowHeight;
+        float topRowsHeight = _topRows.Count * RowHeight;
+        float bottomRowsHeight = _bottomRows.Count * RowHeight;
         float contentHeight = HeadersRowHeight + topRowsHeight + bottomRowsHeight;
 
         _topRowsHeight = topRowsHeight;

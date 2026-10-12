@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Stats;
 
@@ -20,19 +19,6 @@ internal readonly struct ReadOnlyListSegment<T>
 
     public T this[int index]
     {
-        get
-        {
-            if ((uint)index >= (uint)Length)
-            {
-                throw new ArgumentOutOfRangeException("index");
-            }
-
-            return _list[index + Start];
-        }
-    }
-
-    public ReadOnlyListSegment<T> Slice(int start, int length)
-    {
-        return new ReadOnlyListSegment<T>(_list, Start + start, length);
+        get => _list[index + Start];
     }
 }

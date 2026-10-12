@@ -1,55 +1,64 @@
-﻿using System.Runtime.CompilerServices;
-using Stats.Extensions;
+﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Stats.Widgets;
 
 public sealed partial class Table
 {
-    private void SwapRecords(int i1, int i2)
-    {
-        _records.Swap(i1, i2);
-
-        foreach (ColumnWidget column in _columns)
-        {
-            column.Swap(i1, i2);
-        }
-    }
-
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private void ToggleRowPin(int index)
+    private void ToggleRowPin(int index, bool isPinned)
     {
-        _beforeDraw = () =>
+        if (isPinned)
         {
-            if (index < _topRowsCount)
-            {
-                SwapRecords(_rows[index], _topRowsCount - 1);
+            int recordId = _topRows[index];
 
-                _topRowsCount--;
-            }
-            else
+            if (FilterRecord(recordId))
             {
-                SwapRecords(_rows[index], _topRowsCount);
-
-                _topRowsCount++;
+                _bottomRows.Add(recordId);
+                // TODO: Sort bottom rows
             }
 
-            SyncTopRowsWithRecords();
-            ClearBottomRows();
-
-            _doFilter = true;
-        };
-    }
-
-    private void SyncTopRowsWithRecords()
-    {
-        for (int i = 0; i < _topRowsCount; i++)
+            _topRows.RemoveAt(index);
+        }
+        else
         {
-            _rows[i] = i;
+            _topRows.Add(_bottomRows[index]);
+            _bottomRows.RemoveAt(index);
+
+            // TODO: Sort top rows
         }
     }
 
-    private void ClearBottomRows()
+    internal readonly struct GUIListSegment<T>
     {
-        _rows.RemoveRange(_topRowsCount, BottomRowsCount);
+        private readonly List<T> _list;
+        private readonly int _start;
+        private readonly int _length;
+        private readonly int _end;
+        private readonly float _axisStart;
+
+        public GUIListSegment(List<T> list) : this(list, 0, list.Count, 0f)
+        {
+        }
+
+        public GUIListSegment(List<T> list, int start, int length, float axisStart)
+        {
+            _list = list;
+            _start = start;
+            _length = length;
+            _end = start + length;
+            _axisStart = axisStart;
+        }
+
+        public List<T> List => _list;
+
+        public int Start => _start;
+
+        public int Length => _length;
+
+        /// <remarks>Exclusive</remarks>
+        public int End => _end;
+
+        public float AxisStart => _axisStart;
     }
 }

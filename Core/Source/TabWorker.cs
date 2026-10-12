@@ -1,6 +1,4 @@
-﻿using Stats.Widgets;
-
-namespace Stats;
+﻿namespace Stats;
 
 public abstract class TabWorker
 {
