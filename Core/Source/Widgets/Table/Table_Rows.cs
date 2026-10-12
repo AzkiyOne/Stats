@@ -15,7 +15,8 @@ public sealed partial class Table
             if (FilterRecord(recordId))
             {
                 _bottomRows.Add(recordId);
-                // TODO: Sort bottom rows
+
+                _sortWidget.SortRows(_bottomRows);
             }
 
             _topRows.RemoveAt(index);
@@ -25,7 +26,7 @@ public sealed partial class Table
             _topRows.Add(_bottomRows[index]);
             _bottomRows.RemoveAt(index);
 
-            // TODO: Sort top rows
+            _sortWidget.SortRows(_topRows);
         }
     }
 

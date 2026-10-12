@@ -17,10 +17,7 @@ public sealed partial class Table : IDrawable, ISuspendable, IDisposable
     private bool _doFilter;
 
     // Sorting
-    private ColumnWidget? _sortColumn;
-    private int _sortDirection = SortDirectionAscending;
-    private const int SortDirectionAscending = 1;
-    private const int SortDirectionDescending = -1;
+    private readonly SortWidget _sortWidget;
     private bool _doSort;
 
     // Rows
@@ -81,17 +78,24 @@ public sealed partial class Table : IDrawable, ISuspendable, IDisposable
 
         // Misc
         HorDragManager<ColumnWidget> dragManager = new();
+
         dragManager.OnDragBefore += (ColumnWidget draggedColumn, ColumnWidget column) =>
             _postDraw ??= () => HandleColumnDrag(draggedColumn, column, true);
         dragManager.OnDragAfter += (ColumnWidget draggedColumn, ColumnWidget column) =>
             _postDraw ??= () => HandleColumnDrag(draggedColumn, column, false);
 
         // Toolbar
-        Toolbar toolbar = new(columnWidgets);
+        SortWidget sortWidget = new(columns.SelectMany(column => column.SortOptions));
+
+        sortWidget.OnChange += () => _doSort = true;
+
+        Toolbar toolbar = new(columnWidgets, sortWidget);
+
         toolbar.OnFiltersButtonClick += () => _isFiltersTabOpen = !_isFiltersTabOpen;
 
         // Filters tab
         FiltersTab filtersTab = new(columns.SelectMany(column => column.FilterOptions));
+
         filtersTab.OnChange += () => _doFilter = true;
 
         // Finalize
@@ -104,8 +108,9 @@ public sealed partial class Table : IDrawable, ISuspendable, IDisposable
         if (columns.Count > 0)
         {
             _leftColumnsCount = 1;
-            //_sortColumn = columns[0];
         }
+        _sortWidget = sortWidget;
+        _doSort = true;
         _toolbar = toolbar;
         _dragManager = dragManager;
         _filtersTab = filtersTab;

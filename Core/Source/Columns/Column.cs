@@ -51,7 +51,12 @@ public abstract class Column
 
     public virtual float GetMaxCellWidth(List<int> recordIds)
     {
-        return recordIds.Select(GetCellWidth).Max();
+        if (recordIds.Count > 0)
+        {
+            return recordIds.Select(GetCellWidth).Max();
+        }
+
+        return 0f;
     }
 
     protected abstract float GetCellWidth(int i);

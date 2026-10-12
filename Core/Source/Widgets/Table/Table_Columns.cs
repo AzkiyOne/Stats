@@ -150,15 +150,9 @@ public sealed partial class Table
             _headerCellWidth = _labelWidget.Size.x + GUIStyles.TableCell.PadHor;
             _tooltip = $"<i>{column.Label}</i>\n\n{column.Description}";
             _menu = new FloatMenu([
-                //new FloatMenuOption("Sort Asc", () => {
-                //    // TODO
-                //}, TexButton.ReorderUp, Color.white),
-                //new FloatMenuOption("Sort Desc", () => {
-                //    // TODO
-                //}, TexButton.ReorderDown, Color.white),
                 new FloatMenuOption("Pin", () => OnPin?.Invoke(this)),
                 new FloatMenuOption("Unpin", () => OnUnpin?.Invoke(this)),
-                new FloatMenuOption("Hide", () => IsHidden = true, TexButton.Suspend, Color.white)
+                new FloatMenuOption("Hide", () => IsHidden = true)
             ]);
 
             // TODO: The issue with this approach is that if a column is cached
@@ -279,8 +273,7 @@ public sealed partial class Table
             Event @event = Event.current;
             ColumnContentAlignment contentAlignment = _contentAlignment;
             const float SideControlMargin = 1f;
-            rect.CutLeft(out Rect sortControlRect, GUIStyles.TableCell.PadLR - SideControlMargin)
-                .CutRight(out Rect resizeControlRect, GUIStyles.TableCell.PadLR - SideControlMargin)
+            rect.CutRight(out Rect resizeControlRect, GUIStyles.TableCell.PadLR - SideControlMargin)
                 .TakeRest(out Rect labelControlRect);
 
             if (@event.type == EventType.Repaint)
@@ -320,7 +313,6 @@ public sealed partial class Table
 
             MouseoverSounds.DoRegion(rect);
 
-            DoSortControl(sortControlRect);
             dragManager.OnGUI(labelControlRect, rect, this);
             DoLabelControl(labelControlRect);
             DoResizeControl(resizeControlRect);
@@ -340,51 +332,6 @@ public sealed partial class Table
             }
 
             rect.DrawButtonEmpty();
-        }
-
-        private void DoSortControl(Rect rect)
-        {
-            Event @event = Event.current;
-            const float IconPadding = 3f;
-
-            if (@event.type == EventType.Repaint)
-            {
-                // TODO
-                //if (parent._sortColumn == this)
-                //{
-                //    if (parent._sortDirection == SortDirectionAscending)
-                //    {
-                //        rect.TopHalf()
-                //            .ContractedBy(IconPadding)
-                //            .DrawTextureFitted(TexButton.ReorderUp);
-                //    }
-                //    else
-                //    {
-                //        rect.BottomHalf()
-                //            .ContractedBy(IconPadding)
-                //            .DrawTextureFitted(TexButton.ReorderDown);
-                //    }
-                //}
-
-                if (Mouse.IsOver(rect))
-                {
-                    rect.Highlight();
-                }
-            }
-
-            bool wasClicked = rect.DrawButtonEmpty();
-            if (wasClicked && @event is { button: 0, modifiers: EventModifiers.None })
-            {
-                // TODO
-                //if (parent._sortColumn != this)
-                //{
-                //    parent._sortColumn = this;
-                //}
-                //else
-                //{
-                //    parent._sortDirection *= -1;
-                //}
-            }
         }
 
         private void DoResizeControl(Rect rect)

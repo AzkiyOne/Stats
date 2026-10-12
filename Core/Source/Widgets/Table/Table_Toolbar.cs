@@ -24,16 +24,15 @@ public sealed partial class Table
 
         private readonly Button _filtersButton;
         private readonly Button _columnsMenuButton;
-        private readonly Button _columnPresetsButton;
+        private readonly SortWidget _sortWidget;
         private readonly List<ColumnWidget> _columns;
 
-        public Toolbar(List<ColumnWidget> columns)
+        public Toolbar(List<ColumnWidget> columns, SortWidget sortWidget)
         {
             _columns = columns;
             _filtersButton = new Button(Assets.TableFiltersTabIcon, "Filters");
             _columnsMenuButton = new Button(Assets.TableColumnsMenuIcon, "Columns");
-            // TODO: Do we really need this feature if the plan is to save opened tables?
-            _columnPresetsButton = new Button(Verse.TexButton.Paste, "Apply Preset");
+            _sortWidget = sortWidget;
         }
 
         public event Action? OnFiltersButtonClick;
@@ -47,7 +46,7 @@ public sealed partial class Table
                 .CutLeft(Style.Gap)
                 .CutLeft(out Rect columnsMenuButtonRect, _columnsMenuButton.Width)
                 .CutLeft(Style.Gap)
-                .CutLeft(out Rect columnPresetsButtonRect, _columnPresetsButton.Width)
+                .CutLeft(out Rect sortWidgetRect, _sortWidget.Width)
                 .CutRight(out Rect infoIconRect, rect.height);
 
             if (Event.current.type == EventType.Repaint)
@@ -55,10 +54,12 @@ public sealed partial class Table
                 rect.DrawBorderBottom(GUIStyles.MainTabWindow.BorderColor);
             }
 
-            // Buttons
+            // Tools
             bool filtersTabButtonWasClicked = _filtersButton.Draw(filtersTabButtonRect);
+
             bool columnsMenuButtonWasClicked = _columnsMenuButton.Draw(columnsMenuButtonRect);
-            _columnPresetsButton.Draw(columnPresetsButtonRect);
+
+            _sortWidget.Draw(sortWidgetRect);
 
             infoIconRect
                 .ContractedBy(ButtonStyle.PadTB)

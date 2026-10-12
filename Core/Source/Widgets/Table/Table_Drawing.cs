@@ -305,11 +305,13 @@ public sealed partial class Table
             ApplyFilters();
 
             _doFilter = false;
-            _doSort = true;
+            // We have to do sorting immediately, otherwise the table will flicker.
+            _sortWidget.SortRows(_bottomRows);
         }
         else if (_doSort)
         {
-            // TODO
+            _sortWidget.SortRows(_topRows);
+            _sortWidget.SortRows(_bottomRows);
 
             _doSort = false;
         }
