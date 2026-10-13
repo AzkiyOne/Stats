@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Apparel_InsulationCold</defName>
+        <title><Temp_Cold/></title>
+        <stat>Insulation_Cold</stat>
+        <statValueExplanationType>FinalizePart</statValueExplanationType>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Apparel_InsulationHeat</defName>
+        <title><Temp_Hot/></title>
+        <stat>Insulation_Heat</stat>
+        <statValueExplanationType>FinalizePart</statValueExplanationType>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Apparel_OccupiedLayers</defName>
+        <labelKey>Layer</labelKey>
+        <descriptionKey>Stat_Thing_Apparel_Layer_Desc</descriptionKey>
+        <workerClass>Stats.Apparel_OccupiedLayersColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Apparel_CoveredBodyPartGroups</defName>
+        <labelKey>Covers</labelKey>
+        <descriptionKey>Stat_Thing_Apparel_Covers_Desc</descriptionKey>
+        <workerClass>Stats.Apparel_CoveredBodyPartGroupsColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Apparel_CountsAsClothingForNudity</defName>
+        <labelKey>Stat_Thing_Apparel_CountsAsClothingNudity_Name</labelKey>
+        <descriptionKey>Stat_Thing_Apparel_CountsAsClothingNudity_Desc</descriptionKey>
+        <title><NudistPawn/></title>
+        <workerClass>Stats.Apparel_CountsAsClothingForNudityColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Apparel_EquipDelay</defName>
+        <title><Time/>Equip</title>
+        <stat>EquipDelay</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Apparel_MaxChargesCount</defName>
+        <label>charges</label>
+        <description>The maximum number of charges this object has.</description>
+        <workerClass>Stats.Apparel_MaxChargesCountColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Apparel_IsDestroyedWhenAllChargesSpent</defName>
+        <label>expendable</label>
+        <description>This item will vanish when its last charge is used.</description>
+        <workerClass>Stats.Apparel_IsDestroyedWhenAllChargesSpentColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+</Defs>

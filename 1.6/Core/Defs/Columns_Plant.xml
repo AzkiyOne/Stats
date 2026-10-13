@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.ColumnDef>
+        <defName>Plant_MinGrowingSkillToSow</defName>
+        <labelKey>MinGrowingSkillToSow</labelKey>
+        <descriptionKey>Stat_Thing_Plant_MinGrowingSkillToSow_Desc</descriptionKey>
+        <title>LVL<PlantGrow/></title>
+        <workerClass>Stats.Plant_MinGrowingSkillToSowColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Plant_GrowingTimeActual</defName>
+        <label>actual growing time</label>
+        <description>Estimated actual plant growing time.</description>
+        <title><Time/><PlantGrow/></title>
+        <workerClass>Stats.Plant_GrowingTimeActualColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Plant_FertilityRequirement</defName>
+        <labelKey>FertilityRequirement</labelKey>
+        <descriptionKey>Stat_Thing_Plant_FertilityRequirement_Desc</descriptionKey>
+        <title>Fert. req.</title>
+        <workerClass>Stats.Plant_FertilityRequirementColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Plant_FertilitySensitivity</defName>
+        <labelKey>FertilitySensitivity</labelKey>
+        <descriptionKey>Stat_Thing_Plant_FertilitySensitivity_Desc</descriptionKey>
+        <title>Fert. sens.</title>
+        <workerClass>Stats.Plant_FertilitySensitivityColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Plant_LightRequirement</defName>
+        <labelKey>LightRequirement</labelKey>
+        <descriptionKey>Stat_Thing_Plant_LightRequirement_Desc</descriptionKey>
+        <title><Light/>Req.</title>
+        <workerClass>Stats.Plant_LightRequirementColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Plant_LifeSpan</defName>
+        <labelKey>LifeSpan</labelKey>
+        <descriptionKey>Stat_Thing_Plant_LifeSpan_Desc</descriptionKey>
+        <title><Time/>Life</title>
+        <workerClass>Stats.Plant_LifeSpanColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Plant_HarvestYield</defName>
+        <labelKey>HarvestYield</labelKey>
+        <descriptionKey>Stat_Thing_Plant_HarvestYield_Desc</descriptionKey>
+        <title><PlantHarvest/><PlantHarvestProduct/></title>
+        <workerClass>Stats.Plant_HarvestYieldColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Plant_ProductPerDay</defName>
+        <label>product per day</label>
+        <title><PlantHarvest/><PlantHarvestProduct/><Per/>D</title>
+        <workerClass>Stats.Plant_ProductPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Plant_IsSowable</defName>
+        <label>Can be cultivated</label>
+        <title><PlantCanBeCultivated/></title>
+        <workerClass>Stats.Plant_IsSowableColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Plant_CanBeGrownInHydroponics</defName>
+        <label>Can be grown in hydroponics</label>
+        <title><Hydroponics/></title>
+        <workerClass>Stats.Plant_CanBeGrownInHydroponicsColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Plant_IsBlightable</defName>
+        <label>Can be infected with blight</label>
+        <title><Blight/></title>
+        <workerClass>Stats.Plant_IsBlightableColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Plant_IsTree</defName>
+        <label>Is considered a tree</label>
+        <title><Tree/></title>
+        <workerClass>Stats.Plant_IsTreeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Plant_CanBePlantedUnderRoof</defName>
+        <label>Can be planted under roof</label>
+        <title><UnderRoof/></title>
+        <workerClass>Stats.Plant_CanBePlantedUnderRoofColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Plant_IsDestroyedOnHarvest</defName>
+        <label>Is plant destroyed on harvest</label>
+        <title><PlantHarvestDestructive/></title>
+        <workerClass>Stats.Plant_IsDestroyedOnHarvestColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Plant_NutritionPerHarvest</defName>
+        <label>Nutrition per harvest</label>
+        <title><PlantHarvest/><Nutrition/></title>
+        <workerClass>Stats.Plant_NutritionPerHarvestColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Plant_NutritionPerHarvestPerDay</defName>
+        <label>Nutrition per harvest per day</label>
+        <title><PlantHarvest/><Nutrition/><Per/>D</title>
+        <workerClass>Stats.Plant_NutritionPerHarvestPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Plant_RawNutrition</defName>
+        <description>Raw nutrition value of a plant itself, not its product.</description>
+        <title><Nutrition/><PlantRaw/></title>
+        <stat>Nutrition</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Plant_RawNutritionPerDay</defName>
+        <label>Raw nutrition per day</label>
+        <title><Nutrition/><PlantRaw/><Per/>D</title>
+        <workerClass>Stats.Plant_RawNutritionPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+</Defs>

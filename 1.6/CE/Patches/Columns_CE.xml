@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Patch>
+
+    <Operation Class="PatchOperationAttributeSet">
+        <xpath>Defs/Stats.ColumnDef[defName="Thing_ArmorRatingSharp" or defName="Thing_ArmorRatingBlunt"]</xpath>
+        <attribute>Class</attribute>
+        <value>Stats.Compat.CE.BinaryStatColumnDef</value>
+    </Operation>
+
+    <Operation Class="PatchOperationReplace">
+        <xpath>Defs/Stats.ColumnDef[defName="Thing_ArmorRatingSharp" or defName="Thing_ArmorRatingBlunt"]/workerClass</xpath>
+        <value>
+            <workerClass>Stats.Compat.CE.Thing_BinaryStatColumnWorker_Right</workerClass>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAdd">
+        <xpath>Defs/Stats.ColumnDef[defName="Thing_ArmorRatingSharp" or defName="Thing_ArmorRatingBlunt"]</xpath>
+        <value>
+            <statValueSeparator>~</statValueSeparator>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationReplace">
+        <xpath>Defs/Stats.ColumnDef[defName="Pawn_ShootingAccuracy"]/stat</xpath>
+        <value>
+            <stat>AimingAccuracy</stat>
+        </value>
+    </Operation>
+
+</Patch>

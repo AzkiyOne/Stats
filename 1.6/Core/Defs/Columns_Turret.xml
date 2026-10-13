@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.ColumnDef>
+        <defName>Turret_IsManned</defName>
+        <label>is manned</label>
+        <title><IsTurretManned/></title>
+        <workerClass>Stats.Turret_IsMannedColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Turret_ShootingAccuracy</defName>
+        <title><Accuracy/><Shoot/></title>
+        <stat>ShootingAccuracyTurret</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Turret_RearmCost</defName>
+        <label>rearm cost</label>
+        <title><Reload/><Resources/></title>
+        <workerClass>Stats.Turret_RearmCostColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Turret_BurstsPerRearm</defName>
+        <label>bursts per rearm</label>
+        <title><Reload/><Shoot/></title>
+        <workerClass>Stats.Turret_BurstsPerRearmColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+</Defs>

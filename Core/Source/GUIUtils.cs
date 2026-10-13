@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using LudeonTK;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
@@ -12,9 +10,11 @@ public static class GUIUtils
 {
 
     private static readonly GUIContent _guiContent = new();
-    private static readonly MethodInfo _GUI_ReleaseMouseControl = typeof(GUI).GetMethod("ReleaseMouseControl", BindingFlags.NonPublic | BindingFlags.Static);
 
-    internal static void ReleaseMouseControl() => _GUI_ReleaseMouseControl.Invoke(null, null);
+    // TODO:
+    // Investigate whether we need this.
+    // And if we do, there is UnityEngine.GUI._buttonDownActive, which i assume does the same thing.
+    internal static void ReleaseMouseControl() {}
 
     internal static float Opacity { get; set; } = 1f;
 
@@ -35,17 +35,6 @@ public static class GUIUtils
 
     public static Rect DrawLabel(this Rect rect, string text, GUIStyle style)
     {
-        float num = Prefs.UIScale / 2f;
-        if (Prefs.UIScale > 1f && Math.Abs(num - Mathf.Floor(num)) > float.Epsilon)
-        {
-            rect.xMin = UIScaling.AdjustCoordToUIScalingFloor(rect.xMin);
-            rect.yMin = UIScaling.AdjustCoordToUIScalingFloor(rect.yMin);
-            rect.xMax = UIScaling.AdjustCoordToUIScalingCeil(rect.xMax + 1E-05f);
-            rect.yMax = UIScaling.AdjustCoordToUIScalingCeil(rect.yMax + 1E-05f);
-        }
-        // TODO:
-        // Since we don't use native tooltips (which GUI.Label() uses), maybe it will be a good idea to make a lighter version of GUI.Label().
-        // The performance gain is projected to be minimal tho, since we'll be removing one rect.Contains() check and two conditional expression (check for repaint event and check for tooltip).
         GUI.Label(rect, text, style);
 
         return rect;
@@ -61,7 +50,6 @@ public static class GUIUtils
 
     internal static Rect DrawTexture(this Rect rect, Texture2D texture, Color color, ScaleMode scaleMode = ScaleMode.StretchToFill)
     {
-        color.a *= GUI.color.a;
         GUI.DrawTexture(
             rect,
             texture,

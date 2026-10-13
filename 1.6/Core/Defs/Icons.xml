@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.IconDef>
+        <defName>Armor</defName>
+        <path>Things/Pawn/Humanlike/Apparel/FlakVest/FlakVest</path>
+        <color>(0.4,0.4,0.4)</color>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Damage_Sharp</defName>
+        <path>Things/Item/Equipment/WeaponMelee/Longsword</path>
+        <color>(160,178,181)</color>
+        <scale>1.4</scale>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Damage_Blunt</defName>
+        <path>Things/Item/Equipment/WeaponMelee/Club</path>
+        <color>(160,178,181)</color>
+        <scale>1.2</scale>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Damage_Heat</defName>
+        <path>UI/Icons/ColonistBar/Burning</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Temp_Cold</defName>
+        <path>UI/Buttons/ToggleHeatOverlay</path>
+        <color>(0.04,0.66,1)</color>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Temp_Hot</defName>
+        <path>UI/Buttons/ToggleHeatOverlay</path>
+        <color>(1,0.25,0.04)</color>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>NudistPawn</defName>
+        <path>StatsMod/UI/Icons/PawnHumanlike</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Animal_Small</defName>
+        <path>Things/Pawn/Animal/Chicken/Chicken_east</path>
+        <color>(200,150,85)</color>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Animal_Large</defName>
+        <path>Things/Pawn/Animal/Cow/Bull_east</path>
+        <color>(170,170,170)</color>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Construction</defName>
+        <path>StatsMod/UI/Icons/Construction</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Electricity</defName>
+        <path>StatsMod/UI/Icons/Electricity</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Fuel</defName>
+        <path>Things/Item/Resource/Chemfuel</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Meat</defName>
+        <path>Things/Item/Resource/MeatFoodRaw/Meat_Big/Meat_Big_c</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Leather</defName>
+        <path>Things/Item/Resource/Leather/Leather_b</path>
+        <color>(162,106,57)</color>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Toxic</defName>
+        <path>StatsMod/UI/Icons/Toxic</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Resistance</defName>
+        <path>StatsMod/UI/Icons/Resistance</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>ToxicEnvironment</defName>
+        <path>UI/Buttons/ShowPollutionOverlay</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Accuracy</defName>
+        <path>Things/Mote/FeedbackShoot</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Time</defName>
+        <path>StatsMod/UI/Icons/Time</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>TimeInterval</defName>
+        <path>StatsMod/UI/Icons/TimeInterval</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Caravan</defName>
+        <path>UI/Commands/FormCaravan</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>PlantGrow</defName>
+        <path>UI/Icons/CanGraze</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Light</defName>
+        <path>UI/Icons/ColonistBar/Inspired</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>PlantHarvest</defName>
+        <path>UI/Designators/Harvest</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>PlantHarvestProduct</defName>
+        <path>UI/Commands/SetPlantToGrow</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>PlantCanBeCultivated</defName>
+        <path>UI/Designators/ZoneCreate_Growing</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Hydroponics</defName>
+        <path>StatsMod/UI/Icons/HydroponicsBasinSmall</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Blight</defName>
+        <path>Things/Plant/Blight</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Tree</defName>
+        <path>Things/Plant/TreeOak/TreeOakA</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>UnderRoof</defName>
+        <path>UI/Designators/BuildRoofArea</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>PlantHarvestDestructive</defName>
+        <path>UI/Designators/HarvestWood</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Nutrition</defName>
+        <path>Things/Mote/ThoughtSymbol/Food</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>PlantRaw</defName>
+        <path>Things/Mote/Sow</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Milk</defName>
+        <path>Things/Item/Resource/Milk</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Egg</defName>
+        <path>Things/Item/Resource/AnimalProductRaw/EggBirdSmall/EggSmall_b</path>
+        <scale>1.3</scale>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Wool</defName>
+        <path>Things/Item/Resource/Wool</path>
+        <color>(189,161,116)</color>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>AnimalHandling</defName>
+        <path>Things/Mote/SpeechSymbols/TrainAttempt</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Fence</defName>
+        <path>Things/Building/Linked/Fence_MenuIcon</path>
+        <color>(133,97,67)</color>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Shoot</defName>
+        <path>StatsMod/UI/Icons/Shoot</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>StoppingPower</defName>
+        <path>UI/Icons/Trainables/Obedience</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>BuildingPassable</defName>
+        <path>Things/Building/Linked/Sandbags_MenuIcon</path>
+        <color>(139,122,87)</color>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>BuildingImpassable</defName>
+        <path>Things/Building/Linked/WallBricks_MenuIcon</path>
+        <color>(105,95,97)</color>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>DirectHit</defName>
+        <path>UI/Commands/Attack</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>MeleeWeaponDamage</defName>
+        <path>UI/Commands/AttackMelee</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>IncreaseNegative</defName>
+        <path>StatsMod/UI/Icons/IncreaseNegative</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Decrease</defName>
+        <path>StatsMod/UI/Icons/Decrease</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>MoveSpeed</defName>
+        <path>StatsMod/UI/Icons/MoveSpeed</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>IsBuildingReinstallable</defName>
+        <path>UI/Designators/Uninstall</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>IsTurretManned</defName>
+        <path>StatsMod/UI/Icons/PawnHumanlike</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Reload</defName>
+        <path>UI/Widgets/RotRight</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Projectile</defName>
+        <path>StatsMod/UI/Icons/Projectile</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>RangedWeaponDamage</defName>
+        <path>UI/Commands/Detonate</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Per</defName>
+        <path>StatsMod/UI/Icons/Per</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Resources</defName>
+        <path>Things/Item/Resource/Steel/Steel_c</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Nuzzle</defName>
+        <path>Things/Mote/SpeechSymbols/Nuzzle</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>Recreation</defName>
+        <path>Things/Mote/Cards</path>
+        <scale>1.2</scale>
+    </Stats.IconDef>
+    
+    <Stats.IconDef>
+        <defName>Slaughter</defName>
+        <path>UI/Designators/Slaughter</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>CollectAnimalProducts</defName>
+        <path>UI/Designators/Tame</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>RangedWeapon</defName>
+        <path>Things/Item/Equipment/WeaponRanged/Revolver</path>
+        <scale>1.5</scale>
+    </Stats.IconDef>
+
+</Defs>

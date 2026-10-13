@@ -21,11 +21,6 @@ public static class System_Collections_Generic_List
         }
     }
 
-    internal static void CopyTo<T>(this List<T> list, Span<T> span)
-    {
-        list.CopyTo(span, 0);
-    }
-
     internal static void MoveBeforeElem<T>(this List<T> list, T target, T elem)
     {
         list.MoveBeforeElemAt(list.IndexOf(target), list.IndexOf(elem));

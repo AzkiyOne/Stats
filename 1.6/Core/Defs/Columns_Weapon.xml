@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Weapon_MeleeDPS</defName>
+        <title>DPS</title>
+        <stat>MeleeWeapon_AverageDPS</stat>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Weapon_MeleeArmorPenetration</defName>
+        <title>AP</title>
+        <stat>MeleeWeapon_AverageArmorPenetration</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Weapon_ProjectileDamage</defName>
+        <labelKey>Damage</labelKey>
+        <descriptionKey>Stat_Thing_Damage_Desc</descriptionKey>
+        <title><Projectile/><RangedWeaponDamage/></title>
+        <workerClass>Stats.Weapon_ProjectileDamageColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Weapon_ProjectileStoppingPower</defName>
+        <labelKey>StoppingPower</labelKey>
+        <descriptionKey>StoppingPowerExplanation</descriptionKey>
+        <title><Projectile/><StoppingPower/></title>
+        <workerClass>Stats.Weapon_ProjectileStoppingPowerColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Weapon_ProjectileArmorPenetration</defName>
+        <labelKey>ArmorPenetration</labelKey>
+        <title><Projectile/>AP</title>
+        <descriptionKey>ArmorPenetrationExplanation</descriptionKey>
+        <workerClass>Stats.Weapon_ProjectileArmorPenetrationColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Weapon_RPM</defName>
+        <labelKey>BurstShotFireRate</labelKey>
+        <descriptionKey>Stat_Thing_Weapon_BurstShotFireRate_Desc</descriptionKey>
+        <title>RPM</title>
+        <workerClass>Stats.Weapon_RPMColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Weapon_BurstShotCount</defName>
+        <labelKey>BurstShotCount</labelKey>
+        <descriptionKey>Stat_Thing_Weapon_BurstShotCount_Desc</descriptionKey>
+        <title><Shoot/><Projectile/></title>
+        <workerClass>Stats.Weapon_BurstShotCountColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Weapon_Range</defName>
+        <labelKey>Range</labelKey>
+        <descriptionKey>Stat_Thing_Weapon_Range_Desc</descriptionKey>
+        <workerClass>Stats.Weapon_RangeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Weapon_RangedAccuracyTouch</defName>
+        <title><Accuracy/>3</title>
+        <stat>AccuracyTouch</stat>
+        <workerClass>Stats.Thing_GunStatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Weapon_RangedAccuracyShort</defName>
+        <title><Accuracy/>12</title>
+        <stat>AccuracyShort</stat>
+        <workerClass>Stats.Thing_GunStatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Weapon_RangedAccuracyMedium</defName>
+        <title><Accuracy/>25</title>
+        <stat>AccuracyMedium</stat>
+        <workerClass>Stats.Thing_GunStatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Weapon_RangedAccuracyLong</defName>
+        <title><Accuracy/>40</title>
+        <stat>AccuracyLong</stat>
+        <workerClass>Stats.Thing_GunStatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Weapon_RangedCooldown</defName>
+        <title><Shoot/><TimeInterval/></title>
+        <stat>RangedWeapon_Cooldown</stat>
+        <workerClass>Stats.Thing_GunStatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Weapon_RangedAimingTime</defName>
+        <labelKey>RangedWarmupTime</labelKey>
+        <descriptionKey>Stat_Thing_Weapon_RangedWarmupTime_Desc</descriptionKey>
+        <title><Time/><DirectHit/></title>
+        <workerClass>Stats.Weapon_RangedAimingTimeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Weapon_ProjectileBuildingDamageFactorPassable</defName>
+        <labelKey>BuildingDamageFactorPassable</labelKey>
+        <descriptionKey>BuildingDamageFactorPassableExplanation</descriptionKey>
+        <title><Projectile/><RangedWeaponDamage/><BuildingPassable/></title>
+        <workerClass>Stats.Weapon_ProjectileBuildingDamageFactorPassableColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Weapon_ProjectileBuildingDamageFactorImpassable</defName>
+        <labelKey>BuildingDamageFactorImpassable</labelKey>
+        <descriptionKey>BuildingDamageFactorImpassableExplanation</descriptionKey>
+        <title><Projectile/><RangedWeaponDamage/><BuildingImpassable/></title>
+        <workerClass>Stats.Weapon_ProjectileBuildingDamageFactorImpassableColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Weapon_RangedDirectHitChance</defName>
+        <labelKey>DirectHitChance</labelKey>
+        <descriptionKey>Stat_Thing_Weapon_DirectHitChance_Desc</descriptionKey>
+        <title>%<DirectHit/></title>
+        <workerClass>Stats.Weapon_RangedDirectHitChanceColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Weapon_RangedMissRadius</defName>
+        <labelKey>MissRadius</labelKey>
+        <title>MR</title>
+        <descriptionKey>Stat_Thing_Weapon_MissRadius_Desc</descriptionKey>
+        <workerClass>Stats.Weapon_RangedMissRadiusColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+</Defs>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.ColumnDef>
+        <defName>Apparel_ValidLifeStage</defName>
+        <labelKey>Stat_Thing_Apparel_ValidLifestage</labelKey>
+        <descriptionKey>Stat_Thing_Apparel_ValidLifestage_Desc</descriptionKey>
+        <workerClass>Stats.Compat.Biotech.Apparel_ValidLifeStageColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+</Defs>

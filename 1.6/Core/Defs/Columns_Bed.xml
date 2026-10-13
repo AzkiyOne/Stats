@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Bed_RestEffectiveness</defName>
+        <title>Rest *%</title>
+        <stat>BedRestEffectiveness</stat>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Bed_FitsSmallAnimals</defName>
+        <label>for small animals</label>
+        <title><Animal_Small/></title>
+        <workerClass>Stats.Bed_FitsSmallAnimalsColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Bed_FitsLargeAnimals</defName>
+        <label>for large animals</label>
+        <title><Animal_Large/></title>
+        <workerClass>Stats.Bed_FitsLargeAnimalsColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+</Defs>

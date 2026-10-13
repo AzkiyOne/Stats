@@ -226,9 +226,9 @@ public sealed partial class Table
 
             if (bottomRows.Length > 0)
             {
-                using (new GUIClipScope(bottomRowsRect, new Vector2(0f, bottomRows.AxisStart)))
+                using (new GUIClipScope(bottomRowsRect))
                 {
-                    DrawBody(bottomRowsRect with { x = 0f, y = 0f }, bottomRows);
+                    DrawBody(bottomRowsRect with { x = 0f, y = bottomRows.AxisStart }, bottomRows);
                 }
             }
 

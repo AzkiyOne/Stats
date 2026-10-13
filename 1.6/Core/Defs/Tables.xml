@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.TableDef>
+        <defName>RangedWeapons</defName>
+        <label>Weapons / Ranged</label>
+        <iconPath>Things/Item/Equipment/WeaponRanged/Revolver</iconPath>
+        <workerClass>Stats.RangedWeaponsTableWorker</workerClass>
+        <columns>
+            <li>Thing_Label</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_Caliber</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_MagazineCapacity</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_ReloadTime</li>
+            <li>Weapon_ProjectileDamage</li>
+            <li>Weapon_ProjectileStoppingPower</li>
+            <li>Weapon_ProjectileArmorPenetration</li>
+            <li>Weapon_RPM</li>
+            <li>Weapon_BurstShotCount</li>
+            <li>Weapon_RangedCooldown</li>
+            <li>Weapon_RangedAimingTime</li>
+            <li>Weapon_Range</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_ShotSpread</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_SwayFactor</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_Recoil</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_SightsEfficiency</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_IsOneHanded</li>
+            <li>Weapon_RangedAccuracyTouch</li>
+            <li>Weapon_RangedAccuracyShort</li>
+            <li>Weapon_RangedAccuracyMedium</li>
+            <li>Weapon_RangedAccuracyLong</li>
+            <li>Weapon_RangedDirectHitChance</li>
+            <li>Weapon_RangedMissRadius</li>
+            <li>Weapon_ProjectileBuildingDamageFactorPassable</li>
+            <li>Weapon_ProjectileBuildingDamageFactorImpassable</li>
+            <li>Thing_EquippedStatOffsets</li>
+            <li>Thing_Mass</li>
+            <li MayRequire="CETeam.CombatExtended">Thing_Bulk</li>
+            <li>Thing_Recipes</li>
+            <li>Thing_MarketValue</li>
+            <li>Thing_TechLevel</li>
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>MeleeWeapons</defName>
+        <label>Weapons / Melee</label>
+        <iconPath>Things/Item/Equipment/WeaponMelee/Club</iconPath>
+        <iconColor>(105,95,97)</iconColor>
+        <workerClass>Stats.MeleeWeaponsTableWorker</workerClass>
+        <columns>
+            <li>Thing_Label</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_MeleeDamageMin</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_MeleeDamageMax</li>
+            <li>Weapon_MeleeDPS</li>
+            <li>Weapon_MeleeArmorPenetration</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_MeleeArmorPenetrationFactor</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_MeleeCounterParryBonus</li>
+            <li>Thing_EquippedStatOffsets</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_IsOneHanded</li>
+            <li>Thing_MaxHitPoints</li>
+            <li>Thing_Mass</li>
+            <li MayRequire="CETeam.CombatExtended">Thing_Bulk</li>
+            <li>Thing_Recipes</li>
+            <li>Thing_MarketValue</li>
+            <li>Thing_TechLevel</li>
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>Apparel</defName>
+        <label>Apparel</label>
+        <iconPath>Things/Pawn/Humanlike/Apparel/Duster/Duster</iconPath>
+        <iconColor>(112,82,65)</iconColor>
+        <workerClass>Stats.ApparelTableWorker</workerClass>
+        <columns>
+            <li>Thing_Label</li>
+            <li>Thing_ArmorRatingSharp</li>
+            <li>Thing_ArmorRatingBlunt</li>
+            <li>Thing_ArmorRatingHeat</li>
+            <li MayRequire="CETeam.CombatExtended">Thing_ArmorRatingElectric</li>
+            <li>Thing_EnergyShieldCapacity</li>
+            <li>Thing_EnergyShieldRechargeRate</li>
+            <li>Apparel_InsulationCold</li>
+            <li>Apparel_InsulationHeat</li>
+            <li>Apparel_OccupiedLayers</li>
+            <li>Apparel_CoveredBodyPartGroups</li>
+            <li>Thing_EquippedStatOffsets</li>
+            <li>Thing_MaxHitPoints</li>
+            <li>Thing_Flammability</li>
+            <li>Thing_Mass</li>
+            <li MayRequire="CETeam.CombatExtended">Apparel_WornBulk</li>
+            <li>Thing_Recipes</li>
+            <li>Thing_MarketValue</li>
+            <li>Apparel_CountsAsClothingForNudity</li>
+            <li>Apparel_EquipDelay</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">Apparel_ValidLifeStage</li>
+            <li>Thing_TechLevel</li>
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>UtilityApparel</defName>
+        <label>Apparel / Utility</label>
+        <iconPath>Things/Pawn/Humanlike/Apparel/FirefoamPack/FirefoamPack</iconPath>
+        <workerClass>Stats.UtilityApparelTableWorker</workerClass>
+        <columns>
+            <li>Thing_Label</li>
+            <li>Thing_EnergyShieldCapacity</li>
+            <li>Thing_EnergyShieldRechargeRate</li>
+            <li>Weapon_RangedAimingTime</li>
+            <li>Apparel_MaxChargesCount</li>
+            <li>Apparel_IsDestroyedWhenAllChargesSpent</li>
+            <li>Thing_EquippedStatOffsets</li>
+            <li>Thing_MaxHitPoints</li>
+            <li>Thing_Flammability</li>
+            <li>Thing_Mass</li>
+            <li MayRequire="CETeam.CombatExtended">Apparel_WornBulk</li>
+            <li>Thing_Recipes</li>
+            <li>Thing_MarketValue</li>
+            <li>Apparel_EquipDelay</li>
+            <li>Thing_TechLevel</li>
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>PowerGenerators</defName>
+        <label>Buildings / Power / Generators</label>
+        <iconPath>Things/Building/Power/ChemfuelPoweredGenerator</iconPath>
+        <workerClass>Stats.PowerGeneratorsTableWorker</workerClass>
+        <columns>
+            <li>Thing_Label</li>
+            <li>Building_PowerOutput</li>
+            <li>Building_PowerOutputPerCell</li>
+            <li>Building_PowerOutputPerFuel</li>
+            <li>Building_FuelCapacity</li>
+            <li>Building_FuelConsumptionRate</li>
+            <li>Building_DaysPerRefuel</li>
+            <li>Building_Recipe</li>
+            <li>Building_Size</li>
+            <li>Building_IsReinstallable</li>
+            <li>Thing_MarketValue</li>
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>RecreationalBuildings</defName>
+        <label>Buildings / Recreation</label>
+        <iconPath>Things/Building/Joy/BilliardsTable_east</iconPath>
+        <iconColor>(133,97,67)</iconColor>
+        <workerClass>Stats.RecreationalBuildingsTableWorker</workerClass>
+        <columns>
+            <li>Thing_Label</li>
+            <li>Building_JoyGainFactor</li>
+            <li>Building_RecreationType</li>
+            <li>Thing_Beauty</li>
+            <li>Building_Recipe</li>
+            <li>Building_PowerConsumption</li>
+            <li>Building_Size</li>
+            <li>Building_IsReinstallable</li>
+            <li>Thing_MarketValue</li>
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>Beds</defName>
+        <label>Buildings / Furniture / Beds</label>
+        <iconPath>Things/Building/Furniture/Bed/Bed_south</iconPath>
+        <iconColor>(133,97,67)</iconColor>
+        <workerClass>Stats.BedsTableWorker</workerClass>
+        <columns>
+            <li>Thing_Label</li>
+            <li>Building_Comfort</li>
+            <li>Bed_RestEffectiveness</li>
+            <li>Building_ImmunityGainSpeedFactor</li>
+            <li>Building_MedicalTendQualityOffset</li>
+            <li>Building_SurgerySuccessChanceFactor</li>
+            <li>Thing_Beauty</li>
+            <li>Bed_FitsSmallAnimals</li>
+            <li>Bed_FitsLargeAnimals</li>
+            <li>Building_Recipe</li>
+            <li>Building_PowerConsumption</li>
+            <li>Building_Size</li>
+            <li>Building_IsReinstallable</li>
+            <li>Thing_MarketValue</li>
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>Chairs</defName>
+        <label>Buildings / Furniture / Chairs</label>
+        <iconPath>Things/Building/Furniture/DiningChair_south</iconPath>
+        <iconColor>(133,97,67)</iconColor>
+        <workerClass>Stats.ChairsTableWorker</workerClass>
+        <columns>
+            <li>Thing_Label</li>
+            <li>Building_Comfort</li>
+            <li>Thing_Beauty</li>
+            <li>Building_Recipe</li>
+            <li>Building_Size</li>
+            <li>Building_IsReinstallable</li>
+            <li>Thing_MarketValue</li>
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>ArtBuildings</defName>
+        <label>Buildings / Art</label>
+        <iconPath>StatsMod/UI/Icons/Art</iconPath>
+        <iconColor>(132,135,132)</iconColor>
+        <workerClass>Stats.ArtBuildingsTableWorker</workerClass>
+        <columns>
+            <li>Thing_Label</li>
+            <li>Thing_Beauty</li>
+            <li>Thing_Recipes</li>
+            <li>Building_Size</li>
+            <li>Building_IsReinstallable</li>
+            <li>Thing_MarketValue</li>
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>Plants</defName>
+        <label>Plants</label>
+        <iconPath>Things/Plant/CottonPlant/CottonPlantA</iconPath>
+        <workerClass>Stats.PlantsTableWorker</workerClass>
+        <columns>
+            <li>Thing_Label</li>
+            <li>Plant_MinGrowingSkillToSow</li>
+            <li>Plant_GrowingTimeActual</li>
+            <li>Plant_HarvestYield</li>
+            <li>Plant_ProductPerDay</li>
+            <li>Plant_NutritionPerHarvest</li>
+            <li>Plant_NutritionPerHarvestPerDay</li>
+            <li>Plant_RawNutrition</li>
+            <li>Plant_RawNutritionPerDay</li>
+            <li>Plant_FertilityRequirement</li>
+            <li>Plant_FertilitySensitivity</li>
+            <li>Plant_LightRequirement</li>
+            <li>Plant_IsSowable</li>
+            <li>Plant_CanBeGrownInHydroponics</li>
+            <li>Plant_IsBlightable</li>
+            <li>Plant_IsTree</li>
+            <li>Plant_CanBePlantedUnderRoof</li>
+            <li>Plant_IsDestroyedOnHarvest</li>
+            <li>Thing_Beauty</li>
+            <li>Plant_LifeSpan</li>
+            <li>Thing_MaxHitPoints</li>
+            <li>Thing_Flammability</li>
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>Animals</defName>
+        <label>Creatures / Animals</label>
+        <iconPath>Things/Pawn/Animal/Thrumbo/Thrumbo_east</iconPath>
+        <workerClass>Stats.AnimalsTableWorker</workerClass>
+        <columns>
+            <li>Thing_Label</li>
+            <li>Animal_Biomes</li>
+            <!-- Yield -->
+            <li>Pawn_MeatAmount</li>
+            <li>Pawn_LeatherAmount</li>
+            <!-- Yield/d -->
+            <li>Animal_MeatNutritionPerDay</li>
+            <li>Animal_LeatherPerDay</li>
+            <!-- Nutrition consumption -->
+            <li>Pawn_MaxNutrition</li>
+            <!-- TODO: Diet column -->
+            <!-- Handling -->
+            <li>Animal_MinimumHandlingSkill</li>
+            <li>Animal_Trainability</li>
+            <li>Animal_Wildness</li>
+            <li>Animal_IsBlockedByFences</li>
+            <!-- Reproduction -->
+            <li>Animal_AverageLitterSize</li>
+            <li>Animal_GestationTime</li>
+            <li>Animal_GrowthTime</li>
+            <li>Pawn_LifeExpectancy</li>
+            <!-- Combat: Offense -->
+            <li MayRequire="CETeam.CombatExtended">Pawn_MeleeArmorPenetrationSharp</li>
+            <li MayRequire="CETeam.CombatExtended">Pawn_MeleeArmorPenetrationBlunt</li>
+            <li MayRequire="CETeam.CombatExtended">Pawn_MeleeCritChance</li>
+            <!-- Combat: Defense -->
+            <li>Pawn_MeleeDodgeChance</li>
+            <li MayRequire="CETeam.CombatExtended">Pawn_MeleeParryChance</li>
+            <li>Thing_ArmorRatingSharp</li>
+            <li>Thing_ArmorRatingBlunt</li>
+            <li>Thing_ArmorRatingHeat</li>
+            <li MayRequire="CETeam.CombatExtended">Thing_ArmorRatingElectric</li>
+            <!-- Physique -->
+            <li>Pawn_ComfyTemperatureMin</li>
+            <li>Pawn_ComfyTemperatureMax</li>
+            <li>Pawn_ToxicResistance</li>
+            <li>Pawn_ToxicEnvironmentResistance</li>
+            <li>Pawn_MoveSpeed</li>
+            <!-- Misc -->
+            <li>Animal_NuzzleInterval</li>
+            <li>Thing_MarketValue</li>
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>FarmAnimals</defName>
+        <label>Creatures / Animals / Farm</label>
+        <iconPath>Things/Pawn/Animal/Cow/Cow_east</iconPath>
+        <iconColor>(170,170,170)</iconColor>
+        <workerClass>Stats.FarmAnimalsTableWorker</workerClass>
+        <columns>
+            <li>Thing_Label</li>
+            <li>Animal_Biomes</li>
+            <!-- Yield -->
+            <li>Animal_Products</li>
+            <li>Pawn_MeatAmount</li>
+            <li>Pawn_LeatherAmount</li>
+            <li>Animal_WoolAmount</li>
+            <li>Animal_MilkAmount</li>
+            <li>Animal_EggsAmount</li>
+            <!-- Yield/d -->
+            <li>Animal_LeatherPerDay</li>
+            <li>Animal_WoolPerDay</li>
+            <li>Animal_MilkPerDay</li>
+            <li>Animal_EggsPerDay</li>
+            <!-- Yield nutrition/d -->
+            <li>Animal_MeatNutritionPerDay</li>
+            <li>Animal_MilkNutritionPerDay</li>
+            <li>Animal_EggsNutritionPerDay</li>
+            <li>Animal_ProductsNutritionPerDay</li>
+            <!-- Nutrition consumption -->
+            <li>Pawn_MaxNutrition</li>
+            <!-- TODO: Diet column -->
+            <!-- Yield interval -->
+            <li>Animal_WoolShearingInterval</li>
+            <li>Animal_MilkingInterval</li>
+            <li>Animal_EggLayingInterval</li>
+            <!-- Handling -->
+            <li>Animal_MinimumHandlingSkill</li>
+            <li>Animal_Trainability</li>
+            <li>Animal_Wildness</li>
+            <li>Animal_IsBlockedByFences</li>
+            <!-- Reproduction -->
+            <li>Animal_AverageLitterSize</li>
+            <li>Animal_GestationTime</li>
+            <li>Animal_GrowthTime</li>
+            <li>Pawn_LifeExpectancy</li>
+            <!-- Physique -->
+            <li>Pawn_ComfyTemperatureMin</li>
+            <li>Pawn_ComfyTemperatureMax</li>
+            <li>Pawn_ToxicResistance</li>
+            <li>Pawn_ToxicEnvironmentResistance</li>
+            <!-- Misc -->
+            <li>Thing_MarketValue</li>
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>PackAnimals</defName>
+        <label>Creatures / Animals / Pack</label>
+        <iconPath>Things/Pawn/Animal/Donkey/Donkey_east</iconPath>
+        <workerClass>Stats.PackAnimalsTableWorker</workerClass>
+        <columns>
+            <li>Thing_Label</li>
+            <li>Animal_Biomes</li>
+            <!-- Caravan -->
+            <li>Animal_CaravanRidingSpeedFactor</li>
+            <li>Pawn_CaravanCarryingCapacity</li>
+            <!-- Nutrition consumption -->
+            <li>Pawn_MaxNutrition</li>
+            <!-- TODO: Diet column -->
+            <!-- Handling -->
+            <li>Animal_MinimumHandlingSkill</li>
+            <li>Animal_Trainability</li>
+            <li>Animal_Wildness</li>
+            <li>Animal_IsBlockedByFences</li>
+            <!-- Reproduction -->
+            <li>Animal_AverageLitterSize</li>
+            <li>Animal_GestationTime</li>
+            <li>Animal_GrowthTime</li>
+            <li>Pawn_LifeExpectancy</li>
+            <!-- Physique -->
+            <li>Pawn_ComfyTemperatureMin</li>
+            <li>Pawn_ComfyTemperatureMax</li>
+            <li>Pawn_ToxicResistance</li>
+            <li>Pawn_ToxicEnvironmentResistance</li>
+            <li>Pawn_MoveSpeed</li>
+            <!-- Misc -->
+            <li>Thing_MarketValue</li>
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>Mechanoids</defName>
+        <label>Creatures / Mechanoids</label>
+        <iconPath>Things/Pawn/Mechanoid/Centipede_east</iconPath>
+        <workerClass>Stats.MechanoidsTableWorker</workerClass>
+        <columns>
+            <li>Thing_Label</li>
+            <!-- General -->
+            <li MayRequire="Ludeon.RimWorld.Biotech">Mech_WeightClass</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">Mech_BandwidthCost</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">Mech_EnergyLossPerHP</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">Mech_ControlTakingTime</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">Mech_WastepacksPerRecharge</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">Mech_RechargerNeeded</li>
+            <li>Thing_Recipes</li>
+            <!-- Combat: Offense -->
+            <li>Pawn_Weapons</li>
+            <li MayRequire="CETeam.CombatExtended">Pawn_WeaponHandling</li>
+            <li>Pawn_ShootingAccuracy</li>
+            <li>Pawn_AimingTime</li>
+            <li MayRequire="CETeam.CombatExtended">Pawn_NightVisionEfficiency</li>
+            <li MayRequire="CETeam.CombatExtended">Pawn_MeleeArmorPenetrationSharp</li>
+            <li MayRequire="CETeam.CombatExtended">Pawn_MeleeArmorPenetrationBlunt</li>
+            <li MayRequire="CETeam.CombatExtended">Pawn_MeleeCritChance</li>
+            <!-- Combat: Defense -->
+            <li>Pawn_MeleeDodgeChance</li>
+            <li MayRequire="CETeam.CombatExtended">Pawn_MeleeParryChance</li>
+            <li>Thing_ArmorRatingSharp</li>
+            <li>Thing_ArmorRatingBlunt</li>
+            <li>Thing_ArmorRatingHeat</li>
+            <li MayRequire="CETeam.CombatExtended">Thing_ArmorRatingElectric</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">Mech_EMPResistance</li>
+            <li>Thing_EnergyShieldCapacity</li>
+            <li>Thing_EnergyShieldRechargeRate</li>
+            <!-- Caravan -->
+            <!-- TODO: VE compat -->
+            <li>Pawn_CaravanCarryingCapacity</li>
+            <!-- Misc -->
+            <li>Pawn_PsychicSensitivity</li>
+            <li>Pawn_MoveSpeed</li>
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>Turrets</defName>
+        <label>Buildings / Turrets</label>
+        <iconPath>Things/Building/Security/TurretMini_MenuIcon</iconPath>
+        <workerClass>Stats.TurretsTableWorker</workerClass>
+        <columns>
+            <li>Thing_Label</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_Caliber</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_MagazineCapacity</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_ReloadTime</li>
+            <li>Weapon_ProjectileDamage</li>
+            <li>Weapon_ProjectileStoppingPower</li>
+            <li>Weapon_ProjectileArmorPenetration</li>
+            <li>Weapon_RPM</li>
+            <li>Weapon_BurstShotCount</li>
+            <li>Weapon_RangedCooldown</li>
+            <li>Turret_BurstsPerRearm</li>
+            <li>Turret_RearmCost</li>
+            <li>Weapon_RangedAimingTime</li>
+            <li>Weapon_Range</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_ShotSpread</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_SwayFactor</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_Recoil</li>
+            <li MayRequire="CETeam.CombatExtended">Weapon_SightsEfficiency</li>
+            <li>Turret_ShootingAccuracy</li>
+            <li>Weapon_RangedAccuracyTouch</li>
+            <li>Weapon_RangedAccuracyShort</li>
+            <li>Weapon_RangedAccuracyMedium</li>
+            <li>Weapon_RangedAccuracyLong</li>
+            <li>Weapon_RangedDirectHitChance</li>
+            <li>Weapon_RangedMissRadius</li>
+            <li>Weapon_ProjectileBuildingDamageFactorPassable</li>
+            <li>Weapon_ProjectileBuildingDamageFactorImpassable</li>
+            <li>Thing_MaxHitPoints</li>
+            <li>Turret_IsManned</li>
+            <li>Building_Recipe</li>
+            <li>Building_PowerConsumption</li>
+            <li>Building_Size</li>
+            <li>Building_IsReinstallable</li>
+            <li>Thing_MarketValue</li>
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+</Defs>

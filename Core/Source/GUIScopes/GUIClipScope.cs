@@ -9,9 +9,7 @@ namespace Stats.GUIScopes;
 // And the code is taken from Verse.Widgets.BeginScrollView.
 internal readonly record struct GUIClipScope : IDisposable
 {
-    public GUIClipScope(Rect rect) : this(rect, Vector2.zero) { }
-
-    public GUIClipScope(Rect rect, Vector2 scrollOffset)
+    public GUIClipScope(Rect rect)
     {
         Stack<bool> mouseOverScrollViewStack = Verse.Widgets.mouseOverScrollViewStack;
         bool mouseIsOverRect = rect.Contains(Event.current.mousePosition);
@@ -27,7 +25,7 @@ internal readonly record struct GUIClipScope : IDisposable
             mouseOverScrollViewStack.Push(mouseIsOverRect);
         }
 
-        GUI.BeginClip(rect, scrollOffset, Vector2.zero, false);
+        GUI.BeginClip(rect);
     }
 
     public void Dispose()

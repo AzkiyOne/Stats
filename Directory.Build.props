@@ -2,12 +2,13 @@
 
 <Project>
     <PropertyGroup>
-        <TargetFramework>net48</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <AssemblyTitle>$(MSBuildProjectName.Replace(" ", "_"))</AssemblyTitle>
         <OutputPath>..\Assemblies</OutputPath>
         <Copyright>Copyright © Dmitry "Azkiy" 2024-2026</Copyright>
         <LangVersion>preview</LangVersion>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <GenerateDependencyFile>false</GenerateDependencyFile>
         <Nullable>enable</Nullable>
         <WarningLevel>5</WarningLevel>
     </PropertyGroup>
@@ -22,7 +23,20 @@
         <DebugSymbols>false</DebugSymbols>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.*" />
+        <Reference Include="Assembly-CSharp">
+            <HintPath>..\..\..\..\Assembly-CSharp.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="UnityStubs">
+            <HintPath>..\..\..\..\UnityStubs.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="Waylith">
+            <HintPath>..\..\..\..\Waylith.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
         <PackageReference Include="Lib.Harmony" Version="2.4.*" ExcludeAssets="runtime"/>
     </ItemGroup>
 </Project>

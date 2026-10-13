@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <MainButtonDef>
+        <defName>StatsTab</defName>
+        <label>Stats</label>
+        <description>Open stats tab.</description>
+        <tabWindowClass>Stats.Widgets.MainTabWindow</tabWindowClass>
+        <order>71</order>
+    </MainButtonDef>
+    
+</Defs>

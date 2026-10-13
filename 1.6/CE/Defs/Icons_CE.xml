@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.IconDef>
+        <defName>Shield</defName>
+        <path>Things/Apparel/BallisticShield/CE_BallisticShield</path>
+    </Stats.IconDef>
+
+</Defs>

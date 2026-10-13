@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.TableDef>
+        <defName>Genes</defName>
+        <label>genes</label>
+        <iconPath>UI/Gizmos/ViewGenes</iconPath>
+        <workerClass>Stats.Compat.Biotech.GeneTableWorker</workerClass>
+        <columns>
+            <li>Gene_Label</li>
+            <li>Gene_Complexity</li>
+            <li>Gene_MetabolicEfficiency</li>
+            <li>Gene_RequiredArchiteCapsulesAmount</li>
+            <li>Gene_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>LaborMechanoids</defName>
+        <label>Creatures / Mechanoids / Labor</label>
+        <iconPath>Things/Pawn/Mechanoid/Agrihand_east</iconPath>
+        <workerClass>Stats.Compat.Biotech.LaborMechanoidsTableWorker</workerClass>
+        <columns>
+            <li>Thing_Label</li>
+            <!-- Labor -->
+            <li>Mech_WorkActivities</li>
+            <li>Mech_WorkSkill</li>
+            <!-- General -->
+            <li>Mech_WeightClass</li>
+            <li>Mech_BandwidthCost</li>
+            <li>Mech_EnergyLossPerHP</li>
+            <li>Mech_ControlTakingTime</li>
+            <li>Mech_WastepacksPerRecharge</li>
+            <li>Mech_RechargerNeeded</li>
+            <li>Thing_Recipes</li>
+            <!-- Misc -->
+            <li>Pawn_MoveSpeed</li>
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+</Defs>

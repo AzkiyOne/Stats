@@ -8,9 +8,15 @@
         <li IfModActive="CETeam.CombatExtended">1.5/CE</li>
     </v1.5>
     <v1.6>
+        <li>1.6/Core</li>
+        <li IfModActive="Ludeon.RimWorld.Biotech">1.6/Biotech</li>
+        <li IfModActive="Ludeon.RimWorld.Anomaly">1.6/Anomaly</li>
+        <li IfModActive="CETeam.CombatExtended">1.6/CE</li>
+    </v1.6>
+    <v1.7>
         <li>Core</li>
         <li IfModActive="Ludeon.RimWorld.Biotech">Biotech</li>
         <li IfModActive="Ludeon.RimWorld.Anomaly">Anomaly</li>
         <li IfModActive="CETeam.CombatExtended">CE</li>
-    </v1.6>
+    </v1.7>
 </loadFolders>

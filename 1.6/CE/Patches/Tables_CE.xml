@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Patch>
+
+    <Operation Class="PatchOperationRemove">
+        <xpath>Defs/Stats.TableDef/columns/li[
+            text()="Weapon_ProjectileDamage"
+            or text()="Weapon_ProjectileStoppingPower"
+            or text()="Weapon_ProjectileArmorPenetration"
+            or text()="Weapon_RangedAccuracyTouch"
+            or text()="Weapon_RangedAccuracyShort"
+            or text()="Weapon_RangedAccuracyMedium"
+            or text()="Weapon_RangedAccuracyLong"
+            or text()="Weapon_RangedDirectHitChance"
+            or text()="Weapon_RangedMissRadius"
+            or text()="Turret_BurstsPerRearm"
+            or text()="Turret_RearmCost"
+        ]</xpath>
+    </Operation>
+
+    <Operation Class="PatchOperationReplace">
+        <xpath>Defs/Stats.TableDef/columns/li[text()="Weapon_MeleeArmorPenetration"]</xpath>
+        <value>
+            <li>Weapon_MeleeArmorPenetrationSharp</li>
+            <li>Weapon_MeleeArmorPenetrationBlunt</li>
+        </value>
+    </Operation>
+
+</Patch>

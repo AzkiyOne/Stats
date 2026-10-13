@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Pawn_WeaponHandling</defName>
+        <stat>ShootingAccuracyPawn</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.Compat.CE.BinaryStatColumnDef">
+        <defName>Pawn_MeleeArmorPenetrationSharp</defName>
+        <title>AP<Damage_Sharp/></title>
+        <stat>MeleeArmorPenetration</stat>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <statValueSeparator>,</statValueSeparator>
+        <workerClass>Stats.Compat.CE.Thing_BinaryStatColumnWorker_Left</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.Compat.CE.BinaryStatColumnDef">
+        <defName>Pawn_MeleeArmorPenetrationBlunt</defName>
+        <title>AP<Damage_Blunt/></title>
+        <stat>MeleeArmorPenetration</stat>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <statValueSeparator>,</statValueSeparator>
+        <workerClass>Stats.Compat.CE.Thing_BinaryStatColumnWorker_Right</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Pawn_MeleeCritChance</defName>
+        <title>Crit %</title>
+        <stat>MeleeCritChance</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Pawn_MeleeParryChance</defName>
+        <title>Parry %</title>
+        <stat>MeleeParryChance</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Pawn_NightVisionEfficiency</defName>
+        <title>NV %</title>
+        <stat>NightVisionEfficiency</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+</Defs>

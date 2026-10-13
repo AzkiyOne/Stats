@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.IconDef>
+        <defName>Wastepack</defName>
+        <path>Things/Item/Resource/Wastepack/Wastepack_c</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>MechRecharger</defName>
+        <path>Things/Building/Production/StandardRecharger_south</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>MechControl</defName>
+        <path>UI/Gizmos/MechControlGroup</path>
+    </Stats.IconDef>
+
+    <Stats.IconDef>
+        <defName>MechBandwidth</defName>
+        <path>UI/Gizmos/BandNodeTuning</path>
+    </Stats.IconDef>
+
+</Defs>

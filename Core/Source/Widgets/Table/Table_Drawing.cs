@@ -47,7 +47,6 @@ public sealed partial class Table
         if (contentRect.width > viewportRect.width)
         {
             viewportRect.height -= GenUI.ScrollBarWidth;
-            contentRect.height -= GenUI.ScrollBarWidth;
         }
 
         // Because of "sticky" columns and column headers we can't use scroll widget normally.
@@ -111,7 +110,7 @@ public sealed partial class Table
         // Unpinned columns
         if (RightColumnsCount > 0)
         {
-            using (new GUIClipScope(rightColumnsRect, new Vector2(-scrollPosition.x, 0f)))
+            using (new GUIClipScope(rightColumnsRect))
             {
                 DrawColumns(rightColumnsRect with { x = 0f, y = 0f }, scrollPosition, RightColumns, topRows, visibleBottomRows);
             }
@@ -128,10 +127,10 @@ public sealed partial class Table
     private void DrawColumns(Rect rect, Vector2 scrollPosition, ReadOnlyListSegment<ColumnWidget> columns, GUIListSegment<int> topRows, GUIListSegment<int> bottomRows)
     {
         EventType eventType = Event.current.type;
-        float scrollX = scrollPosition.x;
-        float xMin = rect.xMin + scrollX;
-        float xMax = rect.xMax + scrollX;
+        float xMin = rect.xMin;
+        float xMax = rect.xMax;
         ref Rect columnRect = ref rect;
+        columnRect.xMin -= scrollPosition.x;
         int columnsCount = columns.Length;
 
         for (int i = 0; i < columnsCount; i++)

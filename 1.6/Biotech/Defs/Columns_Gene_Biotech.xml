@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.ColumnDef>
+        <defName>Gene_Label</defName>
+        <label>label</label>
+        <workerClass>Stats.Compat.Biotech.Gene_LabelColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Gene_ContentSource</defName>
+        <labelKey>Stat_Source_Label</labelKey>
+        <workerClass>Stats.Compat.Biotech.Gene_ContentSourceColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Gene_Complexity</defName>
+        <labelKey>Complexity</labelKey>
+        <descriptionKey>ComplexityDesc</descriptionKey>
+        <workerClass>Stats.Compat.Biotech.Gene_ComplexityColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Gene_MetabolicEfficiency</defName>
+        <labelKey>Metabolism</labelKey>
+        <descriptionKey>MetabolismDesc</descriptionKey>
+        <workerClass>Stats.Compat.Biotech.Gene_MetabolicEfficiencyColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Gene_RequiredArchiteCapsulesAmount</defName>
+        <labelKey>ArchitesRequired</labelKey>
+        <descriptionKey>ArchitesRequiredDesc</descriptionKey>
+        <workerClass>Stats.Compat.Biotech.Gene_RequiredArchiteCapsulesAmountColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+</Defs>

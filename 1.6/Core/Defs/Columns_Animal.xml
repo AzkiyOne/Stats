@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.ColumnDef>
+        <defName>Animal_MeatNutritionPerDay</defName>
+        <label>Meat nutrition per day during growth</label>
+        <title><Nutrition/><Meat/><Per/>D</title>
+        <workerClass>Stats.Animal_MeatNutritionPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_LeatherPerDay</defName>
+        <label>Leather per day</label>
+        <title><Leather/><Per/>D</title>
+        <workerClass>Stats.Animal_LeatherPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_MilkAmount</defName>
+        <labelKey>Stat_Animal_MilkAmount</labelKey>
+        <descriptionKey>Stat_Animal_MilkAmountDesc</descriptionKey>
+        <title><CollectAnimalProducts/><Milk/></title>
+        <workerClass>Stats.Animal_MilkAmountColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_MilkingInterval</defName>
+        <labelKey>Stat_Animal_MilkGrowthTime</labelKey>
+        <descriptionKey>Stat_Animal_MilkGrowthTimeDesc</descriptionKey>
+        <title><TimeInterval/><Milk/></title>
+        <workerClass>Stats.Animal_MilkingIntervalColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_MilkPerDay</defName>
+        <label>Milk per day</label>
+        <title><Milk/><Per/>D</title>
+        <workerClass>Stats.Animal_MilkPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_MilkNutritionPerDay</defName>
+        <label>Milk nutrition per day</label>
+        <title><Nutrition/><Milk/><Per/>D</title>
+        <workerClass>Stats.Animal_MilkNutritionPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_EggsAmount</defName>
+        <label>Average eggs amount</label>
+        <title><CollectAnimalProducts/><Egg/></title>
+        <workerClass>Stats.Animal_EggsAmountColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_EggLayingInterval</defName>
+        <label>Egg laying interval</label>
+        <title><TimeInterval/><Egg/></title>
+        <workerClass>Stats.Animal_EggLayingIntervalColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_EggsPerDay</defName>
+        <label>Eggs per day</label>
+        <title><Egg/><Per/>D</title>
+        <workerClass>Stats.Animal_EggsPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_EggsNutritionPerDay</defName>
+        <label>Eggs nutrition per day</label>
+        <title><Nutrition/><Egg/><Per/>D</title>
+        <workerClass>Stats.Animal_EggsNutritionPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_WoolAmount</defName>
+        <labelKey>Stat_Animal_WoolAmount</labelKey>
+        <descriptionKey>Stat_Animal_WoolAmountDesc</descriptionKey>
+        <title><CollectAnimalProducts/><Wool/></title>
+        <workerClass>Stats.Animal_WoolAmountColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_WoolShearingInterval</defName>
+        <labelKey>Stat_Animal_WoolGrowthTime</labelKey>
+        <descriptionKey>Stat_Animal_WoolGrowthTimeDesc</descriptionKey>
+        <title><TimeInterval/><Wool/></title>
+        <workerClass>Stats.Animal_WoolShearingIntervalColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_WoolPerDay</defName>
+        <label>Wool per day</label>
+        <title><Wool/><Per/>D</title>
+        <workerClass>Stats.Animal_WoolPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_IsPackAnimal</defName>
+        <labelKey>PackAnimal</labelKey>
+        <descriptionKey>PackAnimalExplanation</descriptionKey>
+        <title><Caravan/></title>
+        <workerClass>Stats.Animal_IsPackAnimalColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Animal_CaravanRidingSpeedFactor</defName>
+        <title><Caravan/><MoveSpeed/></title>
+        <stat>CaravanRidingSpeedFactor</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Animal_MinimumHandlingSkill</defName>
+        <title>LVL<AnimalHandling/></title>
+        <stat>MinimumHandlingSkill</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Animal_Wildness</defName>
+        <stat>Wildness</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_IsBlockedByFences</defName>
+        <labelKey>StatsReport_BlockedByFences</labelKey>
+        <descriptionKey>Stat_Race_BlockedByFences_Desc</descriptionKey>
+        <title><Fence/></title>
+        <workerClass>Stats.Animal_IsBlockedByFencesColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_NuzzleInterval</defName>
+        <labelKey>NuzzleInterval</labelKey>
+        <descriptionKey>NuzzleIntervalExplanation</descriptionKey>
+        <title><TimeInterval/><Nuzzle/></title>
+        <workerClass>Stats.Animal_NuzzleIntervalColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_Trainability</defName>
+        <labelKey>Trainability</labelKey>
+        <descriptionKey>Stat_Race_Trainability_Desc</descriptionKey>
+        <workerClass>Stats.Animal_TrainabilityColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_GestationTime</defName>
+        <labelKey>Stat_Animal_GestationTime</labelKey>
+        <descriptionKey>Stat_Animal_GestationTimeDesc</descriptionKey>
+        <title><Time/>Gestation</title>
+        <workerClass>Stats.Animal_GestationTimeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_GrowthTime</defName>
+        <labelKey>Stat_Animal_GrowthTime</labelKey>
+        <descriptionKey>Stat_Animal_GrowthTimeDesc</descriptionKey>
+        <title><Time/>Growth</title>
+        <workerClass>Stats.Animal_GrowthTimeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_Products</defName>
+        <label>products</label>
+        <workerClass>Stats.Animal_ProductsColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_ProductsNutritionPerDay</defName>
+        <label>products nutrition per day</label>
+        <title><Nutrition/>(<Milk/>+<Egg/>)<Per/>D</title>
+        <workerClass>Stats.Animal_ProductsNutritionPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_AverageLitterSize</defName>
+        <labelKey>Stat_Animal_LitterSize</labelKey>
+        <descriptionKey>Stat_Animal_LitterSizeDesc</descriptionKey>
+        <workerClass>Stats.Animal_AverageLitterSizeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Animal_Biomes</defName>
+        <label>biomes</label>
+        <description>List of biomes where the animal can be found, sorted by animal's commonality.
+
+The column is sortable by the average animal commonality across all biomes where it can be found.</description>
+        <workerClass>Stats.Animal_BiomesColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+</Defs>

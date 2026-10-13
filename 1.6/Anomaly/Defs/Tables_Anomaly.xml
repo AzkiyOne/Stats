@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.TableDef>
+        <defName>Entities</defName>
+        <label>Creatures / Entites</label>
+        <iconPath>Things/Pawn/Noctol/Noctol_east</iconPath>
+        <workerClass>Stats.Compat.Anomaly.EntitiesTableWorker</workerClass>
+        <columns>
+            <li>Thing_Label</li>
+            <!-- Combat: Offense -->
+            <li MayRequire="CETeam.CombatExtended">Pawn_MeleeArmorPenetrationSharp</li>
+            <li MayRequire="CETeam.CombatExtended">Pawn_MeleeArmorPenetrationBlunt</li>
+            <li MayRequire="CETeam.CombatExtended">Pawn_MeleeCritChance</li>
+            <!-- Combat: Defense -->
+            <li>Pawn_MeleeDodgeChance</li>
+            <li MayRequire="CETeam.CombatExtended">Pawn_MeleeParryChance</li>
+            <li>Thing_ArmorRatingSharp</li>
+            <li>Thing_ArmorRatingBlunt</li>
+            <li>Thing_ArmorRatingHeat</li>
+            <li MayRequire="CETeam.CombatExtended">Thing_ArmorRatingElectric</li>
+            <li>Mech_EMPResistance</li>
+            <!-- Physique -->
+            <li>Pawn_ComfyTemperatureMin</li>
+            <li>Pawn_ComfyTemperatureMax</li>
+            <li>Pawn_ToxicResistance</li>
+            <li>Pawn_ToxicEnvironmentResistance</li>
+            <li MayRequire="CETeam.CombatExtended">Pawn_NightVisionEfficiency</li>
+            <li>Pawn_PsychicSensitivity</li>
+            <li>Pawn_MoveSpeed</li>
+            <!-- Productivity -->
+            <li>Pawn_MeatAmount</li>
+            <li>Pawn_LeatherAmount</li>
+            <!-- Misc -->
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+</Defs>

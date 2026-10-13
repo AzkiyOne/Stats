@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Pawn_MeatAmount</defName>
+        <title><Slaughter/><Meat/></title>
+        <stat>MeatAmount</stat>
+        <workerClass>Stats.Pawn_MeatAmountColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Pawn_LeatherAmount</defName>
+        <title><Slaughter/><Leather/></title>
+        <stat>LeatherAmount</stat>
+        <workerClass>Stats.Pawn_LeatherAmountColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Pawn_ToxicResistance</defName>
+        <title><Resistance/><Toxic/></title>
+        <stat>ToxicResistance</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Pawn_ToxicEnvironmentResistance</defName>
+        <title><Resistance/><ToxicEnvironment/></title>
+        <stat>ToxicEnvironmentResistance</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Pawn_MaxNutrition</defName>
+        <title><Nutrition/><Decrease/></title>
+        <stat>MaxNutrition</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Pawn_MoveSpeed</defName>
+        <title><MoveSpeed/></title>
+        <stat>MoveSpeed</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+    
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Pawn_ComfyTemperatureMin</defName>
+        <title><Temp_Cold/></title>
+        <stat>ComfyTemperatureMin</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Pawn_ComfyTemperatureMax</defName>
+        <title><Temp_Hot/></title>
+        <stat>ComfyTemperatureMax</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Pawn_LifeExpectancy</defName>
+        <labelKey>StatsReport_LifeExpectancy</labelKey>
+        <descriptionKey>Stat_Race_LifeExpectancy_Desc</descriptionKey>
+        <title><Time/>Life</title>
+        <workerClass>Stats.Pawn_LifeExpectancyColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Pawn_ShootingAccuracy</defName>
+        <title><Accuracy/><Shoot/></title>
+        <stat>ShootingAccuracyPawn</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Pawn_AimingTime</defName>
+        <title><Time/><DirectHit/></title>
+        <stat>AimingDelayFactor</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+    
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Pawn_MeleeDodgeChance</defName>
+        <stat>MeleeDodgeChance</stat>
+        <title>Dodge %</title>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.StatColumnDef">
+        <defName>Pawn_PsychicSensitivity</defName>
+        <stat>PsychicSensitivity</stat>
+        <workerClass>Stats.Thing_StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Pawn_CaravanCarryingCapacity</defName>
+        <label>caravan carrying capacity</label>
+        <title><Caravan/>kg</title>
+        <workerClass>Stats.Pawn_CaravanCarryingCapacityColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Pawn_Weapons</defName>
+        <label>Weapons</label>
+        <description>Possible weapons that this creature can spawn with.</description>
+        <title><RangedWeapon/></title>
+        <workerClass>Stats.Pawn_WeaponsColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+</Defs>
