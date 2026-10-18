@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using RimWorld;
+﻿using RimWorld;
 using Stats.Extensions;
 using Stats.GUIScopes;
+using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Verse;
 using static Stats.GUIStyles.MainTabWindow;
@@ -17,11 +18,8 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
     private static readonly TipSignal _openTabButtonTooltip = "Open tab";
     private Vector2 _tabListScrollPosition;
     private readonly float _defaultHeight;
-    private bool _isResized;
-    private float _resizeYOffset;
-    private float _yMax;
-    private readonly DragManager<Tab> _tabDragManager;
-    private Action? _beforeDraw;
+    private float _maxYMin;
+    private Action? _postDraw;
 
     public MainTabWindow()
     {
@@ -46,12 +44,7 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
         tabDefsMenuOptions.SortBy(option => option.Label);
 
         _tabDefsMenu = new FloatMenu(tabDefsMenuOptions);
-        _tabs = new(tabDefsCount);
-        _tabDragManager = new VerDragManager<Tab>();
-        _tabDragManager.OnDragBefore += (draggedTab, tab) =>
-            _beforeDraw = () => _tabs.MoveBeforeElem(draggedTab, tab);
-        _tabDragManager.OnDragAfter += (draggedTab, tab) =>
-            _beforeDraw = () => _tabs.MoveAfterElem(draggedTab, tab);
+        _tabs = new List<Tab>(tabDefsCount);
     }
 
     public override Vector2 RequestedTabSize => new(UI.screenWidth, windowRect.height);
@@ -62,11 +55,7 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
     {
         Event @event = Event.current;
 
-        if (_beforeDraw != null)
-        {
-            _beforeDraw();
-            _beforeDraw = null;
-        }
+        GUIUtils.PreOnGUI();
 
         // TODO: Remove this after you'll explixitly set word wrap for every inner widget.
         bool wordWrap = Text.WordWrap;
@@ -94,6 +83,7 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
         // TODO:
         // - Add culling.
         Rect tabListContentRect = new(0f, 0f, ToolbarWidth, _tabs.Count * ToolbarWidth);
+        Tab? draggedTab = GUIUtils.DraggedObj as Tab;
 
         using (new GUIScrollScope(tabListRect, ref _tabListScrollPosition, tabListContentRect, false))
         {
@@ -103,7 +93,14 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
             for (int i = 0; i < tabsCount; i++)
             {
                 Tab tab = _tabs[i];
-                tab.DrawTitle(tabButtonRect, _tabDragManager, _activeTab == tab);
+
+                tab.DrawTitle(tabButtonRect, _activeTab == tab);
+
+                if (draggedTab != null)
+                {
+                    HandleTabDrag(draggedTab, tab, tabButtonRect);
+                }
+
                 tabButtonRect.y = tabButtonRect.yMax;
             }
         }
@@ -114,6 +111,35 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
         Text.WordWrap = wordWrap;
 
         DoResizeControl(resizeControlRect);
+
+        if (_postDraw != null)
+        {
+            _postDraw();
+            _postDraw = null;
+        }
+
+        GUIUtils.PostOnGUI();
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void HandleTabDrag(Tab draggedTab, Tab tab, Rect tabRect)
+    {
+        float mouseY = Event.current.mousePosition.y;
+        FloatRange verBoundaries = tabRect.VerBoundaries();
+
+        if (verBoundaries.MinHalf().Includes(mouseY))
+        {
+            _postDraw ??= () => _tabs.MoveBeforeElem(draggedTab, tab);
+        }
+        else if (verBoundaries.MaxHalf().Includes(mouseY))
+        {
+            _postDraw ??= () => _tabs.MoveAfterElem(draggedTab, tab);
+        }
+
+        if (draggedTab == tab && Event.current.type == EventType.Repaint)
+        {
+            tabRect.HighlightActive();
+        }
     }
 
     private void DrawOpenTabButton(Rect rect)
@@ -135,39 +161,19 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
 
     private void DoResizeControl(Rect rect)
     {
-        Event @event = Event.current;
+        Event curEvent = Event.current;
+        GUIUtils.DragState dragState = rect.DraggableControl(this);
 
-        if (@event is { type: EventType.MouseDown, button: 0, modifiers: EventModifiers.None } && Mouse.IsOver(rect))
+        if (dragState == GUIUtils.DragState.Dragged && curEvent.type == EventType.Layout)
         {
-            if (@event.clickCount > 1)
-            {
-                ResetSize();
-            }
-            else
-            {
-                _isResized = true;
-                _resizeYOffset = @event.mousePosition.y;
-            }
+            float yMin = windowRect.yMin + GUIUtils.MouseDelta.y;
+            windowRect.yMin = Mathf.Clamp(yMin, 0f, _maxYMin);
         }
-        else if (_isResized)
+        else if (curEvent is { type: EventType.MouseDown, clickCount: > 1 } && Mouse.IsOver(rect))
         {
-            if (OriginalEventUtility.EventType == EventType.MouseDrag)
-            {
-                float y = UI.GUIToScreenPoint(@event.mousePosition).y - _resizeYOffset;
-
-                windowRect.yMin = Mathf.Clamp(y, 0f, _yMax);
-                @event.Use();
-            }
-            else if (@event.rawType == EventType.MouseUp)
-            {
-                _isResized = false;
-
-                GUIUtils.ReleaseMouseControl();
-                @event.Use();
-            }
+            ResetSize();
+            curEvent.Use();
         }
-
-        rect.DrawButtonEmpty();
     }
 
     private void OpenTab(TabDef tabDef)
@@ -223,7 +229,7 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
 
     public override void PostOpen()
     {
-        _yMax = UI.screenHeight - MainButtonDef.ButtonHeight - GUIStyles.TableToolbar.Height;
+        _maxYMin = UI.screenHeight - MainButtonDef.ButtonHeight - GUIStyles.TableToolbar.Height;
 
         base.PostOpen();
         _activeTab?.Resume();
@@ -231,8 +237,8 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
 
     public override void PostClose()
     {
-        _isResized = false;
         _activeTab?.Suspend();
+        GUIUtils.ResetDragState();
 
         base.PostClose();
     }

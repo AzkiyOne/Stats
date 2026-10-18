@@ -8,14 +8,29 @@ namespace Stats;
 
 public static class GUIUtils
 {
-
     private static readonly GUIContent _guiContent = new();
+    private static Vector2 _prevMousePos;
+    private static Vector2 _mouseDelta;
 
-    // TODO:
-    // Investigate whether we need this.
-    // And if we do, there is UnityEngine.GUI._buttonDownActive, which i assume does the same thing.
-    internal static void ReleaseMouseControl() {}
+    internal static Vector2 MouseDelta => _mouseDelta;
 
+    internal static void PreOnGUI()
+    {
+        Vector2 mousePos = UI.MousePositionOnUIInverted;
+        _mouseDelta = (mousePos - _prevMousePos).Rounded();
+        _prevMousePos = mousePos;
+    }
+
+    internal static void PostOnGUI()
+    {
+        // Fix drag state (if needed)
+        if (_draggedObj != null && Input.GetMouseButtonUp(0))
+        {
+            ResetDragState();
+        }
+    }
+
+    [Obsolete]
     internal static float Opacity { get; set; } = 1f;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -27,12 +42,15 @@ public static class GUIUtils
         return color;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2 CalcSize(this string text, GUIStyle style)
     {
         _guiContent.text = text.StripTags();
+
         return style.CalcSize(_guiContent);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Rect DrawLabel(this Rect rect, string text, GUIStyle style)
     {
         GUI.Label(rect, text, style);
@@ -48,6 +66,7 @@ public static class GUIUtils
         return rect.DrawTexture(texture, Color.white);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static Rect DrawTexture(this Rect rect, Texture2D texture, Color color, ScaleMode scaleMode = ScaleMode.StretchToFill)
     {
         GUI.DrawTexture(
@@ -76,9 +95,11 @@ public static class GUIUtils
         return rect.DrawTextureFitted(texture, Color.white, scale);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static Rect DrawTextureFitted(this Rect rect, Texture2D texture, Color color, float scale)
     {
         Rect scaledRect;
+
         if (scale != 1f)
         {
             scaledRect = rect.ScaledBy(scale);
@@ -87,11 +108,13 @@ public static class GUIUtils
         {
             scaledRect = rect;
         }
+
         scaledRect.DrawTexture(texture, color, ScaleMode.ScaleToFit);
 
         return rect;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static Rect DrawBorderTop(this Rect rect, Color color)
     {
         (rect with { height = 1f }).Fill(color);
@@ -99,6 +122,7 @@ public static class GUIUtils
         return rect;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static Rect DrawBorderBottom(this Rect rect, Color color)
     {
         (rect with { y = Mathf.Round(rect.yMax) - 1f, height = 1f }).Fill(color);
@@ -106,6 +130,7 @@ public static class GUIUtils
         return rect;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static Rect DrawBorderRight(this Rect rect, Color color)
     {
         (rect with { x = Mathf.Round(rect.xMax) - 1f, width = 1f }).Fill(color);
@@ -113,26 +138,31 @@ public static class GUIUtils
         return rect;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static Rect Fill(this Rect rect, Color color)
     {
         return rect.DrawTexture(BaseContent.WhiteTex, color);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static Rect Highlight(this Rect rect)
     {
         return rect.DrawTexture(TexUI.HighlightTex);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static Rect HighlightLight(this Rect rect)
     {
         return rect.DrawTexture(Verse.Widgets.LightHighlight);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static Rect HighlightSelected(this Rect rect)
     {
         return rect.DrawTexture(TexUI.HighlightSelectedTex);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static Rect HighlightActive(this Rect rect)
     {
         return rect.Fill(GUIStyles.Global.HighlightActiveColor);
@@ -146,13 +176,29 @@ public static class GUIUtils
         return rect;
     }
 
-    internal static bool DrawButtonGhostly(this Rect rect)
+    internal static Rect DrawButtonGhostlySkinSilent(this Rect rect)
     {
-        MouseoverSounds.DoRegion(rect);
-
-        if (Event.current.type == EventType.Repaint && Mouse.IsOver(rect))
+        if (Mouse.IsOver(rect))
         {
             rect.Highlight();
+        }
+
+        return rect;
+    }
+
+    internal static Rect DrawButtonGhostlySkin(this Rect rect)
+    {
+        MouseoverSounds.DoRegion(rect);
+        rect.DrawButtonGhostlySkinSilent();
+
+        return rect;
+    }
+
+    internal static bool DrawButtonGhostly(this Rect rect)
+    {
+        if (Event.current.type == EventType.Repaint)
+        {
+            DrawButtonGhostlySkin(rect);
         }
 
         return rect.DrawButtonEmpty();
@@ -188,6 +234,7 @@ public static class GUIUtils
         return wasClicked;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool DrawButtonSubtle(this Rect rect, string text, float padHor = 0f)
     {
         return rect.DrawButtonSubtle(text, Color.white, padHor);
@@ -220,8 +267,81 @@ public static class GUIUtils
         return wasClicked;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool DrawButtonEmpty(this Rect rect)
     {
         return GUI.Button(rect, GUIContent.none, GUIStyle.none);
+    }
+
+    // Why object?
+    //
+    // I just need an unique id that is:
+    // - Not order based.
+    // - Not position based.
+    //
+    // Because order and/or position of a control may change, while it is being dragged around.
+    // 
+    // Object is just simplest way to implement this.
+    // Tho we have to be extra careful not to cause a memory leak.
+    private static object? _draggedObj;
+    internal static object? DraggedObj => _dragStarted ? _draggedObj : null;
+    private static bool _dragStarted;
+    private static Vector3 _dragMouseDownPos;
+    private const float MinDragStartDistanceSquared = 3f * 3f;
+
+    // If you need standard button behaviour, use a button or just check for events manually.
+    internal static DragState DraggableControl(this Rect rect, object obj)
+    {
+        if (_draggedObj == null)
+        {
+            if (Input.GetMouseButtonDown(0) && Mouse.IsOver(rect))
+            {
+                _draggedObj = obj;
+                _dragMouseDownPos = Input.mousePosition;
+            }
+        }
+        else if (_draggedObj == obj)
+        {
+            if (_dragStarted)
+            {
+                if (Input.GetMouseButtonUp(0))
+                {
+                    ResetDragState();
+
+                    return DragState.DragEnded;
+                }
+
+                return DragState.Dragged;
+            }
+            else
+            {
+                if (Input.GetMouseButtonUp(0))
+                {
+                    ResetDragState();
+                }
+                else if ((_dragMouseDownPos - Input.mousePosition).sqrMagnitude > MinDragStartDistanceSquared)
+                {
+                    _dragStarted = true;
+
+                    return DragState.DragStarted;
+                }
+            }
+        }
+
+        return DragState.Idle;
+    }
+
+    internal static void ResetDragState()
+    {
+        _draggedObj = null;
+        _dragStarted = false;
+    }
+
+    internal enum DragState
+    {
+        Idle,
+        DragStarted,
+        Dragged,
+        DragEnded,
     }
 }

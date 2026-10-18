@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using Verse;
 
 namespace Stats.Extensions;
 
@@ -92,5 +93,15 @@ public static class UnityEngine_Rect
     internal static Rect TakeRest(this Rect rect, out Rect result)
     {
         return result = rect;
+    }
+
+    internal static FloatRange HorBoundaries(this Rect rect)
+    {
+        return new FloatRange(rect.x, rect.xMax);
+    }
+
+    internal static FloatRange VerBoundaries(this Rect rect)
+    {
+        return new FloatRange(rect.y, rect.yMax);
     }
 }

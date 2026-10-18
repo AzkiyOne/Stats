@@ -50,13 +50,9 @@ public sealed partial class Table : IDrawable, ISuspendable, IDisposable
     // the collection that is currently being iterated over.
     // Primarily GUI event handlers.
     private Action? _postDraw;
-    private bool _rightPartIsPanned;
 
     // Toolbar
     private readonly Toolbar _toolbar;
-
-    // Misc
-    private readonly DragManager<ColumnWidget> _dragManager;
 
     public Table(IReadOnlyCollection<Column> columns, int recordsCount)
     {
@@ -75,14 +71,6 @@ public sealed partial class Table : IDrawable, ISuspendable, IDisposable
 
             columnWidgets.Add(columnWidget);
         }
-
-        // Misc
-        HorDragManager<ColumnWidget> dragManager = new();
-
-        dragManager.OnDragBefore += (ColumnWidget draggedColumn, ColumnWidget column) =>
-            _postDraw ??= () => HandleColumnDrag(draggedColumn, column, true);
-        dragManager.OnDragAfter += (ColumnWidget draggedColumn, ColumnWidget column) =>
-            _postDraw ??= () => HandleColumnDrag(draggedColumn, column, false);
 
         // Toolbar
         SortWidget sortWidget = new(columns.SelectMany(column => column.SortOptions));
@@ -112,7 +100,6 @@ public sealed partial class Table : IDrawable, ISuspendable, IDisposable
         _sortWidget = sortWidget;
         _doSort = true;
         _toolbar = toolbar;
-        _dragManager = dragManager;
         _filtersTab = filtersTab;
     }
 
@@ -137,15 +124,6 @@ public sealed partial class Table : IDrawable, ISuspendable, IDisposable
 
     public void Suspend()
     {
-        _rightPartIsPanned = false;
-        _dragManager.EndDrag();
-
-        for (int i = 0; i < _columns.Count; i++)
-        {
-            ColumnWidget column = _columns[i];
-
-            column.Suspend();
-        }
     }
 
     public void Dispose()

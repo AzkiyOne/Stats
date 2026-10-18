@@ -1,6 +1,7 @@
-﻿using System;
-using Stats.Extensions;
+﻿using Stats.Extensions;
 using Stats.GUIScopes;
+using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Verse;
 using static Stats.GUIStyles.Table;
@@ -132,6 +133,7 @@ public sealed partial class Table
         ref Rect columnRect = ref rect;
         columnRect.xMin -= scrollPosition.x;
         int columnsCount = columns.Length;
+        ColumnWidget? draggedColumn = GUIUtils.DraggedObj as ColumnWidget;
 
         for (int i = 0; i < columnsCount; i++)
         {
@@ -144,7 +146,12 @@ public sealed partial class Table
 
                 if (columnRectXmax > xMin || eventType == EventType.Layout)
                 {
-                    column.Draw(columnRect, topRows, bottomRows, _dragManager);
+                    column.Draw(columnRect, topRows, bottomRows);
+
+                    if (draggedColumn != null)
+                    {
+                        HandleColumnDrag(draggedColumn, column, columnRect);
+                    }
                 }
 
                 if (columnRectXmax > xMax && eventType != EventType.Layout)
@@ -154,6 +161,27 @@ public sealed partial class Table
 
                 columnRect.x = columnRectXmax;
             }
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void HandleColumnDrag(ColumnWidget draggedColumn, ColumnWidget column, Rect columnRect)
+    {
+        float mouseX = Event.current.mousePosition.x;
+        FloatRange horBoundaries = columnRect.HorBoundaries();
+
+        if (horBoundaries.MinHalf().Includes(mouseX))
+        {
+            _postDraw ??= () => MoveColumn(draggedColumn, column, true);
+        }
+        else if (horBoundaries.MaxHalf().Includes(mouseX))
+        {
+            _postDraw ??= () => MoveColumn(draggedColumn, column, false);
+        }
+
+        if (draggedColumn == column && Event.current.type == EventType.Repaint)
+        {
+            columnRect.HighlightActive();
         }
     }
 
@@ -222,9 +250,9 @@ public sealed partial class Table
     private void DrawRow(Rect rect, int index, bool isPinned)
     {
         bool mouseIsOverRect = Mouse.IsOver(rect);
-        Event @event = Event.current;
+        Event curEvent = Event.current;
 
-        if (@event.type == EventType.Repaint)
+        if (curEvent.type == EventType.Repaint)
         {
             if (mouseIsOverRect)
             {
@@ -236,40 +264,21 @@ public sealed partial class Table
             }
         }
 
-        if (mouseIsOverRect && @event is { type: EventType.MouseUp, button: 0, modifiers: EventModifiers.Control })
+        if (mouseIsOverRect && curEvent is { type: EventType.MouseUp, button: 0, modifiers: EventModifiers.Control })
         {
             _postDraw = () => ToggleRowPin(index, isPinned);
-            GUIUtils.ReleaseMouseControl();
-            //@event.Use();
+            curEvent.Use();
         }
     }
 
     private void DoHorScrollControl(Rect rect)
     {
-        Event @event = Event.current;
+        GUIUtils.DragState dragState = rect.DraggableControl(this);
 
-        if (@event is { type: EventType.MouseDown, button: 0, modifiers: EventModifiers.None } && Mouse.IsOver(rect))
+        if (dragState == GUIUtils.DragState.Dragged && Event.current.type == EventType.Layout)
         {
-            _rightPartIsPanned = true;
+            _scrollPosition.x = Mathf.Max(_scrollPosition.x - GUIUtils.MouseDelta.x, 0f);
         }
-        else if (_rightPartIsPanned)
-        {
-            if (OriginalEventUtility.EventType == EventType.MouseDrag)
-            {
-                _scrollPosition.x = Mathf.Max(_scrollPosition.x - @event.delta.x, 0f);
-                @event.Use();
-            }
-            else if (@event.rawType == EventType.MouseUp)
-            {
-                _rightPartIsPanned = false;
-                GUIUtils.ReleaseMouseControl();
-                //@event.Use();
-            }
-        }
-
-        // This button is here to capture control from whatever
-        // eats the events above horizontal scroll code.
-        rect.DrawButtonEmpty();
     }
 
     private void DoTasks()

@@ -4,3 +4,4 @@ insert_final_newline = true
 tab_width = 4
 indent_size = 4
 csharp_style_prefer_primary_constructors = false
+csharp_space_around_binary_operators = before_and_after

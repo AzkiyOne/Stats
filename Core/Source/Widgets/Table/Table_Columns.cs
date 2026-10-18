@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Stats.Columns;
+﻿using Stats.Columns;
 using Stats.Extensions;
 using Stats.GUIScopes;
+using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
@@ -39,30 +39,30 @@ public sealed partial class Table
         _leftColumnsCount--;
     }
 
-    private void HandleColumnDrag(ColumnWidget draggedColumn, ColumnWidget column, bool placeBefore)
+    private void MoveColumn(ColumnWidget col1, ColumnWidget col2, bool placeBefore)
     {
-        int draggedColumnIndex = _columns.IndexOf(draggedColumn);
-        int columnIndex = _columns.IndexOf(column);
+        int col1Index = _columns.IndexOf(col1);
+        int col2Index = _columns.IndexOf(col2);
         int leftColumnsCount = _leftColumnsCount;
-        bool draggedColumnIsPinned = draggedColumnIndex < leftColumnsCount;
-        bool columnIsPinned = columnIndex < leftColumnsCount;
+        bool col1IsPinned = col1Index < leftColumnsCount;
+        bool col2IsPinned = col2Index < leftColumnsCount;
 
-        if (draggedColumnIsPinned && columnIsPinned == false)
+        if (col1IsPinned && col2IsPinned == false)
         {
             _leftColumnsCount--;
         }
-        else if (draggedColumnIsPinned == false && columnIsPinned)
+        else if (col1IsPinned == false && col2IsPinned)
         {
             _leftColumnsCount++;
         }
 
         if (placeBefore)
         {
-            _columns.MoveBeforeElemAt(draggedColumnIndex, columnIndex);
+            _columns.MoveBeforeElemAt(col1Index, col2Index);
         }
         else
         {
-            _columns.MoveAfterElemAt(draggedColumnIndex, columnIndex);
+            _columns.MoveAfterElemAt(col1Index, col2Index);
         }
     }
 
@@ -133,7 +133,6 @@ public sealed partial class Table
         private readonly float _headerCellWidth;
         private readonly TipSignal _tooltip;
         private readonly FloatMenu _menu;
-        private bool _isResized;
         private bool _isManuallyResized;
         private bool _isHidden;
         private float _width;
@@ -203,7 +202,7 @@ public sealed partial class Table
 
         public ICollection<ColumnFilterOption> FilterOptions => _body.FilterOptions;
 
-        public void Draw(Rect rect, GUIListSegment<int> topRows, GUIListSegment<int> bottomRows, DragManager<ColumnWidget> dragManager)
+        public void Draw(Rect rect, GUIListSegment<int> topRows, GUIListSegment<int> bottomRows)
         {
             float topRowsHeight = topRows.Length * RowHeight;
 
@@ -211,7 +210,7 @@ public sealed partial class Table
                 .CutTop(out Rect topRowsRect, topRowsHeight)
                 .TakeRest(out Rect bottomRowsRect);
 
-            DrawHeader(headerCellRect, dragManager);
+            DrawHeader(headerCellRect);
 
             // Do we actually need to draw cells on Layout event?
             // Normally we would, so they can refresh themselves.
@@ -268,7 +267,7 @@ public sealed partial class Table
             }
         }
 
-        private void DrawHeader(Rect rect, DragManager<ColumnWidget> dragManager)
+        private void DrawHeader(Rect rect)
         {
             Event @event = Event.current;
             ColumnContentAlignment contentAlignment = _contentAlignment;
@@ -299,21 +298,15 @@ public sealed partial class Table
 
                 GUI.EndClip();
 
-                if (dragManager.IsDragged(this))
+                if (Mouse.IsOver(rect))
                 {
-                    rect.HighlightActive();
-                }
-                else if (Mouse.IsOver(rect))
-                {
+                    MouseoverSounds.DoRegion(rect);
                     rect.HighlightLight();
                 }
 
                 rect.DrawBorderRight(ColumnSeparatorLineColor);
             }
 
-            MouseoverSounds.DoRegion(rect);
-
-            dragManager.OnGUI(labelControlRect, rect, this);
             DoLabelControl(labelControlRect);
             DoResizeControl(resizeControlRect);
 
@@ -324,63 +317,46 @@ public sealed partial class Table
         {
             Event @event = Event.current;
 
-            if (@event is { type: EventType.MouseUp, button: 1, modifiers: EventModifiers.None } && Mouse.IsOver(rect))
+            rect.DraggableControl(this);
+
+            if (@event is { type: EventType.MouseUp, button: 1 } && Mouse.IsOver(rect))
             {
                 _menu.Open();
-                GUIUtils.ReleaseMouseControl();
-                //@event.Use();
+                @event.Use();
             }
-
-            rect.DrawButtonEmpty();
         }
+
+        private readonly object _resizeWidgetToken = new();
 
         private void DoResizeControl(Rect rect)
         {
-            Event @event = Event.current;
-            bool mouseIsOverRect = Mouse.IsOver(rect);
+            Event curEvent = Event.current;
+            GUIUtils.DragState dragState = rect.DraggableControl(_resizeWidgetToken);
 
-            if (@event is { type: EventType.MouseDown, button: 0, modifiers: EventModifiers.None } && mouseIsOverRect)
+            if (dragState == GUIUtils.DragState.DragStarted)
             {
-                if (@event.clickCount > 1)
+                _isManuallyResized = true;
+            }
+            else if (dragState == GUIUtils.DragState.Dragged && curEvent.type == EventType.Layout)
+            {
+                _width = Mathf.Clamp(_width + GUIUtils.MouseDelta.x, HeadersRowHeight, float.MaxValue);
+            }
+            else if (curEvent is { type: EventType.MouseDown, clickCount: > 1 } && Mouse.IsOver(rect))
+            {
+                _isManuallyResized = false;
+                curEvent.Use();
+            }
+
+            if (curEvent.type == EventType.Repaint)
+            {
+                if (dragState == GUIUtils.DragState.Dragged)
                 {
-                    _isManuallyResized = false;
+                    rect.HighlightActive();
                 }
                 else
                 {
-                    _isResized = true;
-                    _isManuallyResized = true;
+                    rect.DrawButtonGhostlySkin();
                 }
-            }
-            else if (_isResized)
-            {
-                if (OriginalEventUtility.EventType == EventType.MouseDrag)
-                {
-                    _width = Mathf.Clamp(_width + @event.delta.x, HeadersRowHeight, float.MaxValue);
-                    @event.Use();
-                }
-                // TODO: This will not work if the column will stop being rendered as the result of resizing.
-                else if (@event.rawType == EventType.MouseUp)
-                {
-                    _isResized = false;
-                    GUIUtils.ReleaseMouseControl();
-                    //@event.Use();
-                }
-            }
-
-            if (@event.type == EventType.Repaint && (mouseIsOverRect || _isResized))
-            {
-                rect.HighlightActive();
-            }
-
-            //GUI.SetNextControlName($"{Def.defName}_ColumnResizeControl");
-            rect.DrawButtonEmpty();
-        }
-
-        public void Suspend()
-        {
-            if (_isResized)
-            {
-                _isResized = false;
             }
         }
 
@@ -408,7 +384,7 @@ public sealed partial class Table
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private void DrawFaultyBodyCell(Rect rect, Exception e)
+        private static void DrawFaultyBodyCell(Rect rect, Exception e)
         {
             rect.Fill(Color.red);
 

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Stats.Extensions;
+using System;
 using System.Collections.Generic;
-using Stats.Extensions;
 using UnityEngine;
 using Verse;
 
@@ -8,9 +8,6 @@ namespace Stats.Widgets;
 
 internal sealed class Tab
 {
-    internal event Action<Tab>? OnTitleClick;
-    internal event Action<Tab>? OnClose;
-
     private readonly TipSignal _tooltip;
     private readonly Texture2D _icon;
     private readonly Color _iconColor;
@@ -39,17 +36,17 @@ internal sealed class Tab
         _menu = new FloatMenu(menuOptions);
     }
 
-    internal void DrawTitle(Rect rect, DragManager<Tab> dragManager, bool isSelected)
+    internal event Action<Tab>? OnTitleClick;
+
+    internal event Action<Tab>? OnClose;
+
+    internal void DrawTitle(Rect rect, bool isSelected)
     {
         Event @event = Event.current;
 
         if (@event.type == EventType.Repaint)
         {
-            if (dragManager.IsDragged(this))
-            {
-                rect.HighlightActive();
-            }
-            else if (isSelected)
+            if (isSelected)
             {
                 rect.HighlightSelected();
             }
@@ -59,7 +56,10 @@ internal sealed class Tab
                 .DrawTextureFitted(_icon, _iconColor, _iconScale);
         }
 
-        if (@event is { type: EventType.MouseUp, modifiers: EventModifiers.None } && Mouse.IsOver(rect))
+        GUIUtils.DragState dragState = rect.DraggableControl(this);
+        bool wasClicked = rect.DrawButtonGhostly();
+
+        if (wasClicked && dragState == GUIUtils.DragState.Idle)
         {
             if (@event.button == 0)
             {
@@ -70,10 +70,6 @@ internal sealed class Tab
                 _menu.Open();
             }
         }
-
-        dragManager.OnGUI(rect, this);
-
-        rect.DrawButtonGhostly();
     }
 
     internal void DrawBody(Rect rect) => _widget.Draw(rect);
