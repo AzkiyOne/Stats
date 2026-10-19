@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Stats.Columns;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Stats.Columns;
 using UnityEngine;
 using Verse;
 
 namespace Stats.Widgets;
 
 // Look at this class as a DB table view, where filters are query and the source DB table is implemented outside.
-public sealed partial class Table : IDrawable, ISuspendable, IDisposable
+public sealed partial class Table : IDrawable
 {
     // Filtering
     private readonly FiltersTab _filtersTab;
@@ -36,7 +36,6 @@ public sealed partial class Table : IDrawable, ISuspendable, IDisposable
     private ReadOnlyListSegment<ColumnWidget> LeftColumns => new(_columns, 0, _leftColumnsCount);
     private ReadOnlyListSegment<ColumnWidget> RightColumns => new(_columns, _leftColumnsCount, RightColumnsCount);
     private readonly Queue<ColumnWidget> _columnsToRefresh;
-    private readonly HashSet<ColumnWidget> _columnsToQueueOnNextCycle;
 
     // Layout
     private float _topRowsHeight;
@@ -67,7 +66,6 @@ public sealed partial class Table : IDrawable, ISuspendable, IDisposable
 
             columnWidget.OnPin += PinColumn;
             columnWidget.OnUnpin += UnpinColumn;
-            columnWidget.OnRefreshOnce += RefreshColumnOnce;
 
             columnWidgets.Add(columnWidget);
         }
@@ -92,7 +90,6 @@ public sealed partial class Table : IDrawable, ISuspendable, IDisposable
         _bottomRows = [.. Enumerable.Range(0, recordsCount)];
         _columns = columnWidgets;
         _columnsToRefresh = new Queue<ColumnWidget>(columns.Count);
-        _columnsToQueueOnNextCycle = new HashSet<ColumnWidget>();
         if (columns.Count > 0)
         {
             _leftColumnsCount = 1;
@@ -116,22 +113,6 @@ public sealed partial class Table : IDrawable, ISuspendable, IDisposable
     public void Replace(int i1, int i2)
     {
         // TODO
-    }
-
-    public void Resume()
-    {
-    }
-
-    public void Suspend()
-    {
-    }
-
-    public void Dispose()
-    {
-        foreach (ColumnWidget column in _columns)
-        {
-            column.Dispose();
-        }
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

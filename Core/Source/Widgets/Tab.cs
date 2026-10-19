@@ -56,7 +56,7 @@ internal sealed class Tab
                 .DrawTextureFitted(_icon, _iconColor, _iconScale);
         }
 
-        GUIUtils.DragState dragState = rect.DraggableControl(this);
+        GUIUtils.DragState dragState = rect.DoDraggableControl(this);
         bool wasClicked = rect.DrawButtonGhostly();
 
         if (wasClicked && dragState == GUIUtils.DragState.Idle)

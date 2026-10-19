@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Stats.Extensions;
+﻿using Stats.Extensions;
 using Stats.TableRecords;
 using Stats.Widgets;
 using Stats.Widgets.Filters;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -53,8 +53,6 @@ public sealed class LabelColumn<TRecord> : Column<TRecord> where TRecord : IThin
             new StringColumnFilterOption("Label", i => _cellText[i]),
         ];
     }
-
-    public override bool AutoRefresh => false;
 
     public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Left;
 

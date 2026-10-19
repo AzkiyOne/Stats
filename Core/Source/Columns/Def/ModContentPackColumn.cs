@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Stats.Extensions;
+﻿using Stats.Extensions;
 using Stats.TableRecords;
 using Stats.Widgets.Filters;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -34,8 +34,6 @@ public sealed class ModContentPackColumn<TRecord> : Column<TRecord> where TRecor
             new OTMColumnFilterOption<ModContentPack?>(label, i => _cellValue[i], filterOptions),
         ];
     }
-
-    public override bool AutoRefresh => false;
 
     public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Left;
 

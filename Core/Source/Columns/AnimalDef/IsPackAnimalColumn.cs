@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Stats.TableRecords;
+﻿using Stats.TableRecords;
+using System.Collections.Generic;
 
 namespace Stats.Columns.AnimalDef;
 
@@ -8,8 +8,6 @@ public sealed class IsPackAnimalColumn<TRecord> : BooleanColumn<TRecord> where T
     public IsPackAnimalColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override bool GetValueFromRecord(TRecord record)
     {

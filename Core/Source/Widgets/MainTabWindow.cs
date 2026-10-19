@@ -162,7 +162,7 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
     private void DoResizeControl(Rect rect)
     {
         Event curEvent = Event.current;
-        GUIUtils.DragState dragState = rect.DraggableControl(this);
+        GUIUtils.DragState dragState = rect.DoDraggableControl(this);
 
         if (dragState == GUIUtils.DragState.Dragged && curEvent.type == EventType.Layout)
         {

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Stats.Extensions;
+﻿using Stats.Extensions;
 using Stats.Widgets.Filters;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Stats.Columns;
@@ -14,7 +14,8 @@ public abstract class DefSetColumn<TRecord> : Column<TRecord>
     private readonly List<string> _cellText;
     private readonly List<float> _cellWidth;
 
-    protected DefSetColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.Def> defFilterOptions) : base(def, records)
+    protected DefSetColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.Def> defFilterOptions, bool autoRefresh = false)
+        : base(def, records, autoRefresh)
     {
         string label = def.LabelCap;
         int capacity = records.Capacity;

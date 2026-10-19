@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Stats.Extensions;
+﻿using Stats.Extensions;
 using Stats.TableRecords;
 using Stats.Widgets.Filters;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -34,8 +34,6 @@ public sealed class SizeColumn<TRecord> : Column<TRecord> where TRecord : IThing
             new OTMColumnFilterOption<decimal>(label, i => _cellValue[i], filterOptions)
         ];
     }
-
-    public override bool AutoRefresh => false;
 
     public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Right;
 

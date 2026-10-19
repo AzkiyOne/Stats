@@ -1,7 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using Stats.Extensions;
+using System;
 using System.Text.RegularExpressions;
-using Stats.Extensions;
 using Verse;
 
 namespace Stats.NumberFormats;
@@ -43,9 +42,4 @@ public class NumberFormatProps
     {
         pattern = _translationTokensRegex.Replace(pattern, match => match.Value.Trim('{', '}').Translate());
     }
-}
-
-public interface IDynamicNumberFormat
-{
-    public event Action OnChange;
 }

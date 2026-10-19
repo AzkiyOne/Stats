@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using RimWorld;
+﻿using RimWorld;
 using Stats.Extensions;
 using Stats.NumberFormats;
 using Stats.TableRecords;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -11,6 +11,8 @@ namespace Stats.Columns.BuildableDef;
 
 public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDefTableRecord
 {
+    private static readonly bool _autoRefresh = typeof(TRecord) is IThingTableRecord;
+
     private readonly StatDef _statDef;
     private readonly List<decimal> _cellValue;
     private readonly List<string> _cellText;
@@ -18,7 +20,7 @@ public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDef
     private readonly List<Lazy<TipSignal>?> _cellTooltip;
     private readonly NumberFormat _numberFormat;
 
-    public StatColumn(StatColumnDef def, List<TRecord> records, object _) : base(def, records)
+    public StatColumn(StatColumnDef def, List<TRecord> records, object _) : base(def, records, _autoRefresh)
     {
         string label = def.LabelCap;
         int capacity = records.Capacity;
@@ -35,18 +37,11 @@ public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDef
             new NumberColumnFilterOption(label, i => _cellValue[i])
         ];
 
-        if (typeof(TRecord) is IThingTableRecord)
+        if (_autoRefresh == false && _numberFormat is IObservable observable)
         {
-            AutoRefresh = true;
-        }
-        // Elif because a refreshable column will get refreshed naturally anyway.
-        else if (_numberFormat is IDynamicNumberFormat dynamicNumberFormat)
-        {
-            dynamicNumberFormat.OnChange += RefreshOnce;
+            observable.OnChange += RefreshOnce;
         }
     }
-
-    public override bool AutoRefresh { get; }
 
     public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Right;
 
@@ -126,9 +121,9 @@ public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDef
     {
         base.Dispose();
 
-        if (_numberFormat is IDynamicNumberFormat dynamicNumberFormat)
+        if (_numberFormat is IObservable observable)
         {
-            dynamicNumberFormat.OnChange -= RefreshOnce;
+            observable.OnChange -= RefreshOnce;
         }
     }
 }

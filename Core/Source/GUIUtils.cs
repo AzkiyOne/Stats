@@ -50,6 +50,13 @@ public static class GUIUtils
         return style.CalcSize(_guiContent);
     }
 
+    public static Rect Draw(this Rect rect, IDrawable drawable)
+    {
+        drawable.Draw(rect);
+
+        return rect;
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Rect DrawLabel(this Rect rect, string text, GUIStyle style)
     {
@@ -176,6 +183,14 @@ public static class GUIUtils
         return rect;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static Rect DoMouseoverSound(this Rect rect)
+    {
+        MouseoverSounds.DoRegion(rect);
+
+        return rect;
+    }
+
     internal static Rect DrawButtonGhostlySkinSilent(this Rect rect)
     {
         if (Mouse.IsOver(rect))
@@ -188,8 +203,8 @@ public static class GUIUtils
 
     internal static Rect DrawButtonGhostlySkin(this Rect rect)
     {
-        MouseoverSounds.DoRegion(rect);
-        rect.DrawButtonGhostlySkinSilent();
+        rect.DoMouseoverSound()
+            .DrawButtonGhostlySkinSilent();
 
         return rect;
     }
@@ -290,7 +305,7 @@ public static class GUIUtils
     private const float MinDragStartDistanceSquared = 3f * 3f;
 
     // If you need standard button behaviour, use a button or just check for events manually.
-    internal static DragState DraggableControl(this Rect rect, object obj)
+    internal static DragState DoDraggableControl(this Rect rect, object obj)
     {
         if (_draggedObj == null)
         {

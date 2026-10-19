@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using Stats.TableRecords;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -12,8 +12,6 @@ public sealed class HarvestYieldColumn<TRecord> : ThingDefCountColumn<TRecord> w
     public HarvestYieldColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetHarvestedThingDefs(thingDefs))
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override ThingDefCount? GetThingDefCount(TRecord record)
     {

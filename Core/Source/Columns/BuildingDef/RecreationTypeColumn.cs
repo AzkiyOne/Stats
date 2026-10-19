@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Stats.TableRecords;
+using System.Collections.Generic;
 using System.Linq;
-using Stats.TableRecords;
 
 namespace Stats.Columns.BuildingDef;
 
@@ -9,8 +9,6 @@ public sealed class RecreationTypeColumn<TRecord> : DefColumn<TRecord> where TRe
     public RecreationTypeColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetJoyKindDefs(thingDefs))
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override Verse.Def? GetDef(TRecord record)
     {

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Stats.TableRecords;
+using System.Collections.Generic;
 using System.Linq;
-using Stats.TableRecords;
 
 namespace Stats.Columns.AnimalDef;
 
@@ -9,8 +9,6 @@ public sealed class TrainabilityColumn<TRecord> : DefColumn<TRecord> where TReco
     public TrainabilityColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetTrainabilityDefs(thingDefs))
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override Verse.Def? GetDef(TRecord record)
     {

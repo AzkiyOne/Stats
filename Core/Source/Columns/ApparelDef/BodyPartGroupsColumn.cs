@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Stats.TableRecords;
+using System.Collections.Generic;
 using System.Linq;
-using Stats.TableRecords;
 using Verse;
 
 namespace Stats.Columns.ApparelDef;
@@ -19,8 +19,6 @@ public sealed class BodyPartGroupsColumn<TRecord> : DefSetColumn<TRecord> where 
     public BodyPartGroupsColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetBodyPartGroupDefs(thingDefs))
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override IReadOnlyCollection<Verse.Def>? GetDefs(TRecord record)
     {

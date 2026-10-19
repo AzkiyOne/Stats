@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Stats.Extensions;
+﻿using Stats.Extensions;
 using Stats.TableRecords;
+using System.Collections.Generic;
 using Verse;
 
 namespace Stats.Columns.PawnDef;
@@ -10,8 +10,6 @@ public sealed class LifeExpectancyColumn<TRecord> : NumberColumn<TRecord> where 
     public LifeExpectancyColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0 y")
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override decimal GetValueFromRecord(TRecord record)
     {

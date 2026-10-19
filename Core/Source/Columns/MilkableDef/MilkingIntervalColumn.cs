@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using RimWorld;
+﻿using RimWorld;
 using Stats.TableRecords;
+using System.Collections.Generic;
 
 namespace Stats.Columns.MilkableDef;
 
@@ -9,8 +9,6 @@ public sealed class MilkingIntervalColumn<TRecord> : NumberColumn<TRecord> where
     public MilkingIntervalColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0 d")
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override decimal GetValueFromRecord(TRecord record)
     {

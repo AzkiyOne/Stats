@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using RimWorld;
+﻿using RimWorld;
 using Stats.TableRecords;
+using System.Collections.Generic;
 
 namespace Stats.Columns.PlantDef;
 
@@ -9,8 +9,6 @@ public sealed class MinGrowingSkillToSowColumn<TRecord> : NumberColumn<TRecord> 
     public MinGrowingSkillToSowColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override decimal GetValueFromRecord(TRecord record)
     {

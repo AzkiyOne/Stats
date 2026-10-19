@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Stats.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Stats.Extensions;
 using UnityEngine;
 
 namespace Stats.Columns;
@@ -14,7 +14,8 @@ public abstract class NumberColumn<TRecord> : Column<TRecord>
     private List<float>? _cellWidth;
     private readonly string _formatString;
 
-    protected NumberColumn(ColumnDef def, List<TRecord> records, string formatString = "") : base(def, records)
+    protected NumberColumn(ColumnDef def, List<TRecord> records, string formatString = "", bool autoRefresh = false)
+        : base(def, records, autoRefresh)
     {
         string label = def.LabelCap;
         _formatString = formatString;

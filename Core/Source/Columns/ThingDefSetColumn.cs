@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Stats.Extensions;
+﻿using Stats.Extensions;
 using Stats.Widgets;
 using Stats.Widgets.Filters;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -17,7 +17,8 @@ public abstract class ThingDefSetColumn<TRecord> : Column<TRecord>
     private readonly List<Widget[]?> _cellIcons;
     private readonly List<float> _cellWidth;
 
-    protected ThingDefSetColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefFilterOptions) : base(def, records)
+    protected ThingDefSetColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefFilterOptions, bool autoRefresh = false)
+        : base(def, records, autoRefresh)
     {
         string label = def.LabelCap;
         int capacity = records.Capacity;

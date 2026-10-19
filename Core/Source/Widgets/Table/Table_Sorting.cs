@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Stats.Columns;
+using Stats.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Stats.Columns;
-using Stats.Extensions;
 using UnityEngine;
 using Verse;
 
@@ -10,7 +10,7 @@ namespace Stats.Widgets;
 
 public sealed partial class Table
 {
-    private sealed class SortWidget
+    private sealed class SortWidget : IDrawable
     {
         private const int SortDirectionAscending = 1;
         private const int SortDirectionDescending = -1;

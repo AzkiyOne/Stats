@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using Stats.Extensions;
 using Stats.TableRecords;
+using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace Stats.Columns.AnimalDef;
@@ -12,8 +12,6 @@ public sealed class ProductsColumn<TRecord> : ThingDefSetColumn<TRecord> where T
     public ProductsColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetProducts(thingDefs))
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override IReadOnlyCollection<Verse.ThingDef>? GetThingDefs(TRecord record)
     {

@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using Stats.Extensions;
 using Stats.TableRecords;
 using Stats.Widgets.Filters;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -53,8 +53,6 @@ public sealed class TechLevelColumn<TRecord> : Column<TRecord> where TRecord : I
             new OTMColumnFilterOption<TechLevel>(label, i => _cellValue[i], filterOptions)
         ];
     }
-
-    public override bool AutoRefresh => false;
 
     public override ColumnContentAlignment ContentAlignment => ColumnContentAlignment.Left;
 

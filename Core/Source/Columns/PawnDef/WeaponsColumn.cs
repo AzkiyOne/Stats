@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Stats.Extensions;
+﻿using Stats.Extensions;
 using Stats.TableRecords;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Stats.Columns.PawnDef;
 
@@ -10,8 +10,6 @@ public sealed class WeaponsColumn<TRecord> : ThingDefSetColumn<TRecord> where TR
     public WeaponsColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetWeaponDefs(thingDefs))
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override IReadOnlyCollection<Verse.ThingDef>? GetThingDefs(TRecord record)
     {

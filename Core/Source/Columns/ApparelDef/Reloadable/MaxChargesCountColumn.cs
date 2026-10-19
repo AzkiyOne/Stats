@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using RimWorld;
+﻿using RimWorld;
 using Stats.TableRecords;
+using System.Collections.Generic;
 
 namespace Stats.Columns.ApparelDef.Reloadable;
 
@@ -9,8 +9,6 @@ public sealed class MaxChargesCountColumn<TRecord> : NumberColumn<TRecord> where
     public MaxChargesCountColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override decimal GetValueFromRecord(TRecord record)
     {

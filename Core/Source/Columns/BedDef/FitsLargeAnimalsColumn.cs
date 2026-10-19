@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using RimWorld;
+﻿using RimWorld;
 using Stats.TableRecords;
+using System.Collections.Generic;
 
 namespace Stats.Columns.BedDef;
 
@@ -9,8 +9,6 @@ public sealed class FitsLargeAnimalsColumn<TRecord> : BooleanColumn<TRecord> whe
     public FitsLargeAnimalsColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override bool GetValueFromRecord(TRecord record)
     {

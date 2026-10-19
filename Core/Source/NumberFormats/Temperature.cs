@@ -3,7 +3,7 @@ using Verse;
 
 namespace Stats.NumberFormats;
 
-public abstract class AbstractTemperature : NumberFormat, IDynamicNumberFormat
+public abstract class AbstractTemperature : NumberFormat, IObservable
 {
     private readonly string[] _formatStrings;
 

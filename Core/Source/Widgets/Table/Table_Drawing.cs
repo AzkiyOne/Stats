@@ -273,7 +273,7 @@ public sealed partial class Table
 
     private void DoHorScrollControl(Rect rect)
     {
-        GUIUtils.DragState dragState = rect.DraggableControl(this);
+        GUIUtils.DragState dragState = rect.DoDraggableControl(this);
 
         if (dragState == GUIUtils.DragState.Dragged && Event.current.type == EventType.Layout)
         {
@@ -323,7 +323,7 @@ public sealed partial class Table
 
             _doSort = false;
         }
-        else if (_columnsToRefresh.TryDequeue(out ColumnWidget column))
+        else if (_columnsToRefresh.TryDequeue(out ColumnWidget? column))
         {
             RefreshQueuedColum(column);
         }

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using Verse;
-using Verse.Sound;
 using static Stats.GUIStyles.Table;
 
 namespace Stats.Widgets;
@@ -66,14 +65,6 @@ public sealed partial class Table
         }
     }
 
-    private void RefreshColumnOnce(ColumnWidget columnWidget)
-    {
-        // Manually refreshed columns are queued only after we finish the current queue.
-        // Until that, we'll put them into a separate collection where they will wait to be queued.
-        // This is done in order to prevent them from locking the queue by spamming RefreshOnce.
-        _columnsToQueueOnNextCycle.Add(columnWidget);
-    }
-
     private void RefreshQueuedColum(ColumnWidget column)
     {
         // TODO: Implementation
@@ -96,11 +87,12 @@ public sealed partial class Table
 
         if (_columnsToRefresh.Count == 0)
         {
-            ResetAutoRefreshableColumnsQueue();
+            ResetColumnsToRefreshQueue();
         }
     }
 
-    private void ResetAutoRefreshableColumnsQueue()
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void ResetColumnsToRefreshQueue()
     {
         foreach (ColumnWidget column in _columns)
         {
@@ -109,17 +101,6 @@ public sealed partial class Table
                 _columnsToRefresh.Enqueue(column);
             }
         }
-
-        foreach (ColumnWidget column in _columnsToQueueOnNextCycle)
-        {
-            // Normally, auto refreshable columns do not manually refresh themselves, but who knows.
-            if (_columnsToRefresh.Contains(column) == false)
-            {
-                _columnsToRefresh.Enqueue(column);
-            }
-        }
-
-        _columnsToQueueOnNextCycle.Clear();
     }
 
     private sealed class ColumnWidget
@@ -153,10 +134,6 @@ public sealed partial class Table
                 new FloatMenuOption("Unpin", () => OnUnpin?.Invoke(this)),
                 new FloatMenuOption("Hide", () => IsHidden = true)
             ]);
-
-            // TODO: The issue with this approach is that if a column is cached
-            // each table where it is used will schedule it for refreshing.
-            column.OnRefreshOnce += HandleColumnRefreshOnce;
         }
 
         public event Action<ColumnWidget>? OnPin;
@@ -166,8 +143,6 @@ public sealed partial class Table
         public event Action<ColumnWidget>? OnShow;
 
         public event Action<ColumnWidget>? OnHide;
-
-        public event Action<ColumnWidget>? OnRefreshOnce;
 
         public string Label => _label;
 
@@ -269,61 +244,49 @@ public sealed partial class Table
 
         private void DrawHeader(Rect rect)
         {
-            Event @event = Event.current;
-            ColumnContentAlignment contentAlignment = _contentAlignment;
-            const float SideControlMargin = 1f;
-            rect.CutRight(out Rect resizeControlRect, GUIStyles.TableCell.PadLR - SideControlMargin)
-                .TakeRest(out Rect labelControlRect);
-
-            if (@event.type == EventType.Repaint)
+            if (Event.current.type == EventType.Repaint)
             {
-                Rect labelClipRect = labelControlRect.ContractedBy(SideControlMargin, GUIStyles.TableCell.PadTB);
-                GUI.BeginClip(labelClipRect);
+                Rect labelRect = rect.ContractedBy(GUIStyles.TableCell.PadLR, GUIStyles.TableCell.PadTB);
 
-                float labelWidgetWidth = _labelWidget.Size.x;
-                Rect labelRect = labelClipRect with { x = 0f, y = 0f };
-                if (contentAlignment == ColumnContentAlignment.Right)
+                using (new GUIClipScopeSimple(labelRect))
                 {
-                    labelRect.CutRight(out labelRect, labelWidgetWidth);
-                }
-                else if (contentAlignment == ColumnContentAlignment.Middle)
-                {
-                    labelRect.CutMidX(out labelRect, labelWidgetWidth);
-                }
-                else
-                {
-                    labelRect = labelRect with { width = labelWidgetWidth };
-                }
-                _labelWidget.Draw(labelRect);
+                    labelRect = labelRect with { x = 0f, y = 0f };
+                    float labelWidgetWidth = _labelWidget.Size.x;
 
-                GUI.EndClip();
+                    labelRect = _contentAlignment switch
+                    {
+                        ColumnContentAlignment.Right => labelRect.RightPartPixels(labelWidgetWidth),
+                        ColumnContentAlignment.Middle => labelRect.MiddlePartPixels(labelWidgetWidth, labelRect.height),
+                        _ => labelRect.LeftPartPixels(labelWidgetWidth),
+                    };
 
-                if (Mouse.IsOver(rect))
-                {
-                    MouseoverSounds.DoRegion(rect);
-                    rect.HighlightLight();
+                    _labelWidget.Draw(labelRect);
                 }
 
-                rect.DrawBorderRight(ColumnSeparatorLineColor);
+                rect.DrawButtonGhostlySkin()
+                    .DrawBorderRight(ColumnSeparatorLineColor);
             }
+
+            rect.CutRight(out Rect resizeControlRect, GUIStyles.TableCell.PadLR - 1f)
+                .TakeRest(out Rect labelControlRect);
 
             DoLabelControl(labelControlRect);
             DoResizeControl(resizeControlRect);
-
-            labelControlRect.Tip(_tooltip);
         }
 
         private void DoLabelControl(Rect rect)
         {
             Event @event = Event.current;
 
-            rect.DraggableControl(this);
+            rect.DoDraggableControl(this);
 
             if (@event is { type: EventType.MouseUp, button: 1 } && Mouse.IsOver(rect))
             {
                 _menu.Open();
                 @event.Use();
             }
+
+            rect.Tip(_tooltip);
         }
 
         private readonly object _resizeWidgetToken = new();
@@ -331,7 +294,7 @@ public sealed partial class Table
         private void DoResizeControl(Rect rect)
         {
             Event curEvent = Event.current;
-            GUIUtils.DragState dragState = rect.DraggableControl(_resizeWidgetToken);
+            GUIUtils.DragState dragState = rect.DoDraggableControl(_resizeWidgetToken);
 
             if (dragState == GUIUtils.DragState.DragStarted)
             {
@@ -355,24 +318,14 @@ public sealed partial class Table
                 }
                 else
                 {
-                    rect.DrawButtonGhostlySkin();
+                    rect.DrawButtonGhostlySkinSilent();
                 }
             }
-        }
-
-        private void HandleColumnRefreshOnce()
-        {
-            OnRefreshOnce?.Invoke(this);
         }
 
         public void RefreshCells()
         {
             _body.RefreshCells();
-        }
-
-        public void Dispose()
-        {
-            _body.OnRefreshOnce -= HandleColumnRefreshOnce;
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]

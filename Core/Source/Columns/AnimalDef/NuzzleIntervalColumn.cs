@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Stats.Extensions;
+﻿using Stats.Extensions;
 using Stats.TableRecords;
+using System.Collections.Generic;
 using Verse;
 
 namespace Stats.Columns.AnimalDef;
@@ -10,8 +10,6 @@ public sealed class NuzzleIntervalColumn<TRecord> : NumberColumn<TRecord> where 
     public NuzzleIntervalColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0.0 h")
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override decimal GetValueFromRecord(TRecord record)
     {

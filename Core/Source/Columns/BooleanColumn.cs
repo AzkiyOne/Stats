@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Stats.Extensions;
+﻿using Stats.Extensions;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -10,7 +10,8 @@ public abstract class BooleanColumn<TRecord> : Column<TRecord>
     private static readonly Texture2D _textureTrue = Verse.Widgets.CheckboxOnTex;
     private readonly List<bool> _cellValue;
 
-    protected BooleanColumn(ColumnDef def, List<TRecord> records) : base(def, records)
+    protected BooleanColumn(ColumnDef def, List<TRecord> records, bool autoRefresh = false)
+        : base(def, records, autoRefresh)
     {
         string label = def.LabelCap;
         _cellValue = new List<bool>(records.Capacity);

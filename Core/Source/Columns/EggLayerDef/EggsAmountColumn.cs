@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using Stats.Extensions;
 using Stats.TableRecords;
+using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace Stats.Columns.EggLayerDef;
@@ -12,8 +12,6 @@ public sealed class EggsAmountColumn<TRecord> : ThingDefCountColumn<TRecord> whe
     public EggsAmountColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetEggDefs(thingDefs))
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override ThingDefCount? GetThingDefCount(TRecord record)
     {

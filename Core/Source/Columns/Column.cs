@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Stats.Widgets;
 using System.Collections.Generic;
 using System.Linq;
-using Stats.Widgets;
 using UnityEngine;
 
 namespace Stats.Columns;
@@ -19,16 +18,20 @@ public abstract class Column
     private readonly string _label;
     private readonly Widget? _labelShort;
     private readonly string _description;
+    private readonly bool _autoRefresh;
+    private bool _refreshOnce;
 
-    protected Column(ColumnDef def) : this(def.LabelCap, def.labelShort, def.description)
+    protected Column(ColumnDef def, bool autoRefresh = false)
+        : this(def.LabelCap, def.labelShort, def.description, autoRefresh)
     {
     }
 
-    protected Column(string label, Widget? labelShort, string description)
+    protected Column(string label, Widget? labelShort, string description, bool autoRefresh = false)
     {
         _label = label;
         _labelShort = labelShort;
         _description = description;
+        _autoRefresh = autoRefresh;
     }
 
     public string Label => _label;
@@ -43,9 +46,7 @@ public abstract class Column
 
     public abstract ICollection<ColumnFilterOption> FilterOptions { get; }
 
-    public abstract bool AutoRefresh { get; }
-
-    internal event Action? OnRefreshOnce;
+    internal bool AutoRefresh => _autoRefresh || _refreshOnce;
 
     public abstract void DrawCell(Rect rect, int i);
 
@@ -61,11 +62,14 @@ public abstract class Column
 
     protected abstract float GetCellWidth(int i);
 
-    public abstract void RefreshCells();
+    public virtual void RefreshCells()
+    {
+        _refreshOnce = false;
+    }
 
     protected void RefreshOnce()
     {
-        OnRefreshOnce?.Invoke();
+        _refreshOnce = true;
     }
 
     public virtual void Dispose()
@@ -77,11 +81,13 @@ public abstract class Column<TRecord> : Column
 {
     private readonly List<TRecord> _records;
 
-    protected Column(ColumnDef def, List<TRecord> records) : this(def.LabelCap, def.labelShort, def.description, records)
+    protected Column(ColumnDef def, List<TRecord> records, bool autoRefresh = false)
+        : this(def.LabelCap, def.labelShort, def.description, records, autoRefresh)
     {
     }
 
-    protected Column(string label, Widget? labelShort, string description, List<TRecord> records) : base(label, labelShort, description)
+    protected Column(string label, Widget? labelShort, string description, List<TRecord> records, bool autoRefresh = false)
+        : base(label, labelShort, description, autoRefresh)
     {
         _records = records;
     }
@@ -92,6 +98,8 @@ public abstract class Column<TRecord> : Column
 
     public override void RefreshCells()
     {
+        base.RefreshCells();
+
         List<TRecord> records = _records;
 
         for (int i = 0; i < records.Count; i++)

@@ -35,3 +35,16 @@ internal readonly record struct GUIClipScope : IDisposable
         GUI.EndClip();
     }
 }
+
+internal readonly record struct GUIClipScopeSimple : IDisposable
+{
+    public GUIClipScopeSimple(Rect rect)
+    {
+        GUI.BeginClip(rect);
+    }
+
+    public void Dispose()
+    {
+        GUI.EndClip();
+    }
+}

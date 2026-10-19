@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using Stats.TableRecords;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -13,8 +13,6 @@ public sealed class FuelCapacityScaledColumn<TRecord> : ThingDefCountColumn<TRec
     {
         Events.DifficultyChanged += RefreshOnce;
     }
-
-    public override bool AutoRefresh => false;
 
     protected override ThingDefCount? GetThingDefCount(TRecord record)
     {

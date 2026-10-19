@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using Stats.Extensions;
 using Stats.TableRecords;
+using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace Stats.Columns.PawnDef;
@@ -12,8 +12,6 @@ public sealed class LeatherAmountColumn<TRecord> : ThingDefCountColumn<TRecord> 
     public LeatherAmountColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetLeatherDefs(thingDefs))
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override ThingDefCount? GetThingDefCount(TRecord record)
     {

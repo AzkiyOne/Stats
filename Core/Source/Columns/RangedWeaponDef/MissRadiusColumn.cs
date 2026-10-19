@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Stats.Extensions;
+﻿using Stats.Extensions;
 using Stats.TableRecords;
+using System.Collections.Generic;
 using Verse;
 
 namespace Stats.Columns.RangedWeaponDef;
@@ -10,8 +10,6 @@ public sealed class MissRadiusColumn<TRecord> : NumberColumn<TRecord> where TRec
     public MissRadiusColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0.0")
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override decimal GetValueFromRecord(TRecord record)
     {

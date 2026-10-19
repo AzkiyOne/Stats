@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using RimWorld;
+﻿using RimWorld;
 using Stats.Extensions;
 using Stats.TableRecords;
+using System.Collections.Generic;
 
 namespace Stats.Columns.ShearableDef;
 
@@ -10,8 +10,6 @@ public sealed class WoolPerDayColumn<TRecord> : NumberColumn<TRecord> where TRec
     public WoolPerDayColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0.0/d")
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override decimal GetValueFromRecord(TRecord record)
     {

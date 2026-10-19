@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using Stats.TableRecords;
+using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace Stats.Columns.RefuelableDef;
@@ -11,8 +11,6 @@ public sealed class FuelCapacityColumn<TRecord> : ThingDefCountColumn<TRecord> w
     public FuelCapacityColumn(ColumnDef def, List<TRecord> records, IEnumerable<Verse.ThingDef> thingDefs) : base(def, records, GetFuelDefs(thingDefs))
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override ThingDefCount? GetThingDefCount(TRecord record)
     {

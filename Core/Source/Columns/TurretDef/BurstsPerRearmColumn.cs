@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using RimWorld;
+﻿using RimWorld;
 using Stats.Extensions;
 using Stats.TableRecords;
+using System.Collections.Generic;
 using Verse;
 
 namespace Stats.Columns.TurretDef;
@@ -11,8 +11,6 @@ public sealed class BurstsPerRearmColumn<TRecord> : NumberColumn<TRecord> where 
     public BurstsPerRearmColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records)
     {
     }
-
-    public override bool AutoRefresh => false;
 
     protected override decimal GetValueFromRecord(TRecord record)
     {
