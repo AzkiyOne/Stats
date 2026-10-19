@@ -9,7 +9,7 @@ using Verse;
 namespace Stats.Widgets;
 
 // Look at this class as a DB table view, where filters are query and the source DB table is implemented outside.
-public sealed partial class Table : IDrawable
+public sealed partial class Table : IDrawable, IDisposable
 {
     // Filtering
     private readonly FiltersTab _filtersTab;
@@ -53,6 +53,18 @@ public sealed partial class Table : IDrawable
     // Toolbar
     private readonly Toolbar _toolbar;
 
+    // Misc
+    private readonly ITableDataSource? _dataSource;
+    private bool _forceTasks;
+
+    public Table(IReadOnlyCollection<Column> columns, ITableDataSource dataSource) : this(columns, dataSource.RecordsCount)
+    {
+        _dataSource = dataSource;
+
+        dataSource.OnAdd += Add;
+        dataSource.OnReplace += Replace;
+    }
+
     public Table(IReadOnlyCollection<Column> columns, int recordsCount)
     {
         // Columns
@@ -64,8 +76,7 @@ public sealed partial class Table : IDrawable
             // ColumnWidget from outside or be willing to expose the class to Table users.
             ColumnWidget columnWidget = new(column, true);
 
-            columnWidget.OnPin += PinColumn;
-            columnWidget.OnUnpin += UnpinColumn;
+            columnWidget.OnTogglePin += ToggleColumnPin;
 
             columnWidgets.Add(columnWidget);
         }
@@ -102,17 +113,55 @@ public sealed partial class Table : IDrawable
 
     public void Add()
     {
-        // TODO
+        _recordsCount++;
+        _doFilter = true;
     }
 
-    // Although we'll probably need only one index,
-    // we define this method instead of simple Remove(int i)
-    // to remember that removed record is swapped with
+    // Remember that removed record is swapped with
     // the last one and then it gets removed instead
     // (because it is faster that way).
-    public void Replace(int i1, int i2)
+    public void Replace(int recordIndex1, int recordIndex2)
     {
-        // TODO
+        //           Sync top rows
+        //   Initial state | Replace(0, 4)
+        //                 |
+        //              Records
+        //  0  1  2  3  4  |  0  1  2  3
+        // [A, B, C, D, E] | [E, B, C, D]
+        //                 |
+        //             Both pinned
+        //        A, C, E  |  C, E
+        //       [0, 2, 4] | [2, 0]
+        //             A pinned
+        //           A, C  |  C
+        //          [0, 2] | [2]
+        //             E pinned
+        //           E, C  |  E, C
+        //          [4, 2] | [0, 2]
+        int rowIndex1 = _topRows.IndexOf(recordIndex1);
+        int rowIndex2 = _topRows.IndexOf(recordIndex2);
+
+        if (rowIndex2 != -1)
+        {
+            _topRows[rowIndex2] = recordIndex1;
+        }
+
+        if (rowIndex1 != -1)
+        {
+            _topRows.RemoveAt(rowIndex1);
+        }
+
+        // For bottom rows we just do force reset to not make a record removal into (at least) O(n*2)
+        _doFilter = true;
+        _forceTasks = true;
+
+        _recordsCount--;
+    }
+
+    public void Dispose()
+    {
+        _dataSource?.OnAdd -= Add;
+        _dataSource?.OnReplace -= Replace;
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

@@ -1,6 +1,7 @@
 ﻿using Stats.Extensions;
 using Stats.GUIScopes;
 using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using Verse;
@@ -14,12 +15,13 @@ public sealed partial class Table
     {
         EventType eventType = Event.current.type;
 
-        if (eventType == EventType.Layout)
+        if (eventType == EventType.Layout || _forceTasks)
         {
             // It is important to run tasks as early as possible,
             // so filtering can be done before _rows will be read by other code.
             // For example, by columns, to calculate their width.
             DoTasks();
+            _forceTasks = false;
         }
 
         // Layout
@@ -281,6 +283,8 @@ public sealed partial class Table
         }
     }
 
+    private readonly Stopwatch _stopwatch = new();
+
     private void DoTasks()
     {
         // How it works:
@@ -300,14 +304,15 @@ public sealed partial class Table
         //
         // 0: ColumnsToRefresh = [A, B, C]
         // 1: Refresh column A
-        // 2: Apply filters
-        // 3: Sort
-        // 4: Refresh column B
-        // 5: Apply filters
-        // 6: Filters were changed by the player
-        // 7: Apply filters
+        // 2: Apply filters, Sort
+        // 3: Refresh column B
+        // 4: Apply filters, Sort
+        // 5: Filters were changed by the player
+        // 6: Apply filters, Sort
+        // 7: Sorting settings were changed by the player
         // 8: Sort
-        // 9: Refresh column C. ColumnsToRefresh = [A, B, C]
+        // 9: Refresh column C
+        // 10: ColumnsToRefresh = [A, B, C]
         if (_doFilter)
         {
             ApplyFilters();
@@ -323,9 +328,42 @@ public sealed partial class Table
 
             _doSort = false;
         }
-        else if (_columnsToRefresh.TryDequeue(out ColumnWidget? column))
+        else if (_columnsToRefresh.Count > 0)
         {
-            RefreshQueuedColum(column);
+            _stopwatch.Start();
+
+            while (_columnsToRefresh.TryDequeue(out ColumnWidget? column) && _stopwatch.ElapsedMilliseconds < 1)
+            {
+                // TODO: Implementation
+                //bool columnWasAltered = false;
+                bool columnWasAltered = true;
+
+                try
+                {
+                    column.RefreshCells();
+                }
+                catch (Exception e)
+                {
+                    LogUnableToRefreshColumn(e, column);
+                }
+
+                if (columnWasAltered)
+                {
+                    _doFilter = true;
+                }
+            }
+
+            _stopwatch.Reset();
+        }
+        else
+        {
+            foreach (ColumnWidget column in _columns)
+            {
+                if (column.AutoRefresh)
+                {
+                    _columnsToRefresh.Enqueue(column);
+                }
+            }
         }
     }
 }

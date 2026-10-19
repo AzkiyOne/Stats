@@ -2,7 +2,6 @@
 using Stats.Extensions;
 using Stats.GUIScopes;
 using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using Verse;
@@ -12,10 +11,22 @@ namespace Stats.Widgets;
 
 public sealed partial class Table
 {
-    private void PinColumn(ColumnWidget column)
+    private void ToggleColumnPin(ColumnWidget column)
     {
         int columnIndex = _columns.IndexOf(column);
 
+        if (columnIndex < _leftColumnsCount)
+        {
+            UnpinColumn(columnIndex);
+        }
+        else
+        {
+            PinColumn(columnIndex);
+        }
+    }
+
+    private void PinColumn(int columnIndex)
+    {
         if (columnIndex != _leftColumnsCount)
         {
             int lastPinnedColumnIndex = _leftColumnsCount - 1;
@@ -25,9 +36,8 @@ public sealed partial class Table
         _leftColumnsCount++;
     }
 
-    private void UnpinColumn(ColumnWidget column)
+    private void UnpinColumn(int columnIndex)
     {
-        int columnIndex = _columns.IndexOf(column);
         int lastPinnedColumnIndex = _leftColumnsCount - 1;
 
         if (columnIndex != lastPinnedColumnIndex)
@@ -65,44 +75,6 @@ public sealed partial class Table
         }
     }
 
-    private void RefreshQueuedColum(ColumnWidget column)
-    {
-        // TODO: Implementation
-        //bool columnWasAltered = false;
-        bool columnWasAltered = true;
-
-        try
-        {
-            column.RefreshCells();
-        }
-        catch (Exception e)
-        {
-            LogUnableToRefreshColumn(e, column);
-        }
-
-        if (columnWasAltered)
-        {
-            _doFilter = true;
-        }
-
-        if (_columnsToRefresh.Count == 0)
-        {
-            ResetColumnsToRefreshQueue();
-        }
-    }
-
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    private void ResetColumnsToRefreshQueue()
-    {
-        foreach (ColumnWidget column in _columns)
-        {
-            if (column.AutoRefresh)
-            {
-                _columnsToRefresh.Enqueue(column);
-            }
-        }
-    }
-
     private sealed class ColumnWidget
     {
         private readonly Column _body;
@@ -130,15 +102,12 @@ public sealed partial class Table
             _headerCellWidth = _labelWidget.Size.x + GUIStyles.TableCell.PadHor;
             _tooltip = $"<i>{column.Label}</i>\n\n{column.Description}";
             _menu = new FloatMenu([
-                new FloatMenuOption("Pin", () => OnPin?.Invoke(this)),
-                new FloatMenuOption("Unpin", () => OnUnpin?.Invoke(this)),
+                new FloatMenuOption("Toggle Pin", () => OnTogglePin?.Invoke(this)),
                 new FloatMenuOption("Hide", () => IsHidden = true)
             ]);
         }
 
-        public event Action<ColumnWidget>? OnPin;
-
-        public event Action<ColumnWidget>? OnUnpin;
+        public event Action<ColumnWidget>? OnTogglePin;
 
         public event Action<ColumnWidget>? OnShow;
 
@@ -174,8 +143,6 @@ public sealed partial class Table
                 }
             }
         }
-
-        public ICollection<ColumnFilterOption> FilterOptions => _body.FilterOptions;
 
         public void Draw(Rect rect, GUIListSegment<int> topRows, GUIListSegment<int> bottomRows)
         {
