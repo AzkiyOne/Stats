@@ -1,6 +1,5 @@
 ﻿using Stats.Widgets;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Stats.Columns;
@@ -52,12 +51,17 @@ public abstract class Column
 
     public virtual float GetMaxCellWidth(List<int> recordIds)
     {
-        if (recordIds.Count > 0)
+        float maxCellWidth = 0f;
+
+        for (int i = 0; i < recordIds.Count; i++)
         {
-            return recordIds.Select(GetCellWidth).Max();
+            int recordId = recordIds[i];
+            float cellWidth = GetCellWidth(recordId);
+
+            maxCellWidth = Mathf.Max(maxCellWidth, cellWidth);
         }
 
-        return 0f;
+        return maxCellWidth;
     }
 
     protected abstract float GetCellWidth(int i);

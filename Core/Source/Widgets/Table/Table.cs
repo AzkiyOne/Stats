@@ -18,7 +18,8 @@ public sealed partial class Table : IDrawable, IDisposable
 
     // Sorting
     private readonly SortWidget _sortWidget;
-    private bool _doSort;
+    private bool _doSortAllRows;
+    private bool _doSortTopRows;
 
     // Rows
     // Why is this called "rows"?
@@ -84,7 +85,7 @@ public sealed partial class Table : IDrawable, IDisposable
         // Toolbar
         SortWidget sortWidget = new(columns.SelectMany(column => column.SortOptions));
 
-        sortWidget.OnChange += () => _doSort = true;
+        sortWidget.OnChange += () => _doSortAllRows = true;
 
         Toolbar toolbar = new(columnWidgets, sortWidget);
 
@@ -106,7 +107,7 @@ public sealed partial class Table : IDrawable, IDisposable
             _leftColumnsCount = 1;
         }
         _sortWidget = sortWidget;
-        _doSort = true;
+        _doSortAllRows = true;
         _toolbar = toolbar;
         _filtersTab = filtersTab;
     }

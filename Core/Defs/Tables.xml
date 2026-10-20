@@ -113,6 +113,39 @@
     </Stats.TableDef>
 
     <Stats.TableDef>
+        <defName>ApparelSpawned</defName>
+        <label>Apparel (spawned)</label>
+        <iconPath>Things/Pawn/Humanlike/Apparel/Duster/Duster</iconPath>
+        <iconColor>(112,82,65)</iconColor>
+        <workerClass>Stats.Tables.ApparelTable</workerClass>
+        <columns>
+            <li IsPrimary="true">Thing_Label</li>
+            <li IsPrimary="true">Thing_ArmorRatingSharp</li>
+            <li IsPrimary="true">Thing_ArmorRatingBlunt</li>
+            <li IsPrimary="true">Thing_ArmorRatingHeat</li>
+            <li IsPrimary="true" MayRequire="CETeam.CombatExtended">Thing_ArmorRatingElectric</li>
+            <li IsPrimary="true">Thing_EnergyShieldCapacity</li>
+            <li IsPrimary="true">Thing_EnergyShieldRechargeRate</li>
+            <li IsPrimary="true">Apparel_InsulationCold</li>
+            <li IsPrimary="true">Apparel_InsulationHeat</li>
+            <li IsPrimary="true">Apparel_OccupiedLayers</li>
+            <li IsPrimary="true">Apparel_CoveredBodyPartGroups</li>
+            <!-- <li IsPrimary="true">Thing_EquippedStatOffsets</li> -->
+            <li IsPrimary="true">Thing_Mass</li>
+            <li IsPrimary="true" MayRequire="CETeam.CombatExtended">Apparel_WornBulk</li>
+            <li IsPrimary="true">Thing_Flammability</li>
+            <li>Apparel_CountsAsClothingForNudity</li>
+            <li>Apparel_EquipDelay</li>
+            <li>Apparel_MaxChargesCount</li>
+            <li>Apparel_IsDestroyedWhenAllChargesSpent</li>
+            <li>Thing_Beauty</li>
+            <li>Thing_MarketValue</li>
+            <li>Thing_TechLevel</li>
+            <li>Thing_ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
         <defName>PowerGenerators</defName>
         <label>Buildings / Power / Generators</label>
         <iconPath>Things/Building/Power/ChemfuelPoweredGenerator</iconPath>

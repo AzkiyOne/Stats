@@ -11,7 +11,7 @@ namespace Stats.Columns.BuildableDef;
 
 public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDefTableRecord
 {
-    private static readonly bool _autoRefresh = typeof(TRecord) is IThingTableRecord;
+    private static readonly bool _autoRefresh = typeof(IThingTableRecord).IsAssignableFrom(typeof(TRecord));
 
     private readonly StatDef _statDef;
     private readonly List<decimal> _cellValue;
@@ -52,6 +52,13 @@ public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDef
     public override void DrawCell(Rect rect, int i)
     {
         _cellText[i].Draw(rect, GUIStyles.TableCell.Number);
+
+        Lazy<TipSignal>? tooltip = _cellTooltip[i];
+
+        if (tooltip != null)
+        {
+            rect.Tip(tooltip.Value);
+        }
     }
 
     protected override float GetCellWidth(int i)
@@ -64,34 +71,42 @@ public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDef
         return record.StatRequest;
     }
 
-    private void GetCellValues(TRecord record, out decimal value, out string text, out Lazy<TipSignal>? tooltip, out float width)
+    private void GetCellDrawData(decimal value, float statValue, StatRequest statRequest, out string text, out Lazy<TipSignal>? tooltip, out float width)
     {
-        StatRequest statRequest = GetStatRequest(record);
-
-        if (_statDef.Worker.ShouldShowFor(statRequest))
+        if (value != 0m)
         {
-            float statValue = _statDef.Worker.GetValue(statRequest);
-            value = _numberFormat.ToDecimal(statValue);
+            text = _numberFormat.FormatNumber(value);
+            width = text.CalcSize(GUIStyles.TableCell.Number).x;
+            tooltip = new Lazy<TipSignal>(() => _statDef.Worker.GetExplanationFull(statRequest, ToStringNumberSense.Absolute, statValue));
 
-            if (value != 0m)
-            {
-                text = _numberFormat.FormatNumber(value);
-                width = text.CalcSize(GUIStyles.TableCell.Number).x;
-                tooltip = new Lazy<TipSignal>(() => _statDef.Worker.GetExplanationFull(statRequest, ToStringNumberSense.Absolute, statValue));
-
-                return;
-            }
+            return;
         }
 
-        value = 0m;
         text = "";
         width = 0f;
         tooltip = null;
     }
 
+    private void GetCellData(TRecord record, out decimal value, out float statValue, out StatRequest statRequest)
+    {
+        statRequest = GetStatRequest(record);
+
+        if (_statDef.Worker.ShouldShowFor(statRequest))
+        {
+            statValue = _statDef.Worker.GetValue(statRequest);
+            value = _numberFormat.ToDecimal(statValue);
+
+            return;
+        }
+
+        value = 0m;
+        statValue = 0f;
+    }
+
     public override void Add(TRecord record)
     {
-        GetCellValues(record, out decimal value, out string text, out Lazy<TipSignal>? tooltip, out float width);
+        GetCellData(record, out decimal value, out float statValue, out StatRequest statRequest);
+        GetCellDrawData(value, statValue, statRequest, out string text, out Lazy<TipSignal>? tooltip, out float width);
 
         _cellValue.Add(value);
         _cellText.Add(text);
@@ -101,12 +116,17 @@ public class StatColumn<TRecord> : Column<TRecord> where TRecord : IBuildableDef
 
     public override void RefreshCell(int i, TRecord record)
     {
-        GetCellValues(record, out decimal value, out string text, out Lazy<TipSignal>? tooltip, out float width);
+        GetCellData(record, out decimal value, out float statValue, out StatRequest statRequest);
 
-        _cellValue[i] = value;
-        _cellText[i] = text;
-        _cellWidth[i] = width;
-        _cellTooltip[i] = tooltip;
+        if (_cellValue[i] != value)
+        {
+            GetCellDrawData(value, statValue, statRequest, out string text, out Lazy<TipSignal>? tooltip, out float width);
+
+            _cellValue[i] = value;
+            _cellText[i] = text;
+            _cellWidth[i] = width;
+            _cellTooltip[i] = tooltip;
+        }
     }
 
     public override void Replace(int i1, int i2)

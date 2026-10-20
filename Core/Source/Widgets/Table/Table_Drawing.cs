@@ -321,12 +321,19 @@ public sealed partial class Table
             // We have to do sorting immediately, otherwise the table will flicker.
             _sortWidget.SortRows(_bottomRows);
         }
-        else if (_doSort)
+        else if (_doSortAllRows)
         {
             _sortWidget.SortRows(_topRows);
             _sortWidget.SortRows(_bottomRows);
 
-            _doSort = false;
+            _doSortAllRows = false;
+            _doSortTopRows = false;
+        }
+        else if (_doSortTopRows)
+        {
+            _sortWidget.SortRows(_topRows);
+
+            _doSortTopRows = false;
         }
         else if (_columnsToRefresh.Count > 0)
         {
@@ -350,6 +357,7 @@ public sealed partial class Table
                 if (columnWasAltered)
                 {
                     _doFilter = true;
+                    _doSortTopRows = true;
                 }
             }
 
@@ -357,8 +365,10 @@ public sealed partial class Table
         }
         else
         {
-            foreach (ColumnWidget column in _columns)
+            for (int i = 0; i < _columns.Count; i++)
             {
+                ColumnWidget column = _columns[i];
+
                 if (column.AutoRefresh)
                 {
                     _columnsToRefresh.Enqueue(column);

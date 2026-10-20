@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Stats.Columns;
+using Stats.Extensions;
+using Stats.Widgets.Filters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Stats.Columns;
-using Stats.Extensions;
-using Stats.Widgets.Filters;
 using UnityEngine;
 using Verse;
 
@@ -161,8 +161,9 @@ public sealed partial class Table
                 _filtersMenu.Open();
             }
 
-            foreach (FilterListItem filter in _filters)
+            for (int i = 0; i < _filters.Count; i++)
             {
+                FilterListItem filter = _filters[i];
                 Vector2 filterSize = filter.Size;
                 rect = rect.CutTop(out Rect filterRect, filterSize.y);
 
@@ -175,7 +176,7 @@ public sealed partial class Table
 
                 if (_filters.Count > 0)
                 {
-                    width = Mathf.Max(width, _filters.Select(filter => filter.Size.x).Max());
+                    width = Mathf.Max(width, _filters.Max(filter => filter.Size.x));
                 }
 
                 Width = width;

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Stats.Columns;
+﻿using Stats.Columns;
 using Stats.Extensions;
 using Stats.TableRecords;
 using Stats.Widgets;
+using System;
+using System.Collections.Generic;
 using Verse;
 
 namespace Stats.Tables;
@@ -11,7 +11,7 @@ namespace Stats.Tables;
 public abstract class ThingDefTableWorker<TRecord> : TabWorker
 {
     private readonly List<Column<TRecord>> _columns;
-    private readonly List<TRecord> _records;
+    private readonly int _recordsCount;
 
     protected ThingDefTableWorker(TableDef def)
     {
@@ -47,7 +47,7 @@ public abstract class ThingDefTableWorker<TRecord> : TabWorker
         records.TrimExcess();
         thingDefs.TrimExcess();
 
-        _records = records;
+        _recordsCount = records.Count;
 
         List<Column<TRecord>> columns = new(def.columns.Count);
 
@@ -82,7 +82,7 @@ public abstract class ThingDefTableWorker<TRecord> : TabWorker
         _columns = columns;
     }
 
-    public override IDrawable Widget => new Table(_columns, _records.Count);
+    public override IDrawable Widget => new Table(_columns, _recordsCount);
 
     protected abstract bool IsValidThingDef(ThingDef thingDef);
 
