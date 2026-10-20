@@ -7,7 +7,7 @@ namespace Stats.Columns.RangedWeaponDef;
 
 public sealed class DirectHitChanceColumn<TRecord> : NumberColumn<TRecord> where TRecord : IThingDefTableRecord
 {
-    public DirectHitChanceColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0.0\\%")
+    public DirectHitChanceColumn(ColumnDef def, List<TRecord> records, object _) : base(def, records, "0\\%")
     {
     }
 
@@ -21,7 +21,7 @@ public sealed class DirectHitChanceColumn<TRecord> : NumberColumn<TRecord> where
                 ? 100f / GenRadial.NumCellsInRadius(verbProps.ForcedMissRadius)
                 : 100f;
 
-            return directHitChance.ToDecimal(1);
+            return directHitChance.ToDecimal();
         }
 
         return 0m;

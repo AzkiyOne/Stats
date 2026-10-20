@@ -58,12 +58,6 @@ public sealed partial class Table
         using (new GUIScrollScope(tableRect, ref _scrollPosition, contentRect)) { }
 
         DrawVisibleContent(viewportRect);
-
-        if (_postDraw != null)
-        {
-            _postDraw.Invoke();
-            _postDraw = null;
-        }
     }
 
     // TODO: We don't need 2 Draw() methods
@@ -88,7 +82,10 @@ public sealed partial class Table
         }
 
         GUIListSegment<int> topRows = new(_topRows);
-        GUIListSegment<int> visibleBottomRows = new(_bottomRows, scrolledBottomRowsCount, visibleBottomRowsCount, firstVisibleBottomRowY);
+        GUIListSegment<int> visibleBottomRows = new(_bottomRows,
+                                                    scrolledBottomRowsCount,
+                                                    visibleBottomRowsCount,
+                                                    firstVisibleBottomRowY);
 
         // Layout
         rect.CutLeft(out Rect leftColumnsRect, _leftColumnsWidth)
@@ -102,7 +99,11 @@ public sealed partial class Table
         // Pinned columns
         if (_leftColumnsCount > 0)
         {
-            DrawColumns(leftColumnsRect, Vector2.zero, LeftColumns, topRows, visibleBottomRows);
+            DrawColumns(leftColumnsRect,
+                        Vector2.zero,
+                        LeftColumns,
+                        topRows,
+                        visibleBottomRows);
             // Separator line
             if (eventType == EventType.Repaint)
             {
@@ -115,11 +116,31 @@ public sealed partial class Table
         {
             using (new GUIClipScope(rightColumnsRect))
             {
-                DrawColumns(rightColumnsRect with { x = 0f, y = 0f }, scrollPosition, RightColumns, topRows, visibleBottomRows);
+                DrawColumns(rightColumnsRect with { x = 0f, y = 0f },
+                            scrollPosition,
+                            RightColumns,
+                            topRows,
+                            visibleBottomRows);
             }
         }
 
         DoHorScrollControl(mouseDragScrollAreaRect);
+
+        if (_rowPinSignal != null)
+        {
+            (int index, bool isPinned) = _rowPinSignal.Value;
+
+            ToggleRowPin(index, isPinned);
+            _rowPinSignal = null;
+        }
+
+        if (_columnDragSignal != null)
+        {
+            (ColumnWidget draggedColumn, ColumnWidget column, bool placeBefore) = _columnDragSignal.Value;
+
+            MoveColumn(draggedColumn, column, placeBefore);
+            _columnDragSignal = null;
+        }
 
         if (eventType == EventType.Layout)
         {
@@ -127,7 +148,12 @@ public sealed partial class Table
         }
     }
 
-    private void DrawColumns(Rect rect, Vector2 scrollPosition, ReadOnlyListSegment<ColumnWidget> columns, GUIListSegment<int> topRows, GUIListSegment<int> bottomRows)
+    private void DrawColumns(
+        Rect rect,
+        Vector2 scrollPosition,
+        ReadOnlyListSegment<ColumnWidget> columns,
+        GUIListSegment<int> topRows,
+        GUIListSegment<int> bottomRows)
     {
         EventType eventType = Event.current.type;
         float xMin = rect.xMin;
@@ -169,21 +195,26 @@ public sealed partial class Table
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void HandleColumnDrag(ColumnWidget draggedColumn, ColumnWidget column, Rect columnRect)
     {
+        if (draggedColumn == column)
+        {
+            if (Event.current.type == EventType.Repaint)
+            {
+                columnRect.HighlightActive();
+            }
+
+            return;
+        }
+
         float mouseX = Event.current.mousePosition.x;
         FloatRange horBoundaries = columnRect.HorBoundaries();
 
         if (horBoundaries.MinHalf().Includes(mouseX))
         {
-            _postDraw ??= () => MoveColumn(draggedColumn, column, true);
+            _columnDragSignal ??= new ColumnDragSignal(draggedColumn, column, true);
         }
         else if (horBoundaries.MaxHalf().Includes(mouseX))
         {
-            _postDraw ??= () => MoveColumn(draggedColumn, column, false);
-        }
-
-        if (draggedColumn == column && Event.current.type == EventType.Repaint)
-        {
-            columnRect.HighlightActive();
+            _columnDragSignal ??= new ColumnDragSignal(draggedColumn, column, false);
         }
     }
 
@@ -213,7 +244,6 @@ public sealed partial class Table
                 topRowsRect.DrawBorderBottom(FixedPartSeparatorLineColor);
             }
 
-            // Rows
             Rect rowRect = topRowsRect with { height = RowHeight };
 
             for (int i = 0; i < topRowsCount; i++)
@@ -268,7 +298,7 @@ public sealed partial class Table
 
         if (mouseIsOverRect && curEvent is { type: EventType.MouseUp, button: 0, modifiers: EventModifiers.Control })
         {
-            _postDraw = () => ToggleRowPin(index, isPinned);
+            _rowPinSignal = new RowPinSignal(index, isPinned);
             curEvent.Use();
         }
     }
@@ -376,4 +406,8 @@ public sealed partial class Table
             }
         }
     }
+
+    private readonly record struct RowPinSignal(int Index, bool IsPinned);
+
+    private readonly record struct ColumnDragSignal(ColumnWidget DraggedColumn, ColumnWidget Column, bool PlaceBefore);
 }

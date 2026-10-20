@@ -29,6 +29,7 @@ public sealed partial class Table : IDrawable, IDisposable
     private readonly List<int> _bottomRows;
     private int RowsCount => _topRows.Count + _bottomRows.Count;
     private int _recordsCount;
+    private RowPinSignal? _rowPinSignal;
 
     // Columns
     private readonly List<ColumnWidget> _columns;
@@ -37,6 +38,7 @@ public sealed partial class Table : IDrawable, IDisposable
     private ReadOnlyListSegment<ColumnWidget> LeftColumns => new(_columns, 0, _leftColumnsCount);
     private ReadOnlyListSegment<ColumnWidget> RightColumns => new(_columns, _leftColumnsCount, RightColumnsCount);
     private readonly Queue<ColumnWidget> _columnsToRefresh;
+    private ColumnDragSignal? _columnDragSignal;
 
     // Layout
     private float _topRowsHeight;
@@ -46,10 +48,6 @@ public sealed partial class Table : IDrawable, IDisposable
 
     // Drawing
     private Vector2 _scrollPosition;
-    // A way to defer any code that would otherwise modify
-    // the collection that is currently being iterated over.
-    // Primarily GUI event handlers.
-    private Action? _postDraw;
 
     // Toolbar
     private readonly Toolbar _toolbar;
